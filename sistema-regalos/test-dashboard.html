@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Dashboard - COOMOTOR</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { padding: 20px; background: #f5f5f5; }
+        .test-card { background: white; border-radius: 8px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .result { margin-top: 10px; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 4px; max-height: 300px; overflow-y: auto; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Test de Dashboard Empleado</h1>
+        <p class="text-muted">Presiona F12 para ver la consola del navegador</p>
+
+        <!-- Test 1: Token -->
+        <div class="test-card">
+            <h3>1️⃣ Verificar Token de Sesión</h3>
+            <button class="btn btn-primary" onclick="testToken()">Verificar Token</button>
+            <div id="result1" class="result"></div>
+        </div>
+
+        <!-- Test 2: API Hijos -->
+        <div class="test-card">
+            <h3>2️⃣ Test API - Cargar Hijos</h3>
+            <button class="btn btn-success" onclick="testHijos()">Probar API Hijos</button>
+            <div id="result2" class="result"></div>
+        </div>
+
+        <!-- Test 3: API Estadísticas -->
+        <div class="test-card">
+            <h3>3️⃣ Test API - Estadísticas</h3>
+            <button class="btn btn-info" onclick="testEstadisticas()">Probar API Estadísticas</button>
+            <div id="result3" class="result"></div>
+        </div>
+
+        <!-- Test 4: Función Modal -->
+        <div class="test-card">
+            <h3>4️⃣ Test Función Modal</h3>
+            <button class="btn btn-warning" onclick="testModal()">Probar Función Modal</button>
+            <div id="result4" class="result"></div>
+        </div>
+
+        <!-- Test 5: Botón Real -->
+        <div class="test-card">
+            <h3>5️⃣ Test Botón Real del Dashboard</h3>
+            <p>Simula el botón real del dashboard:</p>
+            <button class="btn btn-success" id="btnRegistrarHijo">Registrar Nuevo Hijo</button>
+            <div id="result5" class="result"></div>
+        </div>
+
+        <!-- Instrucciones -->
+        <div class="test-card bg-light">
+            <h4>📋 Instrucciones:</h4>
+            <ol>
+                <li>Primero haz login en: <a href="/auth/login.html" target="_blank">Login</a></li>
+                <li>Usa: conductor@coomotor.com / conductor123</li>
+                <li>Vuelve a esta página</li>
+                <li>Haz click en cada botón de prueba</li>
+                <li>Mira los resultados y la consola (F12)</li>
+            </ol>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        console.log('🧪 Página de test cargada');
+
+        function testToken() {
+            console.log('🧪 Test 1: Verificando token...');
+            const result = document.getElementById('result1');
+            const token = localStorage.getItem('coomotor_token');
+            const user = localStorage.getItem('coomotor_user');
+
+            if (token && user) {
+                try {
+                    const userData = JSON.parse(user);
+                    result.innerHTML = `
+                        <div class="alert alert-success">
+                            ✅ <strong>Token encontrado</strong><br>
+                            Usuario: ${userData.nombres} ${userData.apellidos}<br>
+                            Email: ${userData.correo}<br>
+                            Rol: ${userData.rol}<br>
+                            Token: ${token.substring(0, 30)}...
+                        </div>
+                    `;
+                    console.log('✅ Token válido:', userData);
+                } catch (e) {
+                    result.innerHTML = `<div class="alert alert-danger">❌ Error parseando usuario: ${e.message}</div>`;
+                    console.error('❌ Error:', e);
+                }
+            } else {
+                result.innerHTML = `
+                    <div class="alert alert-danger">
+                        ❌ <strong>No hay token</strong><br>
+                        Debes hacer login primero.<br>
+                        <a href="/auth/login.html" class="btn btn-sm btn-primary mt-2">Ir a Login</a>
+                    </div>
+                `;
+                console.error('❌ No hay token en localStorage');
+            }
+        }
+
+        async function testHijos() {
+            console.log('🧪 Test 2: Probando API de hijos...');
+            const result = document.getElementById('result2');
+            const token = localStorage.getItem('coomotor_token');
+
+            if (!token) {
+                result.innerHTML = '<div class="alert alert-danger">❌ No hay token. Haz login primero.</div>';
+                return;
+            }
+
+            try {
+                result.innerHTML = '<div class="alert alert-info">⏳ Cargando...</div>';
+                
+                const response = await fetch('/api/hijos', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                console.log('📡 Status:', response.status);
+                const data = await response.json();
+                console.log('📡 Data:', data);
+
+                if (response.ok && data.success) {
+                    result.innerHTML = `
+                        <div class="alert alert-success">
+                            ✅ <strong>API funcionando</strong><br>
+                            Hijos encontrados: ${data.data.length}<br>
+                            <pre>${JSON.stringify(data.data, null, 2)}</pre>
+                        </div>
+                    `;
+                } else {
+                    result.innerHTML = `
+                        <div class="alert alert-warning">
+                            ⚠️ <strong>API respondió con error</strong><br>
+                            Status: ${response.status}<br>
+                            Error: ${data.error || 'Desconocido'}<br>
+                            <pre>${JSON.stringify(data, null, 2)}</pre>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('❌ Error:', error);
+                result.innerHTML = `
+                    <div class="alert alert-danger">
+                        ❌ <strong>Error de conexión</strong><br>
+                        ${error.message}<br>
+                        ¿Está el servidor corriendo en puerto 3001?
+                    </div>
+                `;
+            }
+        }
+
+        async function testEstadisticas() {
+            console.log('🧪 Test 3: Probando API de estadísticas...');
+            const result = document.getElementById('result3');
+            const token = localStorage.getItem('coomotor_token');
+
+            if (!token) {
+                result.innerHTML = '<div class="alert alert-danger">❌ No hay token. Haz login primero.</div>';
+                return;
+            }
+
+            try {
+                result.innerHTML = '<div class="alert alert-info">⏳ Cargando...</div>';
+                
+                const response = await fetch('/api/empleados/estadisticas', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                console.log('📡 Status:', response.status);
+                const data = await response.json();
+                console.log('📡 Data:', data);
+
+                if (response.ok && data.success) {
+                    result.innerHTML = `
+                        <div class="alert alert-success">
+                            ✅ <strong>API funcionando</strong><br>
+                            <pre>${JSON.stringify(data.data, null, 2)}</pre>
+                        </div>
+                    `;
+                } else {
+                    result.innerHTML = `
+                        <div class="alert alert-warning">
+                            ⚠️ <strong>API respondió con error</strong><br>
+                            Status: ${response.status}<br>
+                            <pre>${JSON.stringify(data, null, 2)}</pre>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('❌ Error:', error);
+                result.innerHTML = `
+                    <div class="alert alert-danger">
+                        ❌ <strong>Error de conexión</strong><br>
+                        ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        function testModal() {
+            console.log('🧪 Test 4: Probando función modal...');
+            const result = document.getElementById('result4');
+
+            // Verificar si la función existe
+            if (typeof mostrarModalRegistroHijo === 'function') {
+                result.innerHTML = `
+                    <div class="alert alert-success">
+                        ✅ <strong>Función existe</strong><br>
+                        La función mostrarModalRegistroHijo está definida.<br>
+                        <button class="btn btn-sm btn-primary mt-2" onclick="mostrarModalRegistroHijo()">Llamar Función</button>
+                    </div>
+                `;
+                console.log('✅ Función mostrarModalRegistroHijo existe');
+            } else {
+                result.innerHTML = `
+                    <div class="alert alert-danger">
+                        ❌ <strong>Función NO existe</strong><br>
+                        La función mostrarModalRegistroHijo no está definida.<br>
+                        Esto significa que el archivo dashboard-empleado.js no se cargó.
+                    </div>
+                `;
+                console.error('❌ Función mostrarModalRegistroHijo NO existe');
+            }
+        }
+
+        // Test del botón real
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🔵 DOM cargado');
+            
+            const btn = document.getElementById('btnRegistrarHijo');
+            if (btn) {
+                console.log('✅ Botón encontrado');
+                btn.addEventListener('click', function() {
+                    console.log('🖱️ Click detectado en botón');
+                    const result = document.getElementById('result5');
+                    result.innerHTML = `
+                        <div class="alert alert-success">
+                            ✅ <strong>Click detectado</strong><br>
+                            El evento click funciona correctamente.<br>
+                            Timestamp: ${new Date().toLocaleTimeString()}
+                        </div>
+                    `;
+                });
+            } else {
+                console.error('❌ Botón NO encontrado');
+            }
+
+            // Auto-ejecutar test de token
+            setTimeout(() => {
+                testToken();
+            }, 500);
+        });
+    </script>
+</body>
+</html>

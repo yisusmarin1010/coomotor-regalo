@@ -1,0 +1,195 @@
+/* ============================================
+   ESTILOS PARA AUTENTICACIÓN - SISTEMA REGALOS
+   ============================================ */
+
+/* Estilos para Registro */
+.registro-container {
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+.registro-card {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+.registro-header {
+    background: linear-gradient(135deg, var(--coomotor-primary), var(--coomotor-secondary));
+    color: white;
+    padding: 2rem;
+    text-align: center;
+}
+
+.registro-header h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.registro-header p {
+    opacity: 0.9;
+    margin: 0;
+}
+
+.registro-body {
+    padding: 2rem;
+}
+
+/* Estilos para Login */
+.login-container {
+    max-width: 450px;
+    width: 100%;
+    padding: 0 1rem;
+    margin: 0 auto;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-card {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+}
+
+.login-header {
+    background: linear-gradient(135deg, var(--coomotor-primary), var(--coomotor-secondary));
+    color: white;
+    padding: 2.5rem 2rem;
+    text-align: center;
+}
+
+.login-header h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.login-header p {
+    opacity: 0.9;
+    margin: 0;
+}
+
+.login-body {
+    padding: 2rem;
+}
+
+/* Estilos comunes para formularios */
+.form-label {
+    font-weight: 600;
+    color: var(--coomotor-dark);
+    margin-bottom: 0.5rem;
+}
+
+.form-control, .form-select {
+    border: 2px solid #e9ecef;
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--coomotor-primary);
+    box-shadow: 0 0 0 0.2rem rgba(29, 143, 131, 0.25);
+}
+
+.required {
+    color: #dc3545;
+}
+
+/* Subtipos dinámicos */
+.subtipo-container {
+    display: none;
+    margin-top: 1rem;
+}
+
+.subtipo-container.show {
+    display: block;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Alertas */
+.alert {
+    border-radius: 10px;
+    border: none;
+}
+
+/* Links */
+.login-link, .registro-link {
+    text-align: center;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e9ecef;
+}
+
+.login-link a, .registro-link a {
+    color: var(--coomotor-primary);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.login-link a:hover, .registro-link a:hover {
+    color: var(--coomotor-secondary);
+}
+
+/* Toggle de contraseña */
+.password-toggle {
+    position: relative;
+}
+
+.password-toggle-btn {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #6c757d;
+    cursor: pointer;
+    padding: 0.25rem;
+}
+
+.password-toggle-btn:hover {
+    color: var(--coomotor-primary);
+}
+
+/* Decoración navideña */
+.christmas-decoration {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    font-size: 2rem;
+    animation: bounce 2s infinite;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .registro-container, .login-container {
+        padding: 1rem;
+    }
+    
+    .registro-body, .login-body {
+        padding: 1.5rem;
+    }
+    
+    .registro-header, .login-header {
+        padding: 1.5rem;
+    }
+    
+    .registro-header h1, .login-header h1 {
+        font-size: 1.5rem;
+    }
+}

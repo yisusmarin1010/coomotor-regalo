@@ -1,0 +1,281 @@
+/* ============================================
+   ESTILOS SISTEMA REGALOS NAVIDEÑOS COOMOTOR
+   ============================================ */
+
+:root {
+    --coomotor-primary: #1d8f83;
+    --coomotor-secondary: #f0673f;
+    --coomotor-dark: #0f172a;
+    --coomotor-light: #f7f2ea;
+    --christmas-red: #dc2626;
+    --christmas-green: #16a34a;
+    --christmas-gold: #d97706;
+}
+
+body {
+    background: linear-gradient(135deg, var(--coomotor-light) 0%, #e8f5f3 100%);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 100vh;
+}
+
+.navbar {
+    background: linear-gradient(135deg, var(--coomotor-primary), var(--coomotor-secondary));
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+.navbar-brand {
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: white !important;
+}
+
+.hero-section {
+    padding: 4rem 0;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(29, 143, 131, 0.1) 0%, transparent 70%);
+    animation: rotate 20s linear infinite;
+}
+
+@keyframes rotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+}
+
+.hero-title {
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: var(--coomotor-dark);
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+}
+
+.hero-subtitle {
+    font-size: 1.3rem;
+    color: #666;
+    margin-bottom: 2rem;
+}
+
+.christmas-icons {
+    font-size: 4rem;
+    margin: 2rem 0;
+}
+
+.christmas-icons .icon {
+    margin: 0 1rem;
+    animation: bounce 2s infinite;
+}
+
+.christmas-icons .icon:nth-child(2) {
+    animation-delay: 0.3s;
+}
+
+.christmas-icons .icon:nth-child(3) {
+    animation-delay: 0.6s;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+    40% { transform: translateY(-20px); }
+    60% { transform: translateY(-10px); }
+}
+
+.btn-christmas {
+    background: linear-gradient(135deg, var(--christmas-red), var(--christmas-gold));
+    border: none;
+    border-radius: 50px;
+    padding: 1rem 2.5rem;
+    font-weight: 600;
+    color: white;
+    font-size: 1.1rem;
+    margin: 0.5rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 25px rgba(220, 38, 38, 0.3);
+}
+
+.btn-christmas:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 35px rgba(220, 38, 38, 0.4);
+    color: white;
+}
+
+.btn-outline-christmas {
+    background: transparent;
+    border: 3px solid var(--christmas-green);
+    border-radius: 50px;
+    padding: 1rem 2.5rem;
+    font-weight: 600;
+    color: var(--christmas-green);
+    font-size: 1.1rem;
+    margin: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.btn-outline-christmas:hover {
+    background: var(--christmas-green);
+    color: white;
+    transform: translateY(-3px);
+}
+
+.features-section {
+    padding: 4rem 0;
+    background: white;
+}
+
+.feature-card {
+    background: white;
+    border-radius: 20px;
+    padding: 2rem;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+    margin-bottom: 2rem;
+    border: 3px solid transparent;
+}
+
+.feature-card:hover {
+    transform: translateY(-10px);
+    border-color: var(--coomotor-primary);
+}
+
+.feature-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    color: var(--coomotor-primary);
+}
+
+.feature-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--coomotor-dark);
+    margin-bottom: 1rem;
+}
+
+.feature-description {
+    color: #666;
+    line-height: 1.6;
+}
+
+.info-section {
+    padding: 4rem 0;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+.info-card {
+    background: white;
+    border-radius: 15px;
+    padding: 2rem;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+}
+
+.info-title {
+    color: var(--coomotor-primary);
+    font-weight: 700;
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+}
+
+.footer {
+    background: var(--coomotor-dark);
+    color: white;
+    padding: 2rem 0;
+    text-align: center;
+}
+
+.countdown-section {
+    background: linear-gradient(135deg, var(--christmas-red), var(--christmas-gold));
+    color: white;
+    padding: 3rem 0;
+    text-align: center;
+}
+
+.countdown-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 2rem;
+}
+
+.countdown-timer {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.countdown-item {
+    background: rgba(255,255,255,0.2);
+    border-radius: 15px;
+    padding: 1.5rem;
+    min-width: 120px;
+    backdrop-filter: blur(10px);
+}
+
+.countdown-number {
+    font-size: 3rem;
+    font-weight: 800;
+    display: block;
+}
+
+.countdown-label {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.snowflake {
+    position: fixed;
+    top: -10px;
+    z-index: 1;
+    user-select: none;
+    cursor: default;
+    animation-name: snowflakes-fall, snowflakes-shake;
+    animation-duration: 10s, 3s;
+    animation-timing-function: linear, ease-in-out;
+    animation-iteration-count: infinite, infinite;
+    animation-play-state: running, running;
+}
+
+@keyframes snowflakes-fall {
+    to { transform: translateY(100vh); }
+}
+
+@keyframes snowflakes-shake {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(80px); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 2.5rem;
+    }
+    
+    .countdown-timer {
+        gap: 1rem;
+    }
+    
+    .countdown-item {
+        min-width: 100px;
+        padding: 1rem;
+    }
+    
+    .countdown-number {
+        font-size: 2rem;
+    }
+}

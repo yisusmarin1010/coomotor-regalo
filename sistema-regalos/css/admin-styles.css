@@ -1,0 +1,203 @@
+/* ============================================
+   ESTILOS ESPECÍFICOS PARA ADMIN - SISTEMA REGALOS
+   ============================================ */
+
+.admin-header {
+    background: linear-gradient(135deg, var(--coomotor-dark), var(--coomotor-primary));
+    color: white;
+    border-radius: 20px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.3);
+}
+
+.admin-title {
+    font-size: 2rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+}
+
+.stat-card.danger {
+    border-left: 5px solid var(--christmas-red);
+}
+
+.stat-card.success {
+    border-left: 5px solid var(--christmas-green);
+}
+
+.stat-card.warning {
+    border-left: 5px solid var(--christmas-gold);
+}
+
+.admin-card {
+    background: white;
+    border-radius: 15px;
+    padding: 2rem;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+}
+
+.admin-card-title {
+    color: var(--coomotor-primary);
+    font-weight: 700;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.btn-admin {
+    background: linear-gradient(135deg, var(--coomotor-primary), var(--coomotor-secondary));
+    border: none;
+    border-radius: 10px;
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
+    color: white;
+    transition: all 0.3s ease;
+    margin: 0.25rem;
+}
+
+.btn-admin:hover {
+    transform: translateY(-2px);
+    color: white;
+}
+
+.btn-danger-admin {
+    background: linear-gradient(135deg, var(--christmas-red), #ef4444);
+    border: none;
+    border-radius: 10px;
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
+    color: white;
+    transition: all 0.3s ease;
+    margin: 0.25rem;
+}
+
+.btn-success-admin {
+    background: linear-gradient(135deg, var(--christmas-green), #22c55e);
+    border: none;
+    border-radius: 10px;
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
+    color: white;
+    transition: all 0.3s ease;
+    margin: 0.25rem;
+}
+
+.postulacion-card {
+    background: white;
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    border-left: 5px solid #e5e7eb;
+}
+
+.postulacion-card.pendiente {
+    border-left-color: var(--christmas-gold);
+}
+
+.postulacion-card.aprobada {
+    border-left-color: var(--christmas-green);
+}
+
+.postulacion-card.rechazada {
+    border-left-color: var(--christmas-red);
+}
+
+.postulacion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    margin-bottom: 1rem;
+}
+
+.postulacion-info {
+    flex: 1;
+}
+
+.postulacion-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.status-rechazada {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.quick-actions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.quick-action {
+    background: white;
+    border-radius: 10px;
+    padding: 1.5rem;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+    cursor: pointer;
+}
+
+.quick-action:hover {
+    transform: translateY(-3px);
+}
+
+.quick-action i {
+    font-size: 2rem;
+    color: var(--coomotor-primary);
+    margin-bottom: 1rem;
+}
+
+.table-responsive {
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.table {
+    margin-bottom: 0;
+}
+
+.table thead th {
+    background: var(--coomotor-primary);
+    color: white;
+    border: none;
+    font-weight: 600;
+}
+
+.filters-section {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+/* Responsive para admin */
+@media (max-width: 768px) {
+    .quick-actions {
+        grid-template-columns: 1fr;
+    }
+    
+    .postulacion-header {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .postulacion-actions {
+        justify-content: flex-start;
+    }
+    
+    .admin-header {
+        padding: 1.5rem;
+    }
+    
+    .admin-title {
+        font-size: 1.5rem;
+    }
+}
