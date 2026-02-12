@@ -1,53 +1,64 @@
 // ============================================
 // SERVICIO DE NOTIFICACIONES POR CORREO
 // Sistema Completo de Notificaciones COOMOTOR
+// Usando SendGrid para mejor compatibilidad
 // ============================================
 
-const nodemailer = require('nodemailer');
+const sgMail = require('@sendgrid/mail');
 require('dotenv').config();
 
 class NotificationService {
     constructor() {
-        this.transporter = null;
-        this.initializeTransporter();
+        this.initialized = false;
+        this.initializeSendGrid();
     }
 
-    // Inicializar transportador
-    initializeTransporter() {
+    // Inicializar SendGrid
+    initializeSendGrid() {
         try {
-            const email = process.env.SMTP_USER;
-            let config = {};
+            const apiKey = process.env.SENDGRID_API_KEY;
+            
+            if (!apiKey) {
+                console.log('⚠️  SENDGRID_API_KEY no configurada - Los correos no se enviarán');
+                return;
+            }
 
-            if (email && email.includes('@gmail.com')) {
-                config = {
-                    service: 'gmail',
-                    host: 'smtp.gmail.com',
-                    port: 587,
-                    secure: false,
-                    auth: {
-                        user: process.env.SMTP_USER,
-                        pass: process.env.SMTP_PASS
-                    },
-                    tls: { rejectUnauthorized: false }
-                };
-            } else if (email && (email.includes('@outlook.com') || email.includes('@hotmail.com'))) {
-                config = {
-                    host: 'smtp-mail.outlook.com',
-                    port: 587,
-                    secure: false,
-                    auth: {
-                        user: process.env.SMTP_USER,
-                        pass: process.env.SMTP_PASS
-                    },
-                    tls: { ciphers: 'SSLv3', rejectUnauthorized: false }
-                };
-            } else {
-                config = {
-                    host: process.env.SMTP_HOST || 'smtp.gmail.com',
-                    port: parseInt(process.env.SMTP_PORT) || 587,
-                    secure: false,
-                    auth: {
-                        user: process.env.SMTP_USER,
+            sgMail.setApiKey(apiKey);
+            this.initialized = true;
+            console.log('📧 Servicio de notificaciones inicializado');
+        } catch (error) {
+            console.error('❌ Error al inicializar notificaciones:', error);
+        }
+    }
+
+    // Enviar email genérico
+    async enviarEmail(opciones) {
+        try {
+            if (!this.initialized) {
+                console.log('⚠️  SendGrid no configurado - Email no enviado');
+                return { success: false, error: 'SendGrid no configurado' };
+            }
+
+            const msg = {
+                to: opciones.to,
+                from: {
+                    email: process.env.SENDGRID_FROM_EMAIL || 'coomotorneivasistemaderegalos@gmail.com',
+                    name: process.env.SENDGRID_FROM_NAME || 'COOMOTOR Regalos Navideños'
+                },
+                subject: opciones.subject,
+                html: opciones.html
+            };
+
+            await sgMail.send(msg);
+            
+            console.log('📧 Email enviado:', opciones.subject);
+            return { success: true };
+
+        } catch (error) {
+            console.error('❌ Error al enviar email:', error.message);
+            return { success: false, error: error.message };
+        }
+    }
                         pass: process.env.SMTP_PASS
                     },
                     tls: { rejectUnauthorized: false }

@@ -16,7 +16,7 @@ require('dotenv').config();
 
 // Importar servicio de correo
 const emailService = require('./email-service');
-const notificationService = require('./email-service-notifications');
+const notificationService = require('./email-service-notifications-sendgrid');
 
 // Crear app Express
 const app = express();
