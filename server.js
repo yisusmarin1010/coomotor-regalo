@@ -72,10 +72,10 @@ app.use(helmet({
 const allowedOrigins = process.env.NODE_ENV === 'production' 
     ? [
         process.env.FRONTEND_URL,
+        'https://coomotor-regalo.onrender.com',
         'https://coomotor-regalos.onrender.com',
-        // Agregar aquí tu dominio personalizado si lo configuras después
-        // 'https://www.tudominio.com',
-        // 'https://tudominio.com'
+        null, // Permitir requests sin origin en producción también
+        undefined // Permitir undefined
     ]
     : [
         'http://localhost:3000',
@@ -90,12 +90,12 @@ const allowedOrigins = process.env.NODE_ENV === 'production'
 
 const corsOptions = {
     origin: function(origin, callback) {
-        // Permitir requests sin origin (como Postman) en desarrollo
-        if (!origin && process.env.NODE_ENV !== 'production') {
+        // Permitir requests sin origin (archivos locales, Postman, etc.)
+        if (!origin) {
             return callback(null, true);
         }
         
-        if (allowedOrigins.includes(origin) || allowedOrigins.includes(null)) {
+        if (allowedOrigins.includes(origin)) {
             callback(null, true);
         } else {
             console.log('❌ CORS bloqueado para origen:', origin);
