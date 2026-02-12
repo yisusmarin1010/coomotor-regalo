@@ -93,7 +93,38 @@
         /* Hero */
         .hero {
             padding: 5rem 0 3rem;
-            background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
+            background: linear-gradient(rgba(5, 150, 105, 0.85), rgba(5, 150, 105, 0.75)), url('img/foto.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            position: relative;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(5, 150, 105, 0.9) 0%, rgba(4, 120, 87, 0.85) 100%);
+            z-index: 1;
+        }
+
+        .hero .container {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1, .hero p, .hero .badge {
+            color: white !important;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .hero .badge {
+            background: rgba(255, 255, 255, 0.2) !important;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
         }
 
         .hero h1 {
@@ -112,11 +143,38 @@
         .hero-icon {
             font-size: 8rem;
             animation: float 3s ease-in-out infinite;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
         }
 
         @keyframes float {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-20px); }
+        }
+
+        .hero .btn-primary {
+            background: white;
+            color: var(--primary-green);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .hero .btn-primary:hover {
+            background: #f9fafb;
+            color: var(--primary-green);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+        }
+
+        .hero .btn-outline-primary {
+            border: 2px solid white;
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .hero .btn-outline-primary:hover {
+            background: white;
+            color: var(--primary-green);
+            border-color: white;
         }
 
         /* Cards */
@@ -230,6 +288,7 @@
         @media (max-width: 768px) {
             .hero {
                 padding: 3rem 0 2rem;
+                background-attachment: scroll;
             }
 
             .hero h1 {
