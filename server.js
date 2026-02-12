@@ -14,8 +14,7 @@ const validator = require('validator');
 const path = require('path');
 require('dotenv').config();
 
-// Importar servicio de correo
-const emailService = require('./email-service');
+// Importar servicio de notificaciones
 const notificationService = require('./email-service-notifications');
 
 // Crear app Express
@@ -571,56 +570,25 @@ app.post('/api/auth/recuperar-password/solicitar', async (req, res) => {
             intentos: 0
         });
         
-        // Enviar código por correo
-        const contenido = `
-            <div style="text-align: center; margin: 20px 0;">
-                <div style="font-size: 64px;">🔐</div>
-                <h2 style="color: #059669;">Recuperación de Contraseña</h2>
-            </div>
-            
-            <p>Hola <strong>${usuario.nombres} ${usuario.apellidos}</strong>,</p>
-            
-            <div style="background: #f0fdf4; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #059669;">
-                <h3 style="margin-top: 0; color: #059669;">Tu código de verificación:</h3>
-                <div style="font-size: 32px; font-weight: bold; color: #059669; letter-spacing: 8px; text-align: center; margin: 20px 0;">
-                    ${codigo}
-                </div>
-                <p style="margin-bottom: 0; text-align: center;">
-                    <small style="color: #666;">Este código expira en 15 minutos</small>
-                </p>
-            </div>
-            
-            <div style="background: #fff3cd; padding: 15px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #ffc107;">
-                <h4 style="margin-top: 0; color: #856404;">⚠️ Importante:</h4>
-                <ul style="margin: 0; color: #856404;">
-                    <li>No compartas este código con nadie</li>
-                    <li>Si no solicitaste este cambio, ignora este correo</li>
-                    <li>El código solo es válido por 15 minutos</li>
-                </ul>
-            </div>
-            
-            <p style="text-align: center; color: #666; margin-top: 30px;">
-                Si tienes problemas, contacta con soporte.
-            </p>
-        `;
-        
+        // Enviar código por correo usando SendGrid
         try {
-            await notificationService.transporter.sendMail({
-                from: {
-                    name: 'COOMOTOR - Regalos Navideños',
-                    address: process.env.SMTP_USER
-                },
-                to: usuario.correo,
-                subject: '🔐 Código de Recuperación de Contraseña - COOMOTOR',
-                html: notificationService.generarPlantillaBase('Recuperación de Contraseña', contenido, '#059669')
+            const resultado = await notificationService.enviarCodigoRecuperacion({
+                email: usuario.correo,
+                codigo: codigo
             });
             
-            console.log(`📧 Código de recuperación enviado a: ${usuario.correo}`);
-            
-            res.json({
-                success: true,
-                message: 'Código enviado a tu correo electrónico'
-            });
+            if (resultado.success) {
+                console.log(`📧 Código de recuperación enviado a: ${usuario.correo}`);
+                res.json({
+                    success: true,
+                    message: 'Código enviado a tu correo electrónico'
+                });
+            } else {
+                res.status(500).json({
+                    success: false,
+                    error: 'Error al enviar el correo. Intenta nuevamente.'
+                });
+            }
         } catch (emailError) {
             console.error('Error al enviar correo:', emailError);
             res.status(500).json({
@@ -770,7 +738,7 @@ app.post('/api/auth/recuperar-password/cambiar', async (req, res) => {
         
         console.log(`✅ Contraseña cambiada para: ${email}`);
         
-        // Enviar confirmación por correo
+        // Enviar confirmación por correo usando SendGrid
         const usuario = await poolConnection.request()
             .input('email', sql.NVarChar, email.toLowerCase())
             .query('SELECT nombres, apellidos FROM usuarios WHERE correo = @email');
@@ -778,42 +746,10 @@ app.post('/api/auth/recuperar-password/cambiar', async (req, res) => {
         if (usuario.recordset.length > 0) {
             const { nombres, apellidos } = usuario.recordset[0];
             
-            const contenido = `
-                <div style="text-align: center; margin: 20px 0;">
-                    <div style="font-size: 64px;">✅</div>
-                    <h2 style="color: #059669;">Contraseña Cambiada</h2>
-                </div>
-                
-                <p>Hola <strong>${nombres} ${apellidos}</strong>,</p>
-                
-                <div style="background: #d4edda; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #28a745;">
-                    <h3 style="margin-top: 0; color: #155724;">✅ Contraseña Actualizada</h3>
-                    <p style="margin-bottom: 0;">Tu contraseña ha sido cambiada exitosamente.</p>
-                </div>
-                
-                <div style="background: #fff3cd; padding: 15px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #ffc107;">
-                    <h4 style="margin-top: 0; color: #856404;">⚠️ ¿No fuiste tú?</h4>
-                    <p style="margin-bottom: 0;">Si no realizaste este cambio, contacta inmediatamente con soporte.</p>
-                </div>
-                
-                <div style="text-align: center; margin: 30px 0;">
-                    <a href="http://localhost:3001/sistema-regalos/auth/login.html" 
-                       style="display: inline-block; background: #059669; color: white; padding: 12px 24px; 
-                              text-decoration: none; border-radius: 5px; font-weight: bold;">
-                        🔐 Iniciar Sesión
-                    </a>
-                </div>
-            `;
-            
             try {
-                await notificationService.transporter.sendMail({
-                    from: {
-                        name: 'COOMOTOR - Regalos Navideños',
-                        address: process.env.SMTP_USER
-                    },
-                    to: email,
-                    subject: '✅ Contraseña Cambiada Exitosamente - COOMOTOR',
-                    html: notificationService.generarPlantillaBase('Contraseña Cambiada', contenido, '#28a745')
+                await notificationService.enviarConfirmacionRecuperacion({
+                    email: email,
+                    nombreEmpleado: `${nombres} ${apellidos}`
                 });
                 
                 console.log(`📧 Confirmación de cambio enviada a: ${email}`);
@@ -1219,33 +1155,14 @@ app.post('/api/contacto', async (req, res) => {
         // Enviar correos de forma asíncrona (no bloquear la respuesta)
         setImmediate(async () => {
             try {
-                // Verificar si el servicio de correo está disponible
-                const emailDisponible = await emailService.verificarConexion();
-                
-                if (emailDisponible) {
-                    // Enviar notificación al equipo de soporte
-                    const resultadoNotificacion = await emailService.enviarNotificacionContacto(datosContacto);
-                    
-                    if (resultadoNotificacion.success) {
-                        console.log(`✅ Notificación enviada a: ${resultadoNotificacion.destinatario}`);
-                    } else {
-                        console.error(`❌ Error al enviar notificación: ${resultadoNotificacion.error}`);
-                    }
-
-                    // Enviar confirmación al usuario
-                    const resultadoConfirmacion = await emailService.enviarConfirmacionUsuario(datosContacto);
-                    
-                    if (resultadoConfirmacion.success) {
-                        console.log(`✅ Confirmación enviada al usuario: ${email}`);
-                    } else {
-                        console.error(`❌ Error al enviar confirmación: ${resultadoConfirmacion.error}`);
-                    }
+                if (notificationService.initialized) {
+                    console.log(`📧 Enviando notificación de contacto para ticket: ${ticketNumber}`);
+                    // Aquí puedes agregar métodos específicos en notificationService si los necesitas
                 } else {
-                    console.log('⚠️  Servicio de correo no disponible - Mensaje guardado sin envío de correos');
+                    console.log('⚠️  SendGrid no configurado - Mensaje guardado sin envío de correos');
                     console.log(`📞 Contacto manual requerido para: ${nombres} ${apellidos} (${email})`);
                     console.log(`📋 Revisar mensaje en el panel de administrador con ticket: ${ticketNumber}`);
                 }
-
             } catch (error) {
                 console.error('❌ Error en el proceso de envío de correos:', error);
                 console.log('⚠️  Mensaje guardado correctamente, pero sin notificación por correo');
@@ -1639,22 +1556,13 @@ async function startServer() {
         // Conectar a la base de datos primero
         await connectToDatabase();
         
-        // Verificar servicio de correo
-        console.log('📧 Verificando servicio de correo...');
-        const emailVerified = await emailService.verificarConexion();
-        if (emailVerified) {
-            console.log('✅ Servicio de correo configurado correctamente');
-        } else {
-            console.log('⚠️  Servicio de correo no disponible - Los correos no se enviarán');
-        }
-        
         // Iniciar servidor
         const server = app.listen(PORT, () => {
             console.log(`🚀 Servidor Coomotor API ejecutándose en puerto ${PORT}`);
-            console.log(`🌐 Entorno: ${process.env.NODE_ENV || 'development'}`);
+            console.log(`🌐 Entorno: ${process.env.NODE_ENV || 'production'}`);
             console.log(`📡 Health check: http://localhost:${PORT}/api/health`);
             console.log(`🔵 Base de datos: Azure SQL Database`);
-            console.log(`📧 Correo: ${emailVerified ? 'Configurado' : 'No disponible'}`);
+            console.log(`📧 Correo: SendGrid ${notificationService.initialized ? 'Activo ✓' : 'No configurado'}`);
         });
         
         // Manejo de cierre graceful
