@@ -305,6 +305,13 @@ function mostrarTablaPostulaciones(postulaciones) {
                         <button class="btn btn-sm btn-danger" onclick="rechazarPostulacion(${postulacion.id})">
                             <i class="bi bi-x"></i>
                         </button>
+                    ` : postulacion.estado_postulacion === 'aprobada' ? `
+                        <button class="btn btn-sm btn-outline-primary me-1" onclick="verDetallePostulacion(${postulacion.id})">
+                            <i class="bi bi-eye"></i>
+                        </button>
+                        <button class="btn btn-sm btn-warning" onclick="eliminarAprobacion(${postulacion.id}, '${postulacion.hijo_nombres}')" title="Eliminar aprobación">
+                            <i class="bi bi-trash"></i>
+                        </button>
                     ` : `
                         <button class="btn btn-sm btn-outline-primary" onclick="verDetallePostulacion(${postulacion.id})">
                             <i class="bi bi-eye"></i>
@@ -1680,3 +1687,50 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+
+// ============================================
+// ELIMINAR APROBACIÓN DE POSTULACIÓN
+// ============================================
+
+async function eliminarAprobacion(postulacionId, nombreHijo) {
+    // Confirmar la acción
+    const motivo = prompt(`⚠️ ATENCIÓN: Está a punto de ELIMINAR la aprobación de ${nombreHijo}.\n\nEsta acción notificará al empleado.\n\nPor favor, ingrese el motivo de la eliminación:`);
+    
+    if (!motivo || motivo.trim() === '') {
+        mostrarAlerta('warning', 'Debe ingresar un motivo para eliminar la aprobación');
+        return;
+    }
+    
+    // Segunda confirmación
+    if (!confirm(`¿Está completamente seguro de eliminar la aprobación de ${nombreHijo}?\n\nSe enviará una notificación al empleado con el motivo:\n"${motivo}"`)) {
+        return;
+    }
+    
+    try {
+        const response = await fetch(`/api/admin/postulaciones/${postulacionId}/eliminar-aprobacion`, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('coomotor_token')}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ 
+                motivo: motivo.trim(),
+                nombreHijo: nombreHijo
+            })
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            mostrarAlerta('success', `Aprobación eliminada. Se ha notificado al empleado.`);
+            cargarPostulaciones();
+            cargarEstadisticas();
+        } else {
+            mostrarAlerta('danger', result.error || 'Error al eliminar la aprobación');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        mostrarAlerta('danger', 'Error de conexión al eliminar la aprobación');
+    }
+}

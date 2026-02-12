@@ -1962,6 +1962,90 @@ app.put('/api/admin/postulaciones/:id/rechazar', authenticateToken, requireAdmin
     }
 });
 
+// Eliminar aprobación de postulación
+app.put('/api/admin/postulaciones/:id/eliminar-aprobacion', authenticateToken, requireAdmin, async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { motivo, nombreHijo } = req.body;
+        
+        // Verificar que la postulación existe y está aprobada
+        const postulacionResult = await poolConnection.request()
+            .input('postulacionId', sql.Int, id)
+            .query(`
+                SELECT 
+                    p.id,
+                    p.hijo_id,
+                    p.estado_postulacion,
+                    h.nombres as hijo_nombres,
+                    h.apellidos as hijo_apellidos,
+                    DATEDIFF(YEAR, h.fecha_nacimiento, GETDATE()) as hijo_edad,
+                    h.usuario_id,
+                    u.nombres as usuario_nombres,
+                    u.apellidos as usuario_apellidos,
+                    u.correo as usuario_correo
+                FROM postulaciones_hijos p
+                INNER JOIN hijos h ON p.hijo_id = h.id
+                INNER JOIN usuarios u ON h.usuario_id = u.id
+                WHERE p.id = @postulacionId
+            `);
+        
+        if (postulacionResult.recordset.length === 0) {
+            return res.status(404).json({ success: false, error: 'Postulación no encontrada' });
+        }
+        
+        const postulacion = postulacionResult.recordset[0];
+        
+        // Verificar que está aprobada
+        if (postulacion.estado_postulacion !== 'aprobada') {
+            return res.status(400).json({ 
+                success: false, 
+                error: 'Solo se pueden eliminar postulaciones aprobadas' 
+            });
+        }
+        
+        // Cambiar el estado a "eliminada" o "cancelada"
+        await poolConnection.request()
+            .input('postulacionId', sql.Int, id)
+            .input('adminId', sql.Int, req.user.userId)
+            .input('motivo', sql.NText, motivo || '')
+            .query(`
+                UPDATE postulaciones_hijos 
+                SET estado_postulacion = 'cancelada',
+                    fecha_revision = GETDATE(),
+                    revisado_por = @adminId,
+                    observaciones_admin = CONCAT(observaciones_admin, CHAR(13) + CHAR(10) + '--- APROBACIÓN ELIMINADA --- ' + CHAR(13) + CHAR(10) + 'Motivo: ', @motivo)
+                WHERE id = @postulacionId
+            `);
+        
+        // Enviar notificación por correo
+        const datosNotificacion = {
+            email: postulacion.usuario_correo,
+            nombreEmpleado: `${postulacion.usuario_nombres} ${postulacion.usuario_apellidos}`,
+            nombreHijo: `${postulacion.hijo_nombres} ${postulacion.hijo_apellidos}`,
+            motivo: motivo || 'No se proporcionó un motivo específico'
+        };
+        
+        // Enviar notificación (no bloqueante)
+        notificationService.notificarAprobacionEliminada(datosNotificacion)
+            .then(result => {
+                if (result.success) {
+                    console.log(`✅ Notificación de eliminación de aprobación enviada a ${postulacion.usuario_correo}`);
+                } else {
+                    console.log(`⚠️ No se pudo enviar notificación`);
+                }
+            })
+            .catch(err => console.error('Error al enviar notificación:', err));
+        
+        res.json({ 
+            success: true, 
+            message: 'Aprobación eliminada exitosamente. Se ha notificado al usuario.' 
+        });
+    } catch (error) {
+        console.error('Error al eliminar aprobación:', error);
+        res.status(500).json({ success: false, error: 'Error interno del servidor' });
+    }
+});
+
 // Obtener empleados para admin
 app.get('/api/admin/empleados', authenticateToken, requireAdmin, async (req, res) => {
     try {
