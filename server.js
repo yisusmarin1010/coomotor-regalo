@@ -1858,25 +1858,20 @@ app.put('/api/admin/postulaciones/:id/aprobar', authenticateToken, requireAdmin,
             `);
         
         // Enviar notificación por correo
-        const usuario = {
-            nombres: postulacion.usuario_nombres,
-            apellidos: postulacion.usuario_apellidos,
-            correo: postulacion.usuario_correo
-        };
-        
-        const hijo = {
-            nombres: postulacion.hijo_nombres,
-            apellidos: postulacion.hijo_apellidos,
+        const datosNotificacion = {
+            email: postulacion.usuario_correo,
+            nombreEmpleado: `${postulacion.usuario_nombres} ${postulacion.usuario_apellidos}`,
+            nombreHijo: `${postulacion.hijo_nombres} ${postulacion.hijo_apellidos}`,
             edad: postulacion.hijo_edad
         };
         
         // Enviar notificación (no bloqueante)
-        notificationService.notificarPostulacionAprobada(usuario, hijo, observaciones || '')
+        notificationService.notificarPostulacionAprobada(datosNotificacion)
             .then(result => {
                 if (result.success) {
-                    console.log(`✅ Notificación de aprobación enviada a ${usuario.correo}`);
+                    console.log(`✅ Notificación de aprobación enviada a ${postulacion.usuario_correo}`);
                 } else {
-                    console.log(`⚠️ No se pudo enviar notificación: ${result.error}`);
+                    console.log(`⚠️ No se pudo enviar notificación`);
                 }
             })
             .catch(err => console.error('Error al enviar notificación:', err));
@@ -1938,25 +1933,20 @@ app.put('/api/admin/postulaciones/:id/rechazar', authenticateToken, requireAdmin
             `);
         
         // Enviar notificación por correo
-        const usuario = {
-            nombres: postulacion.usuario_nombres,
-            apellidos: postulacion.usuario_apellidos,
-            correo: postulacion.usuario_correo
-        };
-        
-        const hijo = {
-            nombres: postulacion.hijo_nombres,
-            apellidos: postulacion.hijo_apellidos,
-            edad: postulacion.hijo_edad
+        const datosNotificacion = {
+            email: postulacion.usuario_correo,
+            nombreEmpleado: `${postulacion.usuario_nombres} ${postulacion.usuario_apellidos}`,
+            nombreHijo: `${postulacion.hijo_nombres} ${postulacion.hijo_apellidos}`,
+            motivo: motivo || 'No se proporcionó un motivo específico'
         };
         
         // Enviar notificación (no bloqueante)
-        notificationService.notificarPostulacionRechazada(usuario, hijo, motivo || '')
+        notificationService.notificarPostulacionRechazada(datosNotificacion)
             .then(result => {
                 if (result.success) {
-                    console.log(`✅ Notificación de rechazo enviada a ${usuario.correo}`);
+                    console.log(`✅ Notificación de rechazo enviada a ${postulacion.usuario_correo}`);
                 } else {
-                    console.log(`⚠️ No se pudo enviar notificación: ${result.error}`);
+                    console.log(`⚠️ No se pudo enviar notificación`);
                 }
             })
             .catch(err => console.error('Error al enviar notificación:', err));

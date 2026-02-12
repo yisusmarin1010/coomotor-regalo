@@ -33,39 +33,89 @@ class NotificationService {
         }
         
         try {
-            await sgMail.send({
+            const msg = {
                 to,
                 from: {
                     email: process.env.SENDGRID_FROM_EMAIL || 'coomotorneivasistemaderegalos@gmail.com',
                     name: process.env.SENDGRID_FROM_NAME || 'COOMOTOR Regalos'
                 },
                 subject,
-                html
-            });
-            console.log('📧 Email enviado:', subject);
+                html,
+                // Configuraciones anti-spam
+                trackingSettings: {
+                    clickTracking: { enable: false },
+                    openTracking: { enable: false }
+                },
+                mailSettings: {
+                    sandboxMode: { enable: false }
+                },
+                // Agregar texto plano para mejor deliverability
+                text: subject
+            };
+            
+            await sgMail.send(msg);
+            console.log(`📧 Email enviado a ${to}: ${subject}`);
             return { success: true };
         } catch (error) {
             console.error('❌ Error al enviar email:', error.message);
+            if (error.response) {
+                console.error('Detalles:', error.response.body);
+            }
             return { success: false };
         }
     }
 
     async notificarPostulacionAprobada(datos) {
         const html = `
-        <div style="font-family: Arial; max-width: 600px; margin: 0 auto;">
-            <div style="background: linear-gradient(135deg, #2e8b57, #c41e3a); color: white; padding: 20px; text-align: center;">
-                <h1>🎄 COOMOTOR</h1>
-            </div>
-            <div style="padding: 30px; background: white;">
-                <div style="background: #d4edda; padding: 20px; border-radius: 8px; text-align: center; margin: 20px 0;">
-                    <h2 style="color: #28a745; margin: 0;">🎉 ¡Postulación Aprobada!</h2>
-                </div>
-                <p>Estimado/a <strong>${datos.nombreEmpleado}</strong>,</p>
-                <p>Tu postulación para <strong>${datos.nombreHijo}</strong> ha sido aprobada.</p>
-                <p><strong>Edad:</strong> ${datos.edad} años</p>
-                <p>¡Felices fiestas! 🎅</p>
-            </div>
-        </div>`;
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        </head>
+        <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f4f4f4;">
+            <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f4f4f4; padding: 20px;">
+                <tr>
+                    <td align="center">
+                        <table width="600" cellpadding="0" cellspacing="0" style="background-color: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                            <tr>
+                                <td style="background: linear-gradient(135deg, #2e8b57, #c41e3a); color: white; padding: 30px; text-align: center;">
+                                    <h1 style="margin: 0; font-size: 28px;">� COOMOTOR</h1>
+                                    <p style="margin: 10px 0 0 0; font-size: 14px;">Sistema de Regalos Navideños</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 40px 30px;">
+                                    <table width="100%" cellpadding="0" cellspacing="0">
+                                        <tr>
+                                            <td style="background: #d4edda; padding: 20px; border-radius: 8px; text-align: center; margin-bottom: 20px;">
+                                                <h2 style="color: #28a745; margin: 0; font-size: 24px;">🎉 ¡Postulación Aprobada!</h2>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 20px 0;">
+                                                <p style="margin: 0 0 15px 0; font-size: 16px; line-height: 1.5;">Estimado/a <strong>${datos.nombreEmpleado}</strong>,</p>
+                                                <p style="margin: 0 0 15px 0; font-size: 16px; line-height: 1.5;">Nos complace informarte que tu postulación para <strong>${datos.nombreHijo}</strong> ha sido <strong style="color: #28a745;">APROBADA</strong>.</p>
+                                                <p style="margin: 0 0 15px 0; font-size: 16px; line-height: 1.5;"><strong>Edad del niño/a:</strong> ${datos.edad} años</p>
+                                                <p style="margin: 0 0 15px 0; font-size: 16px; line-height: 1.5;">Pronto recibirás más información sobre la entrega del regalo.</p>
+                                                <p style="margin: 20px 0 0 0; font-size: 16px; line-height: 1.5;">¡Felices fiestas! 🎅🎁</p>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="background-color: #f8f9fa; padding: 20px; text-align: center; border-top: 1px solid #dee2e6;">
+                                    <p style="margin: 0; font-size: 12px; color: #6c757d;">COOMOTOR - Cooperativa de Motoristas del Huila</p>
+                                    <p style="margin: 5px 0 0 0; font-size: 12px; color: #6c757d;">Neiva, Huila - Colombia</p>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </body>
+        </html>`;
         
         return await this.enviarEmail(datos.email, '🎉 Postulación Aprobada - COOMOTOR', html);
     }
