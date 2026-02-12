@@ -178,18 +178,46 @@
 /* Responsive */
 @media (max-width: 768px) {
     .registro-container, .login-container {
-        padding: 1rem;
+        padding: 0.75rem;
     }
     
     .registro-body, .login-body {
-        padding: 1.5rem;
+        padding: 1.25rem;
     }
     
     .registro-header, .login-header {
-        padding: 1.5rem;
+        padding: 1.25rem;
     }
     
     .registro-header h1, .login-header h1 {
-        font-size: 1.5rem;
+        font-size: 1.35rem;
+    }
+    
+    .form-control, .form-select {
+        font-size: 16px; /* Evita zoom en iOS */
+        padding: 0.65rem 0.875rem;
+    }
+    
+    .btn {
+        padding: 0.75rem 1.25rem;
+        font-size: 0.95rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .registro-container, .login-container {
+        padding: 0.5rem;
+    }
+    
+    .registro-body, .login-body {
+        padding: 1rem;
+    }
+    
+    .registro-header, .login-header {
+        padding: 1rem;
+    }
+    
+    .registro-header h1, .login-header h1 {
+        font-size: 1.2rem;
     }
 }

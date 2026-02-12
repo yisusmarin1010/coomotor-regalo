@@ -5,9 +5,9 @@
 
 /* Variables globales mejoradas */
 :root {
-    --mobile-padding: 1rem;
-    --tablet-padding: 1.5rem;
-    --desktop-padding: 2rem;
+    --mobile-padding: 0.75rem;
+    --tablet-padding: 1.25rem;
+    --desktop-padding: 1.5rem;
     --transition-speed: 0.3s;
 }
 
@@ -76,16 +76,19 @@ img {
 
 /* Hero section móvil */
 .hero-section {
-    padding: 2rem 0 !important;
+    padding: 1.5rem 0 !important;
+    min-height: auto !important;
 }
 
 .hero-title {
-    font-size: 2rem !important;
+    font-size: 1.75rem !important;
     line-height: 1.2;
+    margin-bottom: 0.75rem !important;
 }
 
 .hero-subtitle {
-    font-size: 1rem !important;
+    font-size: 0.95rem !important;
+    margin-bottom: 1rem !important;
 }
 
 .christmas-icons {
@@ -98,11 +101,18 @@ img {
 }
 
 /* Botones móvil */
-.btn-christmas, .btn-outline-christmas {
+.btn-christmas, .btn-outline-christmas, .btn-hero-primary, .btn-hero-secondary {
     width: 100%;
     margin: 0.5rem 0;
-    padding: 0.875rem 1.5rem;
-    font-size: 1rem;
+    padding: 0.75rem 1.25rem;
+    font-size: 0.95rem;
+}
+
+.hero-buttons .btn {
+    width: 100%;
+    margin: 0.5rem 0 !important;
+    padding: 0.75rem 1.25rem !important;
+    font-size: 0.95rem !important;
 }
 
 .btn-group-mobile {

@@ -306,16 +306,21 @@
     }
     
     .main-container {
-        padding: 1rem 0;
+        padding: 1rem 0.75rem;
     }
     
     .welcome-card, .action-card {
-        padding: 1.5rem;
-        margin-bottom: 1.5rem;
+        padding: 1.25rem;
+        margin-bottom: 1.25rem;
+        border-radius: 10px;
     }
     
     .welcome-title {
-        font-size: 1.5rem;
+        font-size: 1.4rem;
+    }
+    
+    .welcome-subtitle {
+        font-size: 0.95rem;
     }
     
     .stat-card {
@@ -326,45 +331,84 @@
         font-size: 2rem;
     }
     
+    .stat-icon {
+        font-size: 2rem;
+    }
+    
     .hijo-card {
-        padding: 1.25rem;
+        padding: 1rem;
     }
     
     .hijo-header {
-        flex-direction: column;
-        text-align: center;
+        flex-direction: row;
+        text-align: left;
         gap: 0.75rem;
     }
     
+    .hijo-avatar {
+        width: 45px;
+        height: 45px;
+        font-size: 1.1rem;
+    }
+    
     .hijo-actions {
-        justify-content: center;
+        justify-content: flex-start;
         width: 100%;
     }
     
     .hijo-actions .btn {
         flex: 1;
-        min-width: 120px;
-    }
-}
-
-@media (max-width: 576px) {
-    .welcome-title {
-        font-size: 1.35rem;
+        min-width: 100px;
+        font-size: 0.85rem;
+        padding: 0.5rem 0.75rem;
     }
     
     .action-title {
         font-size: 1.25rem;
     }
+}
+
+@media (max-width: 576px) {
+    .main-container {
+        padding: 0.75rem 0.5rem;
+    }
+    
+    .welcome-title {
+        font-size: 1.25rem;
+    }
+    
+    .welcome-card, .action-card {
+        padding: 1rem;
+    }
+    
+    .action-title {
+        font-size: 1.15rem;
+    }
+    
+    .hijo-header {
+        flex-direction: column;
+        text-align: center;
+    }
     
     .hijo-actions {
         flex-direction: column;
+        gap: 0.5rem;
     }
     
     .hijo-actions .btn {
         width: 100%;
+        min-width: auto;
     }
     
     .modal-body {
-        padding: 1.25rem;
+        padding: 1rem;
+    }
+    
+    .stat-card {
+        padding: 1rem;
+    }
+    
+    .stat-number {
+        font-size: 1.75rem;
     }
 }
