@@ -1,0 +1,645 @@
+/* ============================================
+   DISEÑO RESPONSIVE GLOBAL - COOMOTOR
+   Optimizado para PC, Tablet y Móvil
+   ============================================ */
+
+/* Variables globales mejoradas */
+:root {
+    --mobile-padding: 1rem;
+    --tablet-padding: 1.5rem;
+    --desktop-padding: 2rem;
+    --transition-speed: 0.3s;
+}
+
+/* Reset y base mejorada */
+* {
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 16px;
+    -webkit-text-size-adjust: 100%;
+}
+
+body {
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Contenedores responsive */
+.container, .container-fluid {
+    padding-left: var(--mobile-padding);
+    padding-right: var(--mobile-padding);
+}
+
+/* Imágenes responsive */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Tablas responsive */
+.table-responsive {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* ============================================
+   MÓVIL FIRST (< 576px)
+   ============================================ */
+
+/* Navbar móvil */
+.navbar {
+    padding: 0.75rem var(--mobile-padding);
+}
+
+.navbar-brand {
+    font-size: 1.2rem !important;
+}
+
+.navbar-toggler {
+    border: none;
+    padding: 0.5rem;
+}
+
+.navbar-collapse {
+    margin-top: 1rem;
+}
+
+.nav-link {
+    padding: 0.75rem 0 !important;
+    font-size: 1rem;
+}
+
+/* Hero section móvil */
+.hero-section {
+    padding: 2rem 0 !important;
+}
+
+.hero-title {
+    font-size: 2rem !important;
+    line-height: 1.2;
+}
+
+.hero-subtitle {
+    font-size: 1rem !important;
+}
+
+.christmas-icons {
+    font-size: 2.5rem !important;
+    margin: 1rem 0 !important;
+}
+
+.christmas-icons .icon {
+    margin: 0 0.5rem !important;
+}
+
+/* Botones móvil */
+.btn-christmas, .btn-outline-christmas {
+    width: 100%;
+    margin: 0.5rem 0;
+    padding: 0.875rem 1.5rem;
+    font-size: 1rem;
+}
+
+.btn-group-mobile {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+/* Cards móvil */
+.feature-card, .info-card, .action-card {
+    margin-bottom: 1.5rem;
+    padding: 1.5rem !important;
+}
+
+.feature-icon {
+    font-size: 2.5rem !important;
+}
+
+.feature-title {
+    font-size: 1.25rem !important;
+}
+
+/* Stats grid móvil */
+.stats-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+}
+
+.stat-card {
+    padding: 1.5rem !important;
+}
+
+.stat-number {
+    font-size: 2.5rem !important;
+}
+
+.stat-label {
+    font-size: 0.9rem !important;
+}
+
+/* Welcome card móvil */
+.welcome-card {
+    padding: 2rem 1.5rem !important;
+    margin-bottom: 2rem !important;
+}
+
+.welcome-title {
+    font-size: 1.75rem !important;
+}
+
+.welcome-subtitle {
+    font-size: 1rem !important;
+}
+
+/* Hijo cards móvil */
+.hijo-card {
+    padding: 1.25rem !important;
+    margin-bottom: 1rem;
+}
+
+.hijo-header {
+    flex-direction: column !important;
+    text-align: center !important;
+    gap: 0.75rem !important;
+}
+
+.hijo-avatar {
+    width: 50px !important;
+    height: 50px !important;
+    font-size: 1.25rem !important;
+}
+
+.hijo-info-header h5 {
+    font-size: 1.1rem !important;
+}
+
+.hijo-actions {
+    flex-direction: column !important;
+    gap: 0.5rem !important;
+}
+
+.hijo-actions .btn {
+    width: 100%;
+}
+
+/* Postulación cards móvil */
+.postulacion-card {
+    padding: 1.25rem !important;
+}
+
+.postulacion-header {
+    flex-direction: column !important;
+    gap: 1rem !important;
+}
+
+.postulacion-actions {
+    width: 100%;
+    flex-direction: column !important;
+}
+
+.postulacion-actions .btn {
+    width: 100%;
+    margin: 0.25rem 0 !important;
+}
+
+/* Admin header móvil */
+.admin-header {
+    padding: 1.5rem !important;
+}
+
+.admin-title {
+    font-size: 1.5rem !important;
+}
+
+/* Modales móvil */
+.modal-dialog {
+    margin: 0.5rem;
+    max-width: calc(100% - 1rem);
+}
+
+.modal-body {
+    padding: 1.5rem !important;
+}
+
+.modal-title {
+    font-size: 1.25rem !important;
+}
+
+/* Formularios móvil */
+.form-control, .form-select {
+    font-size: 16px !important; /* Evita zoom en iOS */
+    padding: 0.75rem !important;
+}
+
+.form-label {
+    font-size: 0.95rem;
+}
+
+/* Tablas móvil */
+.table {
+    font-size: 0.875rem;
+}
+
+.table thead {
+    display: none; /* Ocultar headers en móvil */
+}
+
+.table tbody tr {
+    display: block;
+    margin-bottom: 1rem;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 0.75rem;
+}
+
+.table tbody td {
+    display: block;
+    text-align: right;
+    padding: 0.5rem !important;
+    border: none;
+}
+
+.table tbody td::before {
+    content: attr(data-label);
+    float: left;
+    font-weight: 600;
+    color: var(--coomotor-primary);
+}
+
+/* Countdown móvil */
+.countdown-timer {
+    gap: 0.75rem !important;
+}
+
+.countdown-item {
+    min-width: 80px !important;
+    padding: 1rem !important;
+}
+
+.countdown-number {
+    font-size: 2rem !important;
+}
+
+.countdown-label {
+    font-size: 0.75rem !important;
+}
+
+/* Quick actions móvil */
+.quick-actions {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+}
+
+/* Filters móvil */
+.filters-section {
+    padding: 1rem !important;
+}
+
+.filters-section .row > div {
+    margin-bottom: 1rem;
+}
+
+/* Empty state móvil */
+.empty-state {
+    padding: 2rem 1rem !important;
+}
+
+.empty-state i {
+    font-size: 3rem !important;
+}
+
+.empty-state h4 {
+    font-size: 1.25rem !important;
+}
+
+/* ============================================
+   TABLET (576px - 768px)
+   ============================================ */
+
+@media (min-width: 576px) {
+    html {
+        font-size: 16px;
+    }
+    
+    .container, .container-fluid {
+        padding-left: var(--tablet-padding);
+        padding-right: var(--tablet-padding);
+    }
+    
+    .hero-title {
+        font-size: 2.5rem !important;
+    }
+    
+    .hero-subtitle {
+        font-size: 1.15rem !important;
+    }
+    
+    .christmas-icons {
+        font-size: 3rem !important;
+    }
+    
+    .btn-christmas, .btn-outline-christmas {
+        width: auto;
+        display: inline-block;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 1.5rem !important;
+    }
+    
+    .welcome-title {
+        font-size: 2rem !important;
+    }
+    
+    .hijo-header {
+        flex-direction: row !important;
+        text-align: left !important;
+    }
+    
+    .hijo-actions {
+        flex-direction: row !important;
+        flex-wrap: wrap;
+    }
+    
+    .hijo-actions .btn {
+        width: auto;
+    }
+    
+    .postulacion-actions {
+        flex-direction: row !important;
+        width: auto;
+    }
+    
+    .postulacion-actions .btn {
+        width: auto;
+    }
+    
+    .modal-dialog {
+        margin: 1.75rem auto;
+        max-width: 500px;
+    }
+    
+    .countdown-item {
+        min-width: 100px !important;
+    }
+    
+    .countdown-number {
+        font-size: 2.5rem !important;
+    }
+    
+    .quick-actions {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+}
+
+/* ============================================
+   TABLET GRANDE (768px - 992px)
+   ============================================ */
+
+@media (min-width: 768px) {
+    .container, .container-fluid {
+        padding-left: var(--desktop-padding);
+        padding-right: var(--desktop-padding);
+    }
+    
+    .hero-title {
+        font-size: 3rem !important;
+    }
+    
+    .hero-subtitle {
+        font-size: 1.25rem !important;
+    }
+    
+    .christmas-icons {
+        font-size: 3.5rem !important;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(3, 1fr) !important;
+    }
+    
+    .welcome-title {
+        font-size: 2.25rem !important;
+    }
+    
+    .stat-number {
+        font-size: 2.75rem !important;
+    }
+    
+    .hijo-card {
+        padding: 1.75rem !important;
+    }
+    
+    .postulacion-card {
+        padding: 1.5rem !important;
+    }
+    
+    .postulacion-header {
+        flex-direction: row !important;
+    }
+    
+    .admin-title {
+        font-size: 1.75rem !important;
+    }
+    
+    .modal-dialog {
+        max-width: 600px;
+    }
+    
+    .table thead {
+        display: table-header-group;
+    }
+    
+    .table tbody tr {
+        display: table-row;
+        border: none;
+        padding: 0;
+    }
+    
+    .table tbody td {
+        display: table-cell;
+        text-align: left;
+    }
+    
+    .table tbody td::before {
+        display: none;
+    }
+    
+    .countdown-item {
+        min-width: 120px !important;
+        padding: 1.5rem !important;
+    }
+    
+    .countdown-number {
+        font-size: 3rem !important;
+    }
+    
+    .quick-actions {
+        grid-template-columns: repeat(3, 1fr) !important;
+    }
+}
+
+/* ============================================
+   DESKTOP (992px - 1200px)
+   ============================================ */
+
+@media (min-width: 992px) {
+    .hero-title {
+        font-size: 3.5rem !important;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(4, 1fr) !important;
+        gap: 2rem !important;
+    }
+    
+    .welcome-title {
+        font-size: 2.5rem !important;
+    }
+    
+    .stat-number {
+        font-size: 3rem !important;
+    }
+    
+    .hijo-card {
+        padding: 2rem !important;
+    }
+    
+    .postulacion-card {
+        padding: 1.5rem !important;
+    }
+    
+    .admin-title {
+        font-size: 2rem !important;
+    }
+    
+    .modal-dialog {
+        max-width: 700px;
+    }
+    
+    .quick-actions {
+        grid-template-columns: repeat(4, 1fr) !important;
+    }
+}
+
+/* ============================================
+   DESKTOP GRANDE (> 1200px)
+   ============================================ */
+
+@media (min-width: 1200px) {
+    .container {
+        max-width: 1140px;
+    }
+    
+    .modal-dialog-lg {
+        max-width: 900px;
+    }
+}
+
+/* ============================================
+   UTILIDADES RESPONSIVE
+   ============================================ */
+
+/* Ocultar en móvil */
+@media (max-width: 575px) {
+    .hide-mobile {
+        display: none !important;
+    }
+}
+
+/* Ocultar en tablet */
+@media (min-width: 576px) and (max-width: 991px) {
+    .hide-tablet {
+        display: none !important;
+    }
+}
+
+/* Ocultar en desktop */
+@media (min-width: 992px) {
+    .hide-desktop {
+        display: none !important;
+    }
+}
+
+/* Mostrar solo en móvil */
+.show-mobile {
+    display: block !important;
+}
+
+@media (min-width: 576px) {
+    .show-mobile {
+        display: none !important;
+    }
+}
+
+/* Espaciado responsive */
+.mb-mobile-2 {
+    margin-bottom: 1rem;
+}
+
+@media (min-width: 768px) {
+    .mb-mobile-2 {
+        margin-bottom: 0;
+    }
+}
+
+/* Texto responsive */
+.text-mobile-center {
+    text-align: center;
+}
+
+@media (min-width: 768px) {
+    .text-mobile-center {
+        text-align: left;
+    }
+}
+
+/* ============================================
+   MEJORAS DE ACCESIBILIDAD
+   ============================================ */
+
+/* Área táctil mínima 44x44px */
+.btn, .nav-link, a {
+    min-height: 44px;
+    min-width: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Focus visible */
+*:focus-visible {
+    outline: 3px solid var(--coomotor-primary);
+    outline-offset: 2px;
+}
+
+/* Scroll suave */
+html {
+    scroll-behavior: smooth;
+}
+
+/* ============================================
+   OPTIMIZACIONES DE RENDIMIENTO
+   ============================================ */
+
+/* Aceleración por hardware */
+.stat-card, .hijo-card, .feature-card, .btn {
+    will-change: transform;
+    transform: translateZ(0);
+}
+
+/* Reducir animaciones en dispositivos lentos */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
