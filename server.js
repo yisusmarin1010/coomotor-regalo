@@ -1380,19 +1380,20 @@ app.put('/api/contactos/:id/estado', authenticateToken, async (req, res) => {
 
         // Enviar notificación si hay una respuesta nueva
         if (respuesta && respuesta.trim() !== '' && respuesta !== contacto.respuesta_anterior) {
-            const usuario = {
-                nombres: contacto.nombres,
-                apellidos: contacto.apellidos,
-                correo: contacto.email
+            const datosNotificacion = {
+                email: contacto.email,
+                nombreUsuario: `${contacto.nombres} ${contacto.apellidos}`,
+                asunto: contacto.asunto,
+                respuesta: respuesta
             };
             
             // Enviar notificación (no bloqueante)
-            notificationService.notificarRespuestaContacto(usuario, contacto.asunto, respuesta)
+            notificationService.notificarRespuestaContacto(datosNotificacion)
                 .then(result => {
                     if (result.success) {
-                        console.log(`✅ Notificación de respuesta enviada a ${usuario.correo}`);
+                        console.log(`✅ Notificación de respuesta enviada a ${contacto.email}`);
                     } else {
-                        console.log(`⚠️ No se pudo enviar notificación: ${result.error}`);
+                        console.log(`⚠️ No se pudo enviar notificación`);
                     }
                 })
                 .catch(err => console.error('Error al enviar notificación:', err));
