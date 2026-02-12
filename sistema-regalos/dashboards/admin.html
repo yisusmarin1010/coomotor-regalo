@@ -10,15 +10,11 @@
     <link href="../css/responsive-global.css" rel="stylesheet">
     <style>
         :root {
-            --primary-red: #dc2626;
             --primary-green: #059669;
-            --accent-gold: #d97706;
-            --neutral-50: #f9fafb;
-            --neutral-100: #f3f4f6;
-            --neutral-200: #e5e7eb;
-            --neutral-600: #4b5563;
-            --neutral-800: #1f2937;
-            --neutral-900: #111827;
+            --primary-red: #dc2626;
+            --bg-light: #f9fafb;
+            --text-dark: #1f2937;
+            --text-light: #6b7280;
         }
 
         * {
@@ -29,15 +25,13 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background: var(--neutral-50);
-            color: var(--neutral-800);
-            line-height: 1.6;
+            background: var(--bg-light);
+            color: var(--text-dark);
         }
 
         .navbar {
             background: white;
-            border-bottom: 1px solid var(--neutral-200);
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
 
         .navbar-brand {
@@ -48,132 +42,91 @@
         .main-container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 2rem 1rem;
+            padding: 1.5rem 1rem;
         }
 
         .admin-header {
             background: white;
-            border-radius: 12px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            border: 1px solid var(--neutral-200);
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         }
 
         .admin-title {
-            font-size: 1.875rem;
-            font-weight: 700;
-            color: var(--neutral-900);
-            margin-bottom: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-dark);
         }
 
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
         }
 
         .stat-card {
             background: white;
-            border-radius: 12px;
-            padding: 1.5rem;
-            border: 1px solid var(--neutral-200);
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            transition: all 0.2s ease;
-        }
-
-        .stat-card:hover {
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .stat-card.warning {
-            border-left: 4px solid var(--accent-gold);
-        }
-
-        .stat-card.success {
-            border-left: 4px solid var(--primary-green);
-        }
-
-        .stat-card.info {
-            border-left: 4px solid #3b82f6;
+            border-radius: 10px;
+            padding: 1.25rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            text-align: center;
         }
 
         .stat-icon {
-            font-size: 1.5rem;
+            font-size: 2rem;
             margin-bottom: 0.5rem;
         }
 
         .stat-number {
             font-size: 2rem;
             font-weight: 700;
-            color: var(--neutral-900);
-            margin-bottom: 0.25rem;
+            color: var(--text-dark);
         }
 
         .stat-label {
-            color: var(--neutral-600);
+            color: var(--text-light);
             font-size: 0.875rem;
-            font-weight: 500;
         }
 
         .quick-actions {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
         }
 
         .quick-action {
             background: white;
-            border-radius: 12px;
-            padding: 1.5rem;
-            border: 1px solid var(--neutral-200);
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            padding: 1.25rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
             cursor: pointer;
-            transition: all 0.2s ease;
             text-align: center;
+            transition: all 0.3s;
         }
 
         .quick-action:hover {
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transform: translateY(-1px);
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
         }
 
         .quick-action i {
             font-size: 2rem;
             color: var(--primary-green);
-            margin-bottom: 1rem;
+            margin-bottom: 0.75rem;
         }
 
         .quick-action h5 {
             font-weight: 600;
-            color: var(--neutral-900);
-            margin-bottom: 0.5rem;
+            font-size: 1rem;
+            margin-bottom: 0.25rem;
         }
 
         .quick-action p {
-            color: var(--neutral-600);
-            font-size: 0.875rem;
+            color: var(--text-light);
+            font-size: 0.8rem;
             margin: 0;
-        }
-
-        .btn {
-            border-radius: 8px;
-            font-weight: 500;
-            padding: 0.5rem 1rem;
-            border: none;
-            transition: all 0.2s ease;
-        }
-
-        .btn-outline-light {
-            border: 1px solid var(--neutral-200);
-            color: var(--neutral-600);
-        }
-
-        .btn-outline-light:hover {
-            background: var(--neutral-100);
-            color: var(--neutral-800);
         }
 
         @media (max-width: 768px) {
@@ -182,15 +135,19 @@
             }
             
             .admin-header {
-                padding: 1.5rem;
+                padding: 1rem;
             }
             
             .admin-title {
-                font-size: 1.5rem;
+                font-size: 1.25rem;
             }
             
             .stats-grid, .quick-actions {
                 grid-template-columns: 1fr;
+            }
+            
+            .stat-number {
+                font-size: 1.75rem;
             }
         }
     </style>

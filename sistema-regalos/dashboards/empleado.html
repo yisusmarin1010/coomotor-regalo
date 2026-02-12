@@ -10,15 +10,11 @@
     <link href="../css/responsive-global.css" rel="stylesheet">
     <style>
         :root {
-            --primary-red: #dc2626;
             --primary-green: #059669;
-            --accent-gold: #d97706;
-            --neutral-50: #f9fafb;
-            --neutral-100: #f3f4f6;
-            --neutral-200: #e5e7eb;
-            --neutral-600: #4b5563;
-            --neutral-800: #1f2937;
-            --neutral-900: #111827;
+            --primary-red: #dc2626;
+            --bg-light: #f9fafb;
+            --text-dark: #1f2937;
+            --text-light: #6b7280;
         }
 
         * {
@@ -29,15 +25,13 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background: var(--neutral-50);
-            color: var(--neutral-800);
-            line-height: 1.6;
+            background: var(--bg-light);
+            color: var(--text-dark);
         }
 
         .navbar {
             background: white;
-            border-bottom: 1px solid var(--neutral-200);
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
 
         .navbar-brand {
@@ -48,102 +42,76 @@
         .main-container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 2rem 1rem;
+            padding: 1.5rem 1rem;
         }
 
         .welcome-card {
             background: white;
-            border-radius: 12px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            border: 1px solid var(--neutral-200);
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         }
 
         .welcome-title {
-            font-size: 1.875rem;
-            font-weight: 700;
-            color: var(--neutral-900);
-            margin-bottom: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-dark);
         }
 
         .welcome-subtitle {
-            color: var(--neutral-600);
-            margin-bottom: 1rem;
+            color: var(--text-light);
+            font-size: 0.95rem;
         }
 
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
         }
 
         .stat-card {
             background: white;
-            border-radius: 12px;
-            padding: 1.5rem;
-            border: 1px solid var(--neutral-200);
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            transition: all 0.2s ease;
-        }
-
-        .stat-card:hover {
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            padding: 1.25rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            text-align: center;
         }
 
         .stat-icon {
-            font-size: 1.5rem;
+            font-size: 2rem;
             margin-bottom: 0.5rem;
         }
 
         .stat-number {
             font-size: 2rem;
             font-weight: 700;
-            color: var(--neutral-900);
-            margin-bottom: 0.25rem;
+            color: var(--text-dark);
         }
 
         .stat-label {
-            color: var(--neutral-600);
+            color: var(--text-light);
             font-size: 0.875rem;
-            font-weight: 500;
-        }
-
-        .progress-container {
-            margin-top: 1rem;
-        }
-
-        .progress {
-            height: 6px;
-            border-radius: 3px;
-            background: var(--neutral-200);
-        }
-
-        .progress-bar {
-            background: var(--primary-green);
-            border-radius: 3px;
         }
 
         .action-card {
             background: white;
-            border-radius: 12px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            border: 1px solid var(--neutral-200);
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         }
 
         .action-title {
-            font-size: 1.25rem;
+            font-size: 1.15rem;
             font-weight: 600;
-            color: var(--neutral-900);
-            margin-bottom: 0.5rem;
+            color: var(--text-dark);
         }
 
         .action-description {
-            color: var(--neutral-600);
-            margin-bottom: 1.5rem;
+            color: var(--text-light);
+            font-size: 0.9rem;
         }
 
         .btn-christmas {
@@ -151,24 +119,24 @@
             border: none;
             color: white;
             font-weight: 500;
-            padding: 0.75rem 1.5rem;
+            padding: 0.75rem 1.25rem;
             border-radius: 8px;
-            transition: all 0.2s ease;
+            transition: all 0.3s;
         }
 
         .btn-christmas:hover {
             background: #047857;
-            color: white;
+            transform: translateY(-2px);
         }
 
         .btn-outline-christmas {
-            border: 1px solid var(--primary-green);
+            border: 2px solid var(--primary-green);
             color: var(--primary-green);
             background: transparent;
             font-weight: 500;
-            padding: 0.75rem 1.5rem;
+            padding: 0.75rem 1.25rem;
             border-radius: 8px;
-            transition: all 0.2s ease;
+            transition: all 0.3s;
         }
 
         .btn-outline-christmas:hover {
@@ -178,76 +146,40 @@
 
         .empty-state {
             text-align: center;
-            padding: 3rem 2rem;
-            color: var(--neutral-600);
+            padding: 2rem;
+            color: var(--text-light);
         }
 
-        .empty-icon i {
+        .empty-state i {
             font-size: 3rem;
-            color: var(--neutral-300);
             margin-bottom: 1rem;
-        }
-
-        .empty-state h4 {
-            font-weight: 600;
-            color: var(--neutral-900);
-            margin-bottom: 0.5rem;
-        }
-
-        .timeline {
-            position: relative;
-        }
-
-        .timeline-item {
-            padding: 1rem 0;
-            border-bottom: 1px solid var(--neutral-200);
-        }
-
-        .timeline-item:last-child {
-            border-bottom: none;
-        }
-
-        .badge {
-            font-size: 0.75rem;
-            font-weight: 500;
-            padding: 0.25rem 0.75rem;
-            border-radius: 6px;
-        }
-
-        .badge.bg-success {
-            background: var(--primary-green) !important;
-        }
-
-        .badge.bg-warning {
-            background: var(--accent-gold) !important;
-        }
-
-        .text-christmas {
-            color: var(--primary-green) !important;
         }
 
         .countdown-timer {
             display: flex;
             justify-content: center;
             gap: 1rem;
-            margin-top: 1rem;
+            flex-wrap: wrap;
         }
 
         .countdown-item {
             text-align: center;
+            background: var(--bg-light);
+            padding: 1rem;
+            border-radius: 8px;
+            min-width: 80px;
         }
 
         .countdown-number {
-            display: block;
-            font-size: 1.5rem;
+            font-size: 2rem;
             font-weight: 700;
-            color: var(--primary-green);
+            color: var(--primary-red);
+            display: block;
         }
 
         .countdown-label {
             font-size: 0.75rem;
-            color: var(--neutral-600);
-            text-transform: uppercase;
+            color: var(--text-light);
         }
 
         @media (max-width: 768px) {
@@ -256,15 +188,28 @@
             }
             
             .welcome-card, .action-card {
-                padding: 1.5rem;
+                padding: 1rem;
             }
             
             .welcome-title {
-                font-size: 1.5rem;
+                font-size: 1.25rem;
             }
             
             .stats-grid {
                 grid-template-columns: 1fr;
+            }
+            
+            .stat-number {
+                font-size: 1.75rem;
+            }
+            
+            .countdown-item {
+                min-width: 70px;
+                padding: 0.75rem;
+            }
+            
+            .countdown-number {
+                font-size: 1.5rem;
             }
         }
 

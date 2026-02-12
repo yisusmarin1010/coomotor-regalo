@@ -3,24 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎄 COOMOTOR - Regalos Navideños 2027 🎅</title>
+    <title>🎄 COOMOTOR - Regalos Navideños 2024</title>
+    
+    <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
-    <link href="css/estilos-regalos.css" rel="stylesheet">
+    
+    <!-- Fuentes -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- CSS -->
     <link href="css/responsive-global.css" rel="stylesheet">
+    
     <style>
         :root {
-            --primary-red: #c41e3a;
-            --primary-green: #0f5132;
-            --accent-gold: #ffc107;
-            --neutral-dark: #212529;
-            --neutral-light: #f8f9fa;
-            --neutral-medium: #6c757d;
-            --white: #ffffff;
-            --shadow-light: rgba(0, 0, 0, 0.1);
-            --shadow-medium: rgba(0, 0, 0, 0.15);
-            --shadow-dark: rgba(0, 0, 0, 0.25);
+            --primary-green: #059669;
+            --primary-red: #dc2626;
+            --accent-gold: #d97706;
+            --bg-light: #f9fafb;
+            --text-dark: #1f2937;
+            --text-light: #6b7280;
         }
 
         * {
@@ -31,3639 +33,481 @@
 
         body {
             font-family: 'Poppins', sans-serif;
+            background: var(--bg-light);
+            color: var(--text-dark);
             line-height: 1.6;
-            color: var(--neutral-dark);
-            background: var(--neutral-light);
-            overflow-x: hidden;
         }
 
-        /* ===== ANIMACIONES SUAVES ===== */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes slideInLeft {
-            from {
-                opacity: 0;
-                transform: translateX(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        @keyframes slideInRight {
-            from {
-                opacity: 0;
-                transform: translateX(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        @keyframes gentleFloat {
-            0%, 100% {
-                transform: translateY(0px);
-            }
-            50% {
-                transform: translateY(-10px);
-            }
-        }
-
-        @keyframes subtleGlow {
-            0%, 100% {
-                box-shadow: 0 0 20px rgba(255, 193, 7, 0.2);
-            }
-            50% {
-                box-shadow: 0 0 30px rgba(255, 193, 7, 0.4);
-            }
-        }
-
-        /* ===== NAVBAR ELEGANTE ===== */
+        /* Navbar */
         .navbar {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-            box-shadow: 0 2px 20px var(--shadow-light);
-            transition: all 0.3s ease;
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1050;
-        }
-
-        .navbar.scrolled {
-            background: rgba(255, 255, 255, 0.98);
-            box-shadow: 0 4px 30px var(--shadow-medium);
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 1rem 0;
         }
 
         .navbar-brand {
-            font-family: 'Dancing Script', cursive;
-            font-size: 1.8rem;
             font-weight: 700;
-            color: var(--primary-red) !important;
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-
-        .navbar-brand:hover {
-            color: var(--accent-gold) !important;
-            transform: scale(1.05);
+            color: var(--primary-green) !important;
+            font-size: 1.25rem;
         }
 
         .nav-link {
-            color: var(--neutral-dark) !important;
+            color: var(--text-dark) !important;
             font-weight: 500;
-            margin: 0 10px;
-            transition: all 0.3s ease;
-            position: relative;
+            margin: 0 0.5rem;
+            transition: color 0.3s;
         }
 
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--primary-red);
-            transition: width 0.3s ease;
-        }
-
-        .nav-link:hover::after {
-            width: 100%;
-        }
-
-        .btn-outline-primary {
-            border: 2px solid var(--primary-red);
-            color: var(--primary-red);
-            padding: 8px 20px;
-            border-radius: 25px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            margin: 0 5px;
-        }
-
-        .btn-outline-primary:hover {
-            background: var(--primary-red);
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(196, 30, 58, 0.3);
+        .nav-link:hover {
+            color: var(--primary-green) !important;
         }
 
         .btn-primary {
-            background: var(--primary-red);
-            border: 2px solid var(--primary-red);
-            color: white;
-            padding: 8px 20px;
-            border-radius: 25px;
+            background: var(--primary-green);
+            border: none;
+            padding: 0.625rem 1.5rem;
             font-weight: 600;
-            transition: all 0.3s ease;
-            margin: 0 5px;
+            border-radius: 8px;
+            transition: all 0.3s;
         }
 
         .btn-primary:hover {
-            background: var(--primary-green);
-            border-color: var(--primary-green);
+            background: #047857;
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(15, 81, 50, 0.3);
         }
 
-        /* ===== HERO SECTION ELEGANTE ===== */
-        .hero-section {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            background: linear-gradient(135deg, var(--white) 0%, var(--neutral-light) 100%);
-            position: relative;
-            padding-top: 80px;
-        }
-
-        .hero-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 50%;
-            height: 100%;
-            background: linear-gradient(135deg, var(--primary-red) 0%, var(--primary-green) 100%);
-            opacity: 0.05;
-            z-index: 1;
-        }
-
-        .hero-content {
-            animation: slideInLeft 1s ease-out;
-            z-index: 10;
-            position: relative;
-        }
-
-        .hero-title {
-            font-family: 'Dancing Script', cursive;
-            font-size: 4rem;
-            font-weight: 700;
-            color: var(--neutral-dark);
-            margin-bottom: 20px;
-            line-height: 1.2;
-        }
-
-        .hero-title .highlight {
-            color: var(--primary-red);
-            position: relative;
-        }
-
-        .hero-title .highlight::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background: var(--accent-gold);
-            animation: subtleGlow 3s ease-in-out infinite;
-        }
-
-        .hero-subtitle {
-            font-size: 1.3rem;
-            color: var(--neutral-medium);
-            margin-bottom: 30px;
-            line-height: 1.6;
-            max-width: 600px;
-        }
-
-        .company-badge {
-            display: inline-block;
-            background: var(--accent-gold);
-            color: var(--neutral-dark);
-            padding: 8px 20px;
-            border-radius: 20px;
+        .btn-outline-primary {
+            border: 2px solid var(--primary-green);
+            color: var(--primary-green);
+            padding: 0.625rem 1.5rem;
             font-weight: 600;
-            font-size: 0.9rem;
-            margin-bottom: 30px;
-            box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);
+            border-radius: 8px;
+            transition: all 0.3s;
         }
 
-        .hero-buttons {
-            margin-top: 40px;
-        }
-
-        .hero-buttons .btn {
-            margin: 10px 15px 10px 0;
-            padding: 15px 35px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            border-radius: 30px;
-            transition: all 0.3s ease;
-        }
-
-        .btn-hero-primary {
-            background: var(--primary-red);
-            border: 2px solid var(--primary-red);
+        .btn-outline-primary:hover {
+            background: var(--primary-green);
             color: white;
         }
 
-        .btn-hero-primary:hover {
-            background: var(--primary-green);
-            border-color: var(--primary-green);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(15, 81, 50, 0.3);
+        /* Hero */
+        .hero {
+            padding: 5rem 0 3rem;
+            background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
         }
 
-        .btn-hero-secondary {
-            background: transparent;
-            border: 2px solid var(--accent-gold);
-            color: var(--accent-gold);
+        .hero h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 1rem;
         }
 
-        .btn-hero-secondary:hover {
-            background: var(--accent-gold);
-            color: var(--neutral-dark);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(255, 193, 7, 0.3);
+        .hero p {
+            font-size: clamp(1rem, 2vw, 1.25rem);
+            color: var(--text-light);
+            margin-bottom: 2rem;
         }
 
-        /* ===== CHRISTMAS DECORATION MINIMALISTA ===== */
-        .christmas-scene {
-            animation: slideInRight 1s ease-out;
-            position: relative;
-            z-index: 10;
-            text-align: center;
-        }
-
-        .santa-container {
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 10px 30px var(--shadow-light);
-            backdrop-filter: blur(10px);
-        }
-
-        .santa-emoji {
+        .hero-icon {
             font-size: 8rem;
-            animation: gentleFloat 4s ease-in-out infinite;
-            margin-bottom: 20px;
+            animation: float 3s ease-in-out infinite;
         }
 
-        .christmas-lights {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin: 20px 0;
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
         }
 
-        .light {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            animation: subtleGlow 2s ease-in-out infinite;
+        /* Cards */
+        .card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: all 0.3s;
+            height: 100%;
         }
 
-        .light:nth-child(1) { background: var(--primary-red); animation-delay: 0s; }
-        .light:nth-child(2) { background: var(--primary-green); animation-delay: 0.5s; }
-        .light:nth-child(3) { background: var(--accent-gold); animation-delay: 1s; }
-        .light:nth-child(4) { background: var(--primary-red); animation-delay: 1.5s; }
-        .light:nth-child(5) { background: var(--primary-green); animation-delay: 2s; }
-
-        /* ===== COUNTDOWN ELEGANTE ===== */
-        .countdown-section {
-            background: var(--white);
-            border-radius: 15px;
-            padding: 40px;
-            margin: 40px 0;
-            box-shadow: 0 10px 30px var(--shadow-light);
-            animation: fadeInUp 1s ease-out 0.5s both;
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
         }
 
-        .countdown-title {
-            font-family: 'Dancing Script', cursive;
-            font-size: 2.5rem;
-            color: var(--primary-red);
+        .card-icon {
+            font-size: 3rem;
+            color: var(--primary-green);
+            margin-bottom: 1rem;
+        }
+
+        .card-title {
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 0.75rem;
+        }
+
+        .card-text {
+            color: var(--text-light);
+        }
+
+        /* Stats */
+        .stats {
+            background: white;
+            padding: 3rem 0;
+        }
+
+        .stat-card {
             text-align: center;
-            margin-bottom: 30px;
+            padding: 2rem 1rem;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--primary-green);
+            display: block;
+        }
+
+        .stat-label {
+            color: var(--text-light);
+            font-weight: 500;
+            text-transform: uppercase;
+            font-size: 0.875rem;
+            letter-spacing: 1px;
+        }
+
+        /* Countdown */
+        .countdown {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            margin: 2rem 0;
         }
 
         .countdown-timer {
             display: flex;
             justify-content: center;
+            gap: 1.5rem;
             flex-wrap: wrap;
-            gap: 20px;
         }
 
         .countdown-item {
-            background: var(--neutral-light);
-            border-radius: 15px;
-            padding: 25px 20px;
             text-align: center;
-            min-width: 120px;
-            border: 2px solid var(--accent-gold);
-            box-shadow: 0 5px 15px var(--shadow-light);
-            transition: transform 0.3s ease;
-        }
-
-        .countdown-item:hover {
-            transform: translateY(-5px);
+            background: var(--bg-light);
+            padding: 1.5rem 1rem;
+            border-radius: 10px;
+            min-width: 100px;
         }
 
         .countdown-number {
-            font-size: 3rem;
-            font-weight: 800;
+            font-size: 2.5rem;
+            font-weight: 700;
             color: var(--primary-red);
             display: block;
         }
 
         .countdown-label {
-            font-size: 1rem;
-            color: var(--neutral-medium);
+            font-size: 0.875rem;
+            color: var(--text-light);
             text-transform: uppercase;
             letter-spacing: 1px;
-            font-weight: 600;
-            margin-top: 10px;
         }
 
-        /* ===== FEATURES SECTION LIMPIA ===== */
-        .features-section {
-            padding: 100px 0;
-            background: var(--white);
-        }
-
-        .section-title {
-            text-align: center;
-            margin-bottom: 80px;
-        }
-
-        .section-title h2 {
-            font-family: 'Dancing Script', cursive;
-            font-size: 3.5rem;
-            color: var(--primary-red);
-            margin-bottom: 20px;
-        }
-
-        .section-title p {
-            font-size: 1.2rem;
-            color: var(--neutral-medium);
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .feature-card {
-            background: var(--white);
-            border-radius: 15px;
-            padding: 40px 30px;
-            text-align: center;
-            border: 1px solid rgba(0, 0, 0, 0.1);
-            box-shadow: 0 10px 30px var(--shadow-light);
-            transition: all 0.3s ease;
-            height: 100%;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px var(--shadow-medium);
-            border-color: var(--accent-gold);
-        }
-
-        .feature-icon {
-            font-size: 4rem;
-            margin-bottom: 25px;
-            animation: gentleFloat 3s ease-in-out infinite;
-        }
-
-        .feature-card h4 {
-            font-size: 1.5rem;
-            color: var(--primary-red);
-            margin-bottom: 20px;
-            font-weight: 700;
-        }
-
-        .feature-card p {
-            color: var(--neutral-medium);
-            line-height: 1.6;
-            font-size: 1rem;
-        }
-
-        /* ===== TIMELINE ELEGANTE ===== */
-        .timeline-section {
-            padding: 100px 0;
-            background: var(--neutral-light);
-        }
-
-        .timeline {
-            position: relative;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .timeline::before {
-            content: '';
-            position: absolute;
-            left: 50%;
-            top: 0;
-            bottom: 0;
-            width: 4px;
-            background: var(--accent-gold);
-            transform: translateX(-50%);
-            border-radius: 2px;
-        }
-
-        .timeline-item {
-            position: relative;
-            margin: 50px 0;
-            animation: fadeInUp 0.8s ease-out;
-        }
-
-        .timeline-item:nth-child(odd) .timeline-content {
-            margin-left: 0;
-            margin-right: 50%;
-            padding-right: 40px;
-            text-align: right;
-        }
-
-        .timeline-item:nth-child(even) .timeline-content {
-            margin-left: 50%;
-            margin-right: 0;
-            padding-left: 40px;
-            text-align: left;
-        }
-
-        .timeline-content {
-            background: var(--white);
-            padding: 30px;
-            border-radius: 15px;
-            border: 1px solid rgba(0, 0, 0, 0.1);
-            box-shadow: 0 10px 30px var(--shadow-light);
-            transition: all 0.3s ease;
-        }
-
-        .timeline-content:hover {
-            transform: scale(1.02);
-            box-shadow: 0 15px 40px var(--shadow-medium);
-        }
-
-        .timeline-date {
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            background: var(--accent-gold);
-            color: var(--neutral-dark);
-            padding: 15px 20px;
-            border-radius: 25px;
-            font-weight: 700;
-            font-size: 0.9rem;
-            text-align: center;
-            min-width: 80px;
-            box-shadow: 0 5px 15px rgba(255, 193, 7, 0.4);
-            z-index: 10;
-        }
-
-        .timeline-content h4 {
-            color: var(--primary-red);
-            margin-bottom: 15px;
-            font-weight: 700;
-            font-size: 1.3rem;
-        }
-
-        .timeline-content p {
-            color: var(--neutral-medium);
-            line-height: 1.6;
-            margin: 0;
-        }
-
-        /* ===== FOOTER ELEGANTE ===== */
-        .footer {
-            background: var(--neutral-dark);
-            padding: 60px 0 30px;
-            border-top: 3px solid var(--accent-gold);
-            color: var(--neutral-light);
-        }
-
-        .footer-content {
-            text-align: center;
-        }
-
-        .footer h5 {
-            font-family: 'Dancing Script', cursive;
-            font-size: 2rem;
-            color: var(--accent-gold);
-            margin-bottom: 20px;
-        }
-
-        .footer p {
-            color: var(--neutral-light);
-            margin-bottom: 10px;
-            line-height: 1.6;
-        }
-
-        .footer-heart {
-            color: var(--primary-red);
-            animation: gentleFloat 2s ease-in-out infinite;
-            font-size: 1.2rem;
-        }
-
-        /* ===== COOMOTOR LEGACY CARD ELEGANTE ===== */
-        .coomotor-legacy-card {
-            background: var(--white);
-            border-radius: 20px;
-            padding: 50px 40px;
-            box-shadow: 0 15px 40px var(--shadow-light);
-            margin-bottom: 60px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .coomotor-legacy-card::before {
-            content: '🚌';
-            position: absolute;
-            top: -20px;
-            right: -20px;
-            font-size: 8rem;
-            opacity: 0.05;
-            z-index: 1;
-        }
-
-        .legacy-content {
-            position: relative;
-            z-index: 2;
-        }
-
-        .legacy-content h3 {
-            font-family: 'Dancing Script', cursive;
-            font-size: 2.5rem;
-            color: var(--primary-red);
-            margin-bottom: 25px;
-        }
-
-        .legacy-content p {
-            color: var(--neutral-medium);
-            font-size: 1.1rem;
-            line-height: 1.8;
-            margin-bottom: 30px;
-        }
-
-        .legacy-stats {
-            display: flex;
-            gap: 30px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .stat-item {
-            text-align: center;
-            flex: 1;
-            min-width: 120px;
-            padding: 20px;
-            background: var(--neutral-light);
-            border-radius: 15px;
-            border: 2px solid var(--accent-gold);
-            transition: transform 0.3s ease;
-        }
-
-        .stat-item:hover {
-            transform: translateY(-5px);
-        }
-
-        .stat-number {
-            display: block;
-            font-size: 2.5rem;
-            font-weight: 800;
-            color: var(--primary-red);
-        }
-
-        .stat-label {
-            font-size: 0.9rem;
-            color: var(--neutral-medium);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 600;
-            margin-top: 10px;
-        }
-
-        /* ===== CONDUCTOR TYPE CARDS ELEGANTES ===== */
-        .conductor-type-card {
-            background: var(--white);
-            border-radius: 15px;
-            padding: 30px 20px;
-            text-align: center;
-            border: 1px solid rgba(0, 0, 0, 0.1);
-            box-shadow: 0 10px 30px var(--shadow-light);
-            transition: all 0.3s ease;
-            height: 100%;
-        }
-
-        .conductor-type-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px var(--shadow-medium);
-            border-color: var(--accent-gold);
-        }
-
-        .conductor-icon {
-            font-size: 3rem;
-            margin-bottom: 20px;
-            animation: gentleFloat 3s ease-in-out infinite;
-        }
-
-        .conductor-type-card h5 {
-            color: var(--primary-red);
-            font-weight: 700;
-            margin-bottom: 15px;
-            font-size: 1.2rem;
-        }
-
-        .conductor-type-card p {
-            color: var(--neutral-medium);
-            font-size: 0.9rem;
-            line-height: 1.5;
-            margin-bottom: 20px;
-        }
-
-        .conductor-subtypes {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .subtype-badge {
-            background: var(--primary-red);
+        /* Footer */
+        footer {
+            background: var(--text-dark);
             color: white;
-            padding: 5px 12px;
-            border-radius: 15px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            padding: 2rem 0;
+            text-align: center;
         }
 
-        /* ===== RESPONSIVE DESIGN ===== */
+        footer h5 {
+            color: var(--accent-gold);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Responsive */
         @media (max-width: 768px) {
-            .hero-title {
-                font-size: 3rem;
+            .hero {
+                padding: 3rem 0 2rem;
             }
 
-            .hero-subtitle {
-                font-size: 1.1rem;
-            }
-
-            .santa-emoji {
-                font-size: 6rem;
-            }
-
-            .countdown-item {
-                min-width: 100px;
-                padding: 20px 15px;
-            }
-
-            .countdown-number {
-                font-size: 2.5rem;
-            }
-
-            .timeline::before {
-                left: 20px;
-            }
-
-            .timeline-item:nth-child(odd) .timeline-content,
-            .timeline-item:nth-child(even) .timeline-content {
-                margin-left: 60px;
-                margin-right: 0;
-                padding-left: 30px;
-                padding-right: 20px;
-                text-align: left;
-            }
-
-            .timeline-date {
-                left: 20px;
-                transform: translateY(-50%);
-            }
-
-            .navbar-brand {
-                font-size: 1.5rem;
-            }
-
-            .feature-card {
-                margin-bottom: 30px;
-            }
-
-            .legacy-stats {
-                justify-content: center;
-                gap: 20px;
-            }
-
-            .stat-item {
-                min-width: 100px;
-            }
-
-            .stat-number {
+            .hero h1 {
                 font-size: 2rem;
             }
 
-            .conductor-type-card {
-                margin-bottom: 20px;
-            }
-
-            .coomotor-legacy-card {
-                padding: 30px 20px;
-            }
-
-            .legacy-content h3 {
-                font-size: 2rem;
-            }
-        }
-
-        /* ===== EFECTOS SUAVES ===== */
-        .btn {
-            transition: all 0.3s ease;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-        }
-
-        /* ===== SMOOTH SCROLLING ===== */
-        html {
-            scroll-behavior: smooth;
-        }
-
-        /* ===== SELECCIÓN DE TEXTO ===== */
-        ::selection {
-            background: rgba(196, 30, 58, 0.2);
-            color: var(--neutral-dark);
-        }
-
-        /* ===== FOCUS STATES ===== */
-        .btn:focus,
-        input:focus,
-        button:focus {
-            outline: 2px solid var(--accent-gold);
-            outline-offset: 2px;
-        }
-
-        /* ===== BOT DE AYUDA NAVIDEÑO SÚPER MEJORADO ===== */
-        .chatbot-container {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            z-index: 1000;
-            font-family: 'Poppins', sans-serif;
-        }
-
-        .chatbot-button {
-            width: 80px;
-            height: 80px;
-            background: 
-                linear-gradient(135deg, 
-                    var(--primary-red), 
-                    #dc2626, 
-                    var(--primary-red));
-            background-size: 200% 200%;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            box-shadow: 
-                0 8px 25px rgba(220, 38, 38, 0.5),
-                0 0 30px rgba(245, 158, 11, 0.3);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            border: 4px solid rgba(255, 255, 255, 0.3);
-            animation: gradientShift 4s ease-in-out infinite, botFloat 6s ease-in-out infinite;
-        }
-
-        @keyframes botFloat {
-            0%, 100% { transform: translateY(0px) scale(1); }
-            50% { transform: translateY(-10px) scale(1.05); }
-        }
-
-        .chatbot-button:hover {
-            transform: scale(1.15) rotate(10deg);
-            box-shadow: 
-                0 12px 35px rgba(220, 38, 38, 0.7),
-                0 0 50px rgba(245, 158, 11, 0.5);
-            border-color: var(--accent-gold);
-        }
-
-        .chatbot-button::before {
-            content: '';
-            position: absolute;
-            top: -5px;
-            left: -5px;
-            right: -5px;
-            bottom: -5px;
-            background: 
-                conic-gradient(from 0deg, 
-                    var(--christmas-gold), 
-                    var(--festive-orange), 
-                    var(--christmas-red), 
-                    var(--christmas-green), 
-                    var(--christmas-gold));
-            border-radius: 50%;
-            z-index: -1;
-            animation: magicRotate 8s linear infinite;
-            opacity: 0.7;
-        }
-
-        .bot-avatar {
-            font-size: 3rem;
-            animation: botPulse 2s ease-in-out infinite;
-            filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.5));
-        }
-
-        @keyframes botPulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-        }
-
-        .bot-notification {
-            position: absolute;
-            bottom: 95px;
-            right: 0;
-            background: 
-                linear-gradient(135deg, 
-                    rgba(255, 255, 255, 0.95), 
-                    rgba(245, 158, 11, 0.1));
-            backdrop-filter: blur(20px);
-            color: var(--deep-forest);
-            padding: 15px 22px;
-            border-radius: 25px;
-            font-size: 1rem;
-            font-weight: 600;
-            box-shadow: 
-                0 6px 20px rgba(0, 0, 0, 0.2),
-                0 0 30px rgba(245, 158, 11, 0.3);
-            white-space: nowrap;
-            opacity: 0;
-            transform: translateY(15px) scale(0.9);
-            animation: slideInNotification 0.6s cubic-bezier(0.4, 0, 0.2, 1) 3s forwards;
-            max-width: 280px;
-            border: 2px solid rgba(245, 158, 11, 0.4);
-        }
-
-        @keyframes slideInNotification {
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
-
-        .bot-notification::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            right: 25px;
-            width: 0;
-            height: 0;
-            border-left: 10px solid transparent;
-            border-right: 10px solid transparent;
-            border-top: 10px solid rgba(255, 255, 255, 0.95);
-            filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.1));
-        }
-
-        .chatbot-window {
-            position: absolute;
-            bottom: 95px;
-            right: 0;
-            width: 380px;
-            height: 520px;
-            background: 
-                linear-gradient(135deg, 
-                    rgba(255, 255, 255, 0.95), 
-                    rgba(245, 158, 11, 0.05));
-            backdrop-filter: blur(25px) saturate(180%);
-            border-radius: 25px;
-            box-shadow: 
-                0 20px 60px rgba(0, 0, 0, 0.3),
-                0 0 40px rgba(245, 158, 11, 0.2);
-            border: 2px solid rgba(245, 158, 11, 0.4);
-            display: none;
-            flex-direction: column;
-            overflow: hidden;
-            transform: scale(0.8) translateY(30px);
-            opacity: 0;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .chatbot-window.active {
-            display: flex;
-            transform: scale(1) translateY(0);
-            opacity: 1;
-        }
-
-        .chatbot-header {
-            background: 
-                linear-gradient(135deg, 
-                    var(--primary-green), 
-                    #047857, 
-                    var(--primary-green));
-            background-size: 200% 200%;
-            padding: 22px 25px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            color: white;
-            animation: gradientShift 5s ease-in-out infinite;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .chatbot-header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            animation: shimmer 4s ease-in-out infinite;
-        }
-
-        .bot-info {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            z-index: 10;
-        }
-
-        .bot-avatar-large {
-            font-size: 2.5rem;
-            animation: botPulse 3s ease-in-out infinite;
-            filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.5));
-        }
-
-        .bot-details h4 {
-            color: var(--accent-gold);
-            margin: 0;
-            font-size: 1.2rem;
-            font-weight: 700;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-        }
-
-        .bot-status {
-            color: rgba(255, 255, 255, 0.95);
-            font-size: 0.9rem;
-            font-weight: 500;
-            margin-top: 3px;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-        }
-
-        .close-chat {
-            background: rgba(255, 255, 255, 0.2);
-            border: none;
-            color: white;
-            font-size: 1.3rem;
-            cursor: pointer;
-            padding: 8px;
-            border-radius: 50%;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            width: 36px;
-            height: 36px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 10;
-        }
-
-        .close-chat:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: scale(1.1) rotate(90deg);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        }
-
-        .chatbot-messages {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
-            background: 
-                linear-gradient(135deg, 
-                    rgba(248, 249, 250, 0.95), 
-                    rgba(245, 158, 11, 0.05));
-            max-height: 320px;
-            backdrop-filter: blur(10px);
-        }
-
-        .message {
-            display: flex;
-            margin-bottom: 18px;
-            animation: slideInMessage 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        @keyframes slideInMessage {
-            from {
-                opacity: 0;
-                transform: translateY(15px) scale(0.95);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
-
-        .message-avatar {
-            font-size: 1.8rem;
-            margin-right: 12px;
-            flex-shrink: 0;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            background: rgba(245, 158, 11, 0.1);
-            animation: avatarGlow 3s ease-in-out infinite;
-        }
-
-        @keyframes avatarGlow {
-            0%, 100% { box-shadow: 0 0 10px rgba(245, 158, 11, 0.3); }
-            50% { box-shadow: 0 0 20px rgba(245, 158, 11, 0.5); }
-        }
-
-        .message-content {
-            background: 
-                linear-gradient(135deg, 
-                    rgba(255, 255, 255, 0.95), 
-                    rgba(245, 158, 11, 0.05));
-            backdrop-filter: blur(15px);
-            padding: 12px 16px;
-            border-radius: 18px;
-            border: 1px solid rgba(233, 236, 239, 0.5);
-            box-shadow: 
-                0 4px 12px rgba(0, 0, 0, 0.1),
-                inset 0 1px 0 rgba(255, 255, 255, 0.5);
-            max-width: 280px;
-            line-height: 1.5;
-            font-size: 0.9rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .message-content::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-            transition: left 0.6s ease;
-        }
-
-        .message-content:hover::before {
-            left: 100%;
-        }
-
-        .bot-message .message-content {
-            background: 
-                linear-gradient(135deg, 
-                    var(--primary-green), 
-                    #047857);
-            color: white;
-            border-color: var(--primary-green);
-            box-shadow: 
-                0 6px 18px rgba(5, 150, 105, 0.3),
-                inset 0 1px 0 rgba(255, 255, 255, 0.2);
-        }
-
-        .bot-message .message-content p {
-            color: white !important;
-            margin: 0 0 10px 0;
-            font-weight: 500;
-        }
-
-        .bot-message .message-content p:last-child {
-            margin-bottom: 0;
-        }
-
-        .bot-message .message-content strong {
-            color: var(--accent-gold) !important;
-            font-weight: 700;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-        }
-
-        .user-message {
-            flex-direction: row-reverse;
-        }
-
-        .user-message .message-avatar {
-            margin-right: 0;
-            margin-left: 12px;
-            background: rgba(220, 38, 38, 0.1);
-        }
-
-        .user-message .message-content {
-            background: 
-                linear-gradient(135deg, 
-                    var(--accent-gold), 
-                    #f59e0b);
-            color: var(--neutral-900);
-            font-weight: 600;
-            box-shadow: 
-                0 6px 18px rgba(245, 158, 11, 0.3),
-                inset 0 1px 0 rgba(255, 255, 255, 0.3);
-        }
-
-        .user-message .message-content p {
-            color: var(--neutral-900) !important;
-            font-weight: 500;
-        }
-
-        .message-content p {
-            margin: 0 0 8px 0;
-            line-height: 1.5;
-            font-size: 0.9rem;
-            color: var(--neutral-800);
-            font-weight: 500;
-        }
-
-        .message-content p:last-child {
-            margin-bottom: 0;
-        }
-
-        .message-content strong {
-            font-weight: 700;
-            color: var(--neutral-900);
-        }
-
-        .quick-questions {
-            padding: 12px 18px;
-            background: 
-                linear-gradient(135deg, 
-                    rgba(255, 255, 255, 0.95), 
-                    rgba(245, 158, 11, 0.05));
-            backdrop-filter: blur(15px);
-            border-top: 1px solid rgba(233, 236, 239, 0.5);
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-
-        .quick-question {
-            background: 
-                linear-gradient(135deg, 
-                    var(--primary-red), 
-                    #dc2626);
-            color: white;
-            padding: 8px 12px;
-            border-radius: 18px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            border: none;
-            flex: 1;
-            min-width: 90px;
-            text-align: center;
-            line-height: 1.3;
-            box-shadow: 
-                0 3px 8px rgba(220, 38, 38, 0.3),
-                inset 0 1px 0 rgba(255, 255, 255, 0.2);
-        }
-
-        .quick-question:hover {
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 
-                0 6px 16px rgba(220, 38, 38, 0.4),
-                0 0 20px rgba(245, 158, 11, 0.3);
-            background: 
-                linear-gradient(135deg, 
-                    #dc2626, 
-                    var(--primary-red));
-        }
-
-        .chatbot-input {
-            padding: 12px 18px;
-            background: 
-                linear-gradient(135deg, 
-                    rgba(255, 255, 255, 0.95), 
-                    rgba(245, 158, 11, 0.05));
-            backdrop-filter: blur(15px);
-            border-top: 1px solid rgba(233, 236, 239, 0.5);
-            display: flex;
-            gap: 10px;
-        }
-
-        .chatbot-input input {
-            flex: 1;
-            padding: 12px 18px;
-            border: 2px solid rgba(245, 158, 11, 0.4);
-            border-radius: 25px;
-            background: 
-                linear-gradient(135deg, 
-                    rgba(255, 255, 255, 0.95), 
-                    rgba(245, 158, 11, 0.05));
-            backdrop-filter: blur(10px);
-            font-size: 0.9rem;
-            outline: none;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            color: var(--deep-forest);
-            font-weight: 500;
-        }
-
-        .chatbot-input input:focus {
-            border-color: var(--christmas-gold);
-            box-shadow: 
-                0 0 15px rgba(245, 158, 11, 0.4),
-                inset 0 2px 5px rgba(245, 158, 11, 0.1);
-            transform: scale(1.02);
-        }
-
-        .chatbot-input input::placeholder {
-            color: #7f8c8d;
-            font-weight: 400;
-        }
-
-        .chatbot-input button {
-            width: 45px;
-            height: 45px;
-            background: 
-                linear-gradient(135deg, 
-                    var(--christmas-green), 
-                    var(--aurora-blue));
-            border: none;
-            border-radius: 50%;
-            color: white;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1rem;
-            box-shadow: 
-                0 4px 12px rgba(5, 150, 105, 0.3),
-                inset 0 1px 0 rgba(255, 255, 255, 0.2);
-        }
-
-        .chatbot-input button:hover {
-            transform: scale(1.15) rotate(15deg);
-            box-shadow: 
-                0 6px 18px rgba(5, 150, 105, 0.4),
-                0 0 25px rgba(245, 158, 11, 0.3);
-        }
-
-        /* Scrollbar súper personalizado */
-        .chatbot-messages::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        .chatbot-messages::-webkit-scrollbar-track {
-            background: rgba(241, 241, 241, 0.5);
-            border-radius: 4px;
-        }
-
-        .chatbot-messages::-webkit-scrollbar-thumb {
-            background: 
-                linear-gradient(135deg, 
-                    var(--christmas-gold), 
-                    var(--festive-orange));
-            border-radius: 4px;
-            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
-        }
-
-        .chatbot-messages::-webkit-scrollbar-thumb:hover {
-            background: 
-                linear-gradient(135deg, 
-                    var(--festive-orange), 
-                    var(--christmas-red));
-        }
-
-        /* ===== RESPONSIVE DESIGN SÚPER MEJORADO ===== */
-        @media (max-width: 768px) {
-            .hero-title {
-                font-size: 3.5rem;
-                line-height: 1.1;
-            }
-
-            .hero-subtitle {
-                font-size: 1.2rem;
-                line-height: 1.5;
-            }
-
-            .santa-emoji {
-                font-size: 10rem;
+            .hero-icon {
+                font-size: 5rem;
             }
 
             .countdown-item {
-                min-width: 110px;
-                padding: 25px 20px;
+                min-width: 80px;
+                padding: 1rem 0.75rem;
             }
 
             .countdown-number {
-                font-size: 2.8rem;
-            }
-
-            .timeline::before {
-                left: 25px;
-                width: 4px;
-            }
-
-            .timeline-item:nth-child(odd) .timeline-content,
-            .timeline-item:nth-child(even) .timeline-content {
-                margin-left: 70px;
-                margin-right: 0;
-                padding-left: 35px;
-                padding-right: 25px;
-                text-align: left;
-            }
-
-            .timeline-date {
-                left: 25px;
-                transform: translateY(-50%);
-                min-width: 90px;
-                padding: 15px 20px;
-            }
-
-            .navbar-brand {
-                font-size: 1.8rem;
-            }
-
-            .feature-card {
-                margin-bottom: 40px;
-                padding: 40px 25px;
-            }
-
-            .legacy-stats {
-                justify-content: center;
-                gap: 25px;
-            }
-
-            .stat-item {
-                min-width: 120px;
-                padding: 25px 15px;
+                font-size: 2rem;
             }
 
             .stat-number {
                 font-size: 2.5rem;
             }
 
-            .bus-animation {
-                height: 180px;
-            }
-
-            .bus-emoji {
-                font-size: 3.5rem;
-            }
-
-            .point {
-                font-size: 1.8rem;
-            }
-
-            .coomotor-values {
-                flex-direction: column;
-                align-items: center;
-                gap: 20px;
-            }
-
-            .conductor-type-card {
-                margin-bottom: 25px;
-                padding: 35px 20px;
-            }
-
-            .coomotor-legacy-card {
-                padding: 40px 25px;
-                margin-bottom: 60px;
-            }
-
-            .legacy-content h3 {
-                font-size: 2.3rem;
-            }
-
-            .section-title h2 {
-                font-size: 3rem;
-            }
-
-            .countdown-title {
-                font-size: 2.5rem;
-            }
-
-            .fleet-vehicles {
-                grid-template-columns: 1fr;
-                gap: 20px;
-            }
-
-            .vehicle-item.special {
-                grid-column: 1;
-            }
-
-            .chatbot-container {
-                bottom: 20px;
-                right: 20px;
-            }
-
-            .chatbot-window {
-                width: calc(100vw - 40px);
-                height: 70vh;
-                bottom: 85px;
-                right: -10px;
-            }
-
-            .bot-notification {
-                max-width: 220px;
-                font-size: 0.85rem;
-                padding: 12px 16px;
-                bottom: 80px;
-            }
-
-            .chatbot-button {
-                width: 70px;
-                height: 70px;
-            }
-
-            .bot-avatar {
-                font-size: 2.5rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .hero-title {
-                font-size: 2.8rem;
-            }
-
-            .hero-subtitle {
+            .navbar-brand {
                 font-size: 1rem;
             }
-
-            .santa-emoji {
-                font-size: 8rem;
-            }
-
-            .countdown-timer {
-                gap: 15px;
-            }
-
-            .countdown-item {
-                min-width: 90px;
-                padding: 20px 15px;
-            }
-
-            .countdown-number {
-                font-size: 2.2rem;
-            }
-
-            .section-title h2 {
-                font-size: 2.5rem;
-            }
-
-            .feature-card {
-                padding: 30px 20px;
-            }
-
-            .feature-icon {
-                font-size: 3.5rem;
-            }
-
-            .coomotor-legacy-card {
-                padding: 30px 20px;
-            }
-
-            .legacy-content h3 {
-                font-size: 2rem;
-            }
-
-            .stat-number {
-                font-size: 2rem;
-            }
-
-            .navbar-brand {
-                font-size: 1.5rem;
-            }
-
-            .hero-buttons .btn {
-                padding: 15px 30px;
-                font-size: 1rem;
-                margin: 10px 10px 10px 0;
-            }
-
-            .company-badge {
-                font-size: 0.85rem;
-                padding: 10px 20px;
-            }
-        }
-
-        /* ===== EFECTOS ADICIONALES PARA INTERACTIVIDAD ===== */
-        .interactive-element {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .interactive-element:hover {
-            transform: translateY(-2px);
-        }
-
-        .glow-on-hover {
-            transition: all 0.3s ease;
-        }
-
-        .glow-on-hover:hover {
-            box-shadow: 0 0 20px rgba(245, 158, 11, 0.5);
-        }
-
-        .scale-on-hover {
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .scale-on-hover:hover {
-            transform: scale(1.05);
-        }
-
-        /* ===== ANIMACIONES DE ENTRADA MEJORADAS ===== */
-        .fade-in-up {
-            opacity: 0;
-            transform: translateY(30px);
-            animation: fadeInUp 0.8s ease-out forwards;
-        }
-
-        @keyframes fadeInUp {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .fade-in-left {
-            opacity: 0;
-            transform: translateX(-30px);
-            animation: fadeInLeft 0.8s ease-out forwards;
-        }
-
-        @keyframes fadeInLeft {
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        .fade-in-right {
-            opacity: 0;
-            transform: translateX(30px);
-            animation: fadeInRight 0.8s ease-out forwards;
-        }
-
-        @keyframes fadeInRight {
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        /* ===== EFECTOS DE PARTÍCULAS ADICIONALES ===== */
-        .particle-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        .floating-particle {
-            position: absolute;
-            width: 3px;
-            height: 3px;
-            background: var(--christmas-gold);
-            border-radius: 50%;
-            animation: floatParticle 8s linear infinite;
-            opacity: 0.7;
-        }
-
-        @keyframes floatParticle {
-            0% {
-                transform: translateY(100vh) translateX(0) rotate(0deg);
-                opacity: 0;
-            }
-            10% {
-                opacity: 0.7;
-            }
-            90% {
-                opacity: 0.7;
-            }
-            100% {
-                transform: translateY(-10vh) translateX(100px) rotate(360deg);
-                opacity: 0;
-            }
-        }
-
-        /* ===== MEJORAS DE ACCESIBILIDAD ===== */
-        @media (prefers-reduced-motion: reduce) {
-            *,
-            *::before,
-            *::after {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
-            }
-        }
-
-        /* ===== EFECTOS DE FOCUS MEJORADOS ===== */
-        .btn:focus,
-        input:focus,
-        button:focus {
-            outline: 3px solid rgba(245, 158, 11, 0.6);
-            outline-offset: 2px;
-        }
-
-        /* ===== SMOOTH SCROLLING ===== */
-        html {
-            scroll-behavior: smooth;
-        }
-
-        /* ===== SELECCIÓN DE TEXTO PERSONALIZADA ===== */
-        ::selection {
-            background: rgba(245, 158, 11, 0.3);
-            color: var(--deep-forest);
-        }
-
-@keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    10%, 30%, 50%, 70%, 90% { transform: translateX(-3px); }
-    20%, 40%, 60%, 80% { transform: translateX(3px); }
-}
-
-
-
-        /* Mejoras adicionales para legibilidad */
-        .bot-message .message-content p {
-            color: white !important;
-        }
-
-        .bot-message .message-content strong {
-            color: #ffd700 !important;
-        }
-
-        .bot-message .message-content em {
-            color: rgba(255, 255, 255, 0.9) !important;
-            font-style: italic;
-        }
-
-        .user-message .message-content p {
-            color: #2c3e50 !important;
-        }
-
-        .user-message .message-content strong {
-            color: #1a252f !important;
-        }
-
-        /* Botones de seguimiento mejorados */
-        .follow-up-buttons {
-            margin-top: 8px;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        .follow-up-button {
-            background: rgba(255, 215, 0, 0.9) !important;
-            color: #2c3e50 !important;
-            border: 1px solid #f39c12 !important;
-            padding: 5px 8px !important;
-            border-radius: 10px !important;
-            font-size: 0.7rem !important;
-            font-weight: 600 !important;
-            cursor: pointer !important;
-            transition: all 0.3s ease !important;
-            text-align: left !important;
-            box-shadow: 0 1px 4px rgba(255, 215, 0, 0.3) !important;
-            width: 100% !important;
-            display: block !important;
-            line-height: 1.2 !important;
-        }
-
-        .follow-up-button:hover {
-            transform: translateY(-1px) !important;
-            box-shadow: 0 4px 12px rgba(255, 215, 0, 0.5) !important;
-            background: #ffd700 !important;
-        }
-
-        /* ===== ELEMENTOS ESPECÍFICOS DE COOMOTOR SÚPER MEJORADOS ===== */
-        .coomotor-legacy-card {
-            background: 
-                linear-gradient(145deg, 
-                    rgba(255, 255, 255, 0.25) 0%, 
-                    rgba(245, 158, 11, 0.1) 25%,
-                    rgba(220, 38, 38, 0.1) 50%,
-                    rgba(5, 150, 105, 0.1) 75%,
-                    rgba(255, 255, 255, 0.15) 100%);
-            backdrop-filter: blur(30px) saturate(180%);
-            border-radius: 40px;
-            padding: 60px 50px;
-            border: 3px solid transparent;
-            background-clip: padding-box;
-            box-shadow: 
-                0 25px 60px rgba(0, 0, 0, 0.3),
-                inset 0 1px 0 rgba(255, 255, 255, 0.3),
-                0 0 0 1px rgba(245, 158, 11, 0.4);
-            margin-bottom: 80px;
-            position: relative;
-            overflow: hidden;
-            animation: legacyCardFloat 8s ease-in-out infinite;
-        }
-
-        @keyframes legacyCardFloat {
-            0%, 100% { transform: translateY(0px) scale(1); }
-            50% { transform: translateY(-10px) scale(1.02); }
-        }
-
-        .coomotor-legacy-card::before {
-            content: '🚌';
-            position: absolute;
-            top: -30px;
-            right: -30px;
-            font-size: 12rem;
-            opacity: 0.05;
-            z-index: 1;
-            animation: busRotate 20s linear infinite;
-        }
-
-        @keyframes busRotate {
-            0% { transform: rotate(0deg) scale(1); }
-            50% { transform: rotate(180deg) scale(1.1); }
-            100% { transform: rotate(360deg) scale(1); }
-        }
-
-        .coomotor-legacy-card::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: 
-                conic-gradient(from 0deg at 50% 50%, 
-                    transparent 0deg, 
-                    rgba(245, 158, 11, 0.1) 90deg, 
-                    transparent 180deg, 
-                    rgba(220, 38, 38, 0.1) 270deg, 
-                    transparent 360deg);
-            animation: magicRotate 25s linear infinite;
-            z-index: 1;
-        }
-
-        .legacy-content {
-            position: relative;
-            z-index: 10;
-        }
-
-        .legacy-content h3 {
-            font-family: 'Dancing Script', cursive;
-            font-size: 3rem;
-            background: linear-gradient(45deg, 
-                var(--christmas-gold), 
-                var(--festive-orange), 
-                var(--christmas-red));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            background-size: 200% 200%;
-            animation: rainbowText 8s ease-in-out infinite;
-            margin-bottom: 30px;
-            text-shadow: 0 0 30px rgba(245, 158, 11, 0.5);
-            position: relative;
-        }
-
-        .legacy-content h3::before {
-            content: '⭐';
-            position: absolute;
-            left: -50px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 2rem;
-            animation: magicSparkle 3s ease-in-out infinite;
-        }
-
-        .legacy-content p {
-            color: var(--warm-cream);
-            font-size: 1.2rem;
-            line-height: 1.9;
-            margin-bottom: 40px;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-        }
-
-        .legacy-stats {
-            display: flex;
-            gap: 40px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .stat-item {
-            text-align: center;
-            flex: 1;
-            min-width: 140px;
-            padding: 20px;
-            background: 
-                linear-gradient(135deg, 
-                    rgba(255, 255, 255, 0.1), 
-                    rgba(245, 158, 11, 0.05));
-            border-radius: 20px;
-            border: 2px solid rgba(245, 158, 11, 0.3);
-            backdrop-filter: blur(15px);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .stat-item:hover {
-            transform: translateY(-10px) scale(1.05);
-            box-shadow: 0 15px 40px rgba(245, 158, 11, 0.3);
-            border-color: var(--christmas-gold);
-        }
-
-        .stat-number {
-            display: block;
-            font-size: 3rem;
-            font-weight: 800;
-            background: linear-gradient(45deg, 
-                var(--christmas-gold), 
-                var(--festive-orange));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-shadow: 0 0 20px rgba(245, 158, 11, 0.5);
-            animation: pulse 3s ease-in-out infinite;
-        }
-
-        .stat-label {
-            font-size: 1rem;
-            color: var(--warm-cream);
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            font-weight: 700;
-            margin-top: 10px;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-        }
-
-        .legacy-visual {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 350px;
-            position: relative;
-            background: 
-                radial-gradient(ellipse at center, 
-                    rgba(245, 158, 11, 0.1) 0%, 
-                    transparent 70%);
-            border-radius: 30px;
-            backdrop-filter: blur(10px);
-        }
-
-        .bus-animation {
-            position: relative;
-            width: 100%;
-            height: 250px;
-        }
-
-        .bus-emoji {
-            font-size: 5rem;
-            position: absolute;
-            left: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            animation: busMove 6s ease-in-out infinite;
-            filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.3));
-        }
-
-        @keyframes busMove {
-            0%, 100% { 
-                left: 0; 
-                transform: translateY(-50%) scale(1); 
-            }
-            25% { 
-                left: 25%; 
-                transform: translateY(-60%) scale(1.1); 
-            }
-            50% { 
-                left: calc(100% - 100px); 
-                transform: translateY(-50%) scale(1); 
-            }
-            75% { 
-                left: 75%; 
-                transform: translateY(-40%) scale(1.1); 
-            }
-        }
-
-        .route-line {
-            position: absolute;
-            top: 50%;
-            left: 50px;
-            right: 50px;
-            height: 6px;
-            background: 
-                linear-gradient(90deg, 
-                    var(--christmas-gold), 
-                    var(--festive-orange), 
-                    var(--christmas-red), 
-                    var(--christmas-green), 
-                    var(--christmas-gold));
-            background-size: 200% 100%;
-            border-radius: 3px;
-            transform: translateY(-50%);
-            animation: routeFlow 4s linear infinite;
-            box-shadow: 
-                0 0 20px rgba(245, 158, 11, 0.5),
-                inset 0 1px 0 rgba(255, 255, 255, 0.3);
-        }
-
-        @keyframes routeFlow {
-            0% { background-position: 0% 50%; }
-            100% { background-position: 200% 50%; }
-        }
-
-        .destination-points {
-            position: absolute;
-            top: 50%;
-            left: 0;
-            right: 0;
-            transform: translateY(-50%);
-            display: flex;
-            justify-content: space-between;
-            padding: 0 30px;
-        }
-
-        .point {
-            font-size: 2.5rem;
-            animation: twinkle 3s ease-in-out infinite;
-            filter: drop-shadow(0 0 15px currentColor);
-            background: 
-                radial-gradient(circle, 
-                    rgba(255, 255, 255, 0.2), 
-                    transparent);
-            border-radius: 50%;
-            padding: 10px;
-        }
-
-        .point:nth-child(1) { animation-delay: 0s; color: var(--christmas-red); }
-        .point:nth-child(2) { animation-delay: 1s; color: var(--christmas-gold); }
-        .point:nth-child(3) { animation-delay: 2s; color: var(--christmas-green); }
-
-        /* Tipos de Conductores Súper Mejorados */
-        .conductor-type-card {
-            background: 
-                linear-gradient(145deg, 
-                    rgba(255, 255, 255, 0.2) 0%, 
-                    rgba(245, 158, 11, 0.1) 50%, 
-                    rgba(255, 255, 255, 0.05) 100%);
-            backdrop-filter: blur(25px) saturate(180%);
-            border-radius: 25px;
-            padding: 40px 25px;
-            text-align: center;
-            border: 2px solid rgba(245, 158, 11, 0.3);
-            box-shadow: 
-                0 15px 40px rgba(0, 0, 0, 0.2),
-                inset 0 1px 0 rgba(255, 255, 255, 0.3);
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            height: 100%;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .conductor-type-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: 
-                linear-gradient(135deg, 
-                    rgba(245, 158, 11, 0.1) 0%, 
-                    rgba(220, 38, 38, 0.1) 50%, 
-                    rgba(5, 150, 105, 0.1) 100%);
-            opacity: 0;
-            transition: opacity 0.5s ease;
-            z-index: -1;
-        }
-
-        .conductor-type-card:hover {
-            transform: translateY(-15px) scale(1.05) rotateY(5deg);
-            box-shadow: 
-                0 25px 60px rgba(0, 0, 0, 0.3),
-                0 0 40px rgba(245, 158, 11, 0.4);
-            border-color: var(--christmas-gold);
-        }
-
-        .conductor-type-card:hover::before {
-            opacity: 1;
-        }
-
-        .conductor-icon {
-            font-size: 4rem;
-            margin-bottom: 25px;
-            animation: float 4s ease-in-out infinite;
-            filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.3));
-            position: relative;
-        }
-
-        .conductor-type-card:hover .conductor-icon {
-            animation: float 2s ease-in-out infinite, iconGlow 3s ease-in-out infinite;
-        }
-
-        .conductor-type-card h5 {
-            background: linear-gradient(45deg, 
-                var(--christmas-gold), 
-                var(--festive-orange));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            font-weight: 700;
-            margin-bottom: 20px;
-            font-size: 1.4rem;
-            text-shadow: 0 0 20px rgba(245, 158, 11, 0.3);
-        }
-
-        .conductor-type-card p {
-            color: var(--warm-cream);
-            font-size: 1rem;
-            line-height: 1.6;
-            margin-bottom: 25px;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-        }
-
-        .conductor-subtypes {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .subtype-badge {
-            background: 
-                linear-gradient(45deg, 
-                    var(--christmas-red), 
-                    var(--festive-orange));
-            color: white;
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            box-shadow: 
-                0 4px 12px rgba(220, 38, 38, 0.3),
-                inset 0 1px 0 rgba(255, 255, 255, 0.2);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .subtype-badge:hover {
-            transform: translateY(-2px) scale(1.05);
-            box-shadow: 
-                0 6px 18px rgba(220, 38, 38, 0.4),
-                0 0 20px rgba(245, 158, 11, 0.3);
-        }
-
-        /* Valores COOMOTOR en Footer Mejorados */
-        .coomotor-values {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 40px;
-            margin: 40px 0;
-            padding: 30px 0;
-            border-top: 3px solid transparent;
-            border-bottom: 3px solid transparent;
-            border-image: linear-gradient(90deg, 
-                transparent, 
-                var(--christmas-gold), 
-                var(--festive-orange), 
-                var(--christmas-red), 
-                var(--christmas-green), 
-                var(--christmas-gold), 
-                transparent) 1;
-            position: relative;
-        }
-
-        .coomotor-values::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: 
-                linear-gradient(90deg, 
-                    transparent, 
-                    rgba(245, 158, 11, 0.1), 
-                    rgba(220, 38, 38, 0.1), 
-                    rgba(5, 150, 105, 0.1), 
-                    transparent);
-            animation: valuesGlow 6s ease-in-out infinite;
-        }
-
-        @keyframes valuesGlow {
-            0%, 100% { opacity: 0.3; }
-            50% { opacity: 0.7; }
-        }
-
-        .value-item {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            color: var(--warm-cream);
-            font-weight: 700;
-            font-size: 1rem;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            padding: 15px 20px;
-            background: 
-                linear-gradient(135deg, 
-                    rgba(255, 255, 255, 0.1), 
-                    rgba(245, 158, 11, 0.05));
-            border-radius: 25px;
-            backdrop-filter: blur(15px);
-            border: 2px solid rgba(245, 158, 11, 0.2);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-        }
-
-        .value-item:hover {
-            transform: translateY(-5px) scale(1.05);
-            box-shadow: 0 10px 30px rgba(245, 158, 11, 0.3);
-            border-color: var(--christmas-gold);
-        }
-
-        .value-item i {
-            background: linear-gradient(45deg, 
-                var(--christmas-gold), 
-                var(--festive-orange));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            font-size: 1.5rem;
-            animation: iconGlow 4s ease-in-out infinite;
-        }
-
-        /* Identidad COOMOTOR Mejorada */
-        .coomotor-identity-section {
-            background: 
-                linear-gradient(145deg, 
-                    rgba(255, 255, 255, 0.15) 0%, 
-                    rgba(245, 158, 11, 0.1) 25%,
-                    rgba(220, 38, 38, 0.1) 50%,
-                    rgba(5, 150, 105, 0.1) 75%,
-                    rgba(255, 255, 255, 0.05) 100%);
-            backdrop-filter: blur(30px) saturate(180%);
-            border-radius: 40px;
-            padding: 80px 50px;
-            border: 3px solid transparent;
-            background-clip: padding-box;
-            box-shadow: 
-                0 25px 60px rgba(0, 0, 0, 0.3),
-                inset 0 1px 0 rgba(255, 255, 255, 0.3),
-                0 0 0 1px rgba(245, 158, 11, 0.4);
-            position: relative;
-            overflow: hidden;
-            animation: identityFloat 10s ease-in-out infinite;
-        }
-
-        @keyframes identityFloat {
-            0%, 100% { transform: translateY(0px) scale(1); }
-            50% { transform: translateY(-8px) scale(1.01); }
-        }
-
-        .coomotor-identity-section::before {
-            content: '🚌';
-            position: absolute;
-            top: -40px;
-            right: -40px;
-            font-size: 15rem;
-            opacity: 0.03;
-            z-index: 1;
-            animation: busRotate 30s linear infinite;
-        }
-
-        .identity-content {
-            position: relative;
-            z-index: 10;
-        }
-
-        .coomotor-promise {
-            margin-top: 35px;
-        }
-
-        .promise-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 18px;
-            color: var(--warm-cream);
-            font-weight: 500;
-            font-size: 1.1rem;
-            padding: 12px 0;
-            border-bottom: 1px solid rgba(245, 158, 11, 0.2);
-            transition: all 0.3s ease;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-        }
-
-        .promise-item:hover {
-            color: var(--christmas-gold);
-            transform: translateX(10px);
-            border-bottom-color: var(--christmas-gold);
-        }
-
-        .promise-item i {
-            margin-right: 15px;
-            font-size: 1.3rem;
-            color: var(--christmas-gold);
-            animation: iconGlow 3s ease-in-out infinite;
-        }
-
-        .coomotor-fleet-showcase {
-            background: 
-                linear-gradient(145deg, 
-                    rgba(0, 0, 0, 0.25) 0%, 
-                    rgba(245, 158, 11, 0.1) 50%, 
-                    rgba(0, 0, 0, 0.15) 100%);
-            backdrop-filter: blur(20px) saturate(180%);
-            border-radius: 30px;
-            padding: 50px 40px;
-            border: 2px solid rgba(245, 158, 11, 0.3);
-            box-shadow: 
-                0 20px 50px rgba(0, 0, 0, 0.3),
-                inset 0 1px 0 rgba(255, 255, 255, 0.2);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .coomotor-fleet-showcase::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: 
-                radial-gradient(circle at 30% 30%, rgba(245, 158, 11, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 70% 70%, rgba(220, 38, 38, 0.1) 0%, transparent 50%);
-            animation: fleetBackgroundMove 20s ease-in-out infinite;
-            z-index: 1;
-        }
-
-        @keyframes fleetBackgroundMove {
-            0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.5; }
-            50% { transform: scale(1.1) rotate(180deg); opacity: 0.8; }
-        }
-
-        .fleet-vehicles {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 25px;
-            position: relative;
-            z-index: 10;
-        }
-
-        .vehicle-item {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            background: 
-                linear-gradient(45deg, 
-                    rgba(255, 255, 255, 0.15), 
-                    rgba(245, 158, 11, 0.05));
-            backdrop-filter: blur(15px);
-            padding: 25px;
-            border-radius: 20px;
-            border: 2px solid rgba(245, 158, 11, 0.3);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 
-                0 8px 25px rgba(0, 0, 0, 0.2),
-                inset 0 1px 0 rgba(255, 255, 255, 0.2);
-        }
-
-        .vehicle-item:hover {
-            transform: translateY(-8px) scale(1.03);
-            box-shadow: 
-                0 15px 40px rgba(0, 0, 0, 0.3),
-                0 0 30px rgba(245, 158, 11, 0.4);
-            border-color: var(--christmas-gold);
-        }
-
-        .vehicle-item.special {
-            grid-column: 1 / -1;
-            background: 
-                linear-gradient(45deg, 
-                    var(--christmas-red), 
-                    var(--festive-orange), 
-                    var(--christmas-green));
-            background-size: 200% 200%;
-            animation: gradientShift 6s ease-in-out infinite, glow 4s ease-in-out infinite;
-            border: 3px solid var(--christmas-gold);
-        }
-
-        .vehicle-emoji {
-            font-size: 3rem;
-            animation: float 3s ease-in-out infinite;
-            filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.3));
-        }
-
-        .vehicle-name {
-            color: var(--warm-cream);
-            font-weight: 600;
-            font-size: 1.1rem;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-        }
-
-        .vehicle-item.special .vehicle-name {
-            color: white;
-            font-weight: 700;
-            font-size: 1.3rem;
-            text-shadow: 
-                0 2px 4px rgba(0, 0, 0, 0.5),
-                0 0 20px rgba(255, 255, 255, 0.3);
-        }
-
-        /* ===== EFECTOS ESPECIALES ADICIONALES ===== */
-        .magical-sparkle {
-            position: absolute;
-            width: 6px;
-            height: 6px;
-            background: 
-                radial-gradient(circle, 
-                    var(--christmas-gold), 
-                    transparent);
-            border-radius: 50%;
-            animation: magicSparkle 4s ease-in-out infinite;
-            z-index: 1000;
-            pointer-events: none;
-        }
-
-        .btn-magical {
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn-magical::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: 
-                linear-gradient(90deg, 
-                    transparent, 
-                    rgba(255, 255, 255, 0.3), 
-                    transparent);
-            transition: left 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .btn-magical:hover::before {
-            left: 100%;
-        }
-
-        .btn-magical::after {
-            content: '✨';
-            position: absolute;
-            top: 50%;
-            right: 10px;
-            transform: translateY(-50%);
-            opacity: 0;
-            transition: all 0.3s ease;
-            animation: magicSparkle 2s ease-in-out infinite;
-        }
-
-        .btn-magical:hover::after {
-            opacity: 1;
-            right: 15px;
-        }
-
-        /* ===== LOADING ANIMATION MEJORADA ===== */
-        .page-loader {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: 
-                linear-gradient(135deg, 
-                    var(--deep-forest), 
-                    var(--christmas-green), 
-                    var(--christmas-red), 
-                    var(--magic-purple));
-            background-size: 400% 400%;
-            animation: gradientShift 4s ease-in-out infinite;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            transition: opacity 0.8s ease, visibility 0.8s ease;
-        }
-
-        .loader-content {
-            text-align: center;
-            color: white;
-            position: relative;
-        }
-
-        .loader-santa {
-            font-size: 6rem;
-            animation: bounce 1.5s infinite, santaGlow 3s ease-in-out infinite;
-            filter: drop-shadow(0 0 30px rgba(245, 158, 11, 0.8));
-        }
-
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% { transform: translateY(0) scale(1); }
-            40% { transform: translateY(-40px) scale(1.1); }
-            60% { transform: translateY(-20px) scale(1.05); }
-        }
-
-        .loader-text {
-            font-family: 'Dancing Script', cursive;
-            font-size: 2.5rem;
-            margin-top: 30px;
-            background: linear-gradient(45deg, 
-                var(--christmas-gold), 
-                var(--festive-orange), 
-                var(--christmas-red));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            background-size: 200% 200%;
-            animation: rainbowText 4s ease-in-out infinite;
-            text-shadow: 0 0 30px rgba(245, 158, 11, 0.5);
-        }
-
-        .loader-progress {
-            width: 300px;
-            height: 6px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 3px;
-            margin: 30px auto 0;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .loader-progress::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: 
-                linear-gradient(90deg, 
-                    var(--christmas-gold), 
-                    var(--festive-orange), 
-                    var(--christmas-red));
-            animation: loadingProgress 3s ease-in-out infinite;
-        }
-
-        @keyframes loadingProgress {
-            0% { left: -100%; }
-            50% { left: 0%; }
-            100% { left: 100%; }
         }
     </style>
 </head>
 <body>
-    <!-- Page Loader -->
-    <div class="page-loader" id="pageLoader">
-        <div class="loader-content">
-            <div class="loader-santa">🎅</div>
-            <div class="loader-text">Cargando la magia navideña...</div>
-        </div>
-    </div>
-
-    <!-- Navbar Mágica -->
-    <nav class="navbar navbar-expand-lg" id="mainNavbar">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg sticky-top">
         <div class="container">
-            <a class="navbar-brand" href="#inicio">
+            <a class="navbar-brand" href="#">
                 <i class="bi bi-gift-fill me-2"></i>
-                COOMOTOR Regalos Navideños
+                COOMOTOR Regalos
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
+                <ul class="navbar-nav ms-auto align-items-center">
                     <li class="nav-item">
-                        <a class="nav-link text-light" href="#inicio">🏠 Inicio</a>
+                        <a class="nav-link" href="#inicio">Inicio</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-light" href="#como-funciona">🎯 ¿Cómo Funciona?</a>
+                        <a class="nav-link" href="#como-funciona">Cómo Funciona</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-light" href="#fechas">📅 Fechas Importantes</a>
+                        <a class="nav-link" href="contacto.html">Contacto</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-light" href="contacto.html">📞 Contacto</a>
+                    <li class="nav-item ms-2">
+                        <a class="btn btn-outline-primary btn-sm" href="auth/login.html">
+                            <i class="bi bi-box-arrow-in-right me-1"></i>
+                            Ingresar
+                        </a>
+                    </li>
+                    <li class="nav-item ms-2">
+                        <a class="btn btn-primary btn-sm" href="auth/registro.html">
+                            <i class="bi bi-person-plus me-1"></i>
+                            Registrarse
+                        </a>
                     </li>
                 </ul>
-                <div class="nav-buttons ms-auto">
-                    <a href="auth/login.html" class="btn btn-christmas-login btn-magical">
-                        <i class="bi bi-box-arrow-in-right me-1"></i>
-                        Iniciar Sesión
-                    </a>
-                    <a href="auth/registro.html" class="btn btn-christmas-register btn-magical">
-                        <i class="bi bi-person-plus me-1"></i>
-                        Registrarse
-                    </a>
-                </div>
             </div>
         </div>
     </nav>
 
-    <!-- Hero Section Épica -->
-    <section id="inicio" class="hero-section">
+    <!-- Hero -->
+    <section class="hero" id="inicio">
         <div class="container">
             <div class="row align-items-center">
-                <div class="col-lg-6">
-                    <div class="hero-content">
-                        <div class="company-badge">
-                            <i class="bi bi-bus-front-fill me-2"></i>
-                            60+ Años Conectando Colombia
-                        </div>
-                        <h1 class="hero-title">
-                            🎄 Navidad Mágica<br>
-                            <span style="color: var(--christmas-gold);">COOMOTOR 2024</span> 🎅
-                        </h1>
-                        <p class="hero-subtitle">
-                            🚌 Desde 1960, hemos sido más que una empresa de transporte: somos una familia que conecta sueños, 
-                            une corazones y ahora lleva la magia navideña a cada hogar de nuestros colaboradores. 
-                            <strong>¡Porque cada kilómetro recorrido construye historias de amor! 🚌💙</strong>
-                        </p>
-                        <div class="hero-buttons">
-                            <a href="auth/registro.html" class="btn btn-hero-primary btn-magical">
-                                <i class="bi bi-gift-fill me-2"></i>
-                                ¡Registrar a mi Hijo!
-                            </a>
-                            <a href="#como-funciona" class="btn btn-hero-secondary btn-magical">
-                                <i class="bi bi-info-circle me-2"></i>
-                                Descubrir la Magia
-                            </a>
-                        </div>
+                <div class="col-lg-6 mb-4 mb-lg-0">
+                    <span class="badge bg-success mb-3">
+                        <i class="bi bi-calendar-event me-1"></i>
+                        Temporada Navideña 2024
+                    </span>
+                    <h1>Regalos Navideños para Nuestros Colaboradores</h1>
+                    <p>En COOMOTOR, tu familia es nuestra familia. Registra a tus hijos menores de 12 años y postúlalos para recibir un regalo especial esta Navidad.</p>
+                    <div class="d-flex gap-2 flex-wrap">
+                        <a href="auth/registro.html" class="btn btn-primary btn-lg">
+                            <i class="bi bi-gift me-2"></i>
+                            Comenzar Ahora
+                        </a>
+                        <a href="#como-funciona" class="btn btn-outline-primary btn-lg">
+                            <i class="bi bi-info-circle me-2"></i>
+                            Más Información
+                        </a>
                     </div>
                 </div>
-                <div class="col-lg-6">
-                    <div class="christmas-scene">
-                        <div class="santa-container">
-                            <div class="santa-emoji">🎅</div>
-                            <div class="christmas-lights">
-                                <div class="light"></div>
-                                <div class="light"></div>
-                                <div class="light"></div>
-                                <div class="light"></div>
-                                <div class="light"></div>
-                            </div>
-                        </div>
-                        
-                        <!-- Countdown Mágico -->
-                        <div class="countdown-section">
-                            <h3 class="countdown-title">🎅 Faltan para Navidad</h3>
-                            <div class="countdown-timer" id="countdown">
-                                <div class="countdown-item">
-                                    <span class="countdown-number" id="days">00</span>
-                                    <span class="countdown-label">Días</span>
-                                </div>
-                                <div class="countdown-item">
-                                    <span class="countdown-number" id="hours">00</span>
-                                    <span class="countdown-label">Horas</span>
-                                </div>
-                                <div class="countdown-item">
-                                    <span class="countdown-number" id="minutes">00</span>
-                                    <span class="countdown-label">Minutos</span>
-                                </div>
-                                <div class="countdown-item">
-                                    <span class="countdown-number" id="seconds">00</span>
-                                    <span class="countdown-label">Segundos</span>
-                                </div>
-                            </div>
-                        </div>
+                <div class="col-lg-6 text-center">
+                    <div class="hero-icon">🎅</div>
+                    <div class="d-flex justify-content-center gap-3 mt-3">
+                        <span style="font-size: 2rem;">🎄</span>
+                        <span style="font-size: 2rem;">🎁</span>
+                        <span style="font-size: 2rem;">⭐</span>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Features Section -->
-    <section id="como-funciona" class="features-section">
-        <div class="container">
-            <div class="section-title">
-                <h2>🚌 El Legado COOMOTOR en Navidad</h2>
-                <p>Más de 6 décadas conectando familias colombianas, ahora llevamos esa misma pasión a la Navidad</p>
+    <!-- Countdown -->
+    <section class="container my-5">
+        <div class="countdown">
+            <h2 class="text-center mb-4">
+                <i class="bi bi-clock me-2"></i>
+                Tiempo Restante para Postular
+            </h2>
+            <div class="countdown-timer" id="countdown">
+                <div class="countdown-item">
+                    <span class="countdown-number" id="days">00</span>
+                    <span class="countdown-label">Días</span>
+                </div>
+                <div class="countdown-item">
+                    <span class="countdown-number" id="hours">00</span>
+                    <span class="countdown-label">Horas</span>
+                </div>
+                <div class="countdown-item">
+                    <span class="countdown-number" id="minutes">00</span>
+                    <span class="countdown-label">Minutos</span>
+                </div>
+                <div class="countdown-item">
+                    <span class="countdown-number" id="seconds">00</span>
+                    <span class="countdown-label">Segundos</span>
+                </div>
             </div>
-            
-            <!-- Sección de Historia y Valores COOMOTOR -->
-            <div class="row mb-5">
-                <div class="col-lg-12">
-                    <div class="coomotor-legacy-card">
-                        <div class="row align-items-center">
-                            <div class="col-md-6">
-                                <div class="legacy-content">
-                                    <h3>🚌 Nuestra Historia de Conexión</h3>
-                                    <p><strong>Desde 1960</strong>, COOMOTOR ha sido el puente que une familias, sueños y destinos a lo largo y ancho de Colombia. Hemos transportado más que pasajeros: hemos llevado esperanzas, reunido familias y construido el país kilómetro a kilómetro.</p>
-                                    <div class="legacy-stats">
-                                        <div class="stat-item">
-                                            <span class="stat-number">60+</span>
-                                            <span class="stat-label">Años de Historia</span>
-                                        </div>
-                                        <div class="stat-item">
-                                            <span class="stat-number">1000+</span>
-                                            <span class="stat-label">Colaboradores</span>
-                                        </div>
-                                        <div class="stat-item">
-                                            <span class="stat-number">∞</span>
-                                            <span class="stat-label">Familias Conectadas</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="legacy-visual">
-                                    <div class="bus-animation">
-                                        <div class="bus-emoji">🚌</div>
-                                        <div class="route-line"></div>
-                                        <div class="destination-points">
-                                            <div class="point">🏠</div>
-                                            <div class="point">🎄</div>
-                                            <div class="point">❤️</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+        </div>
+    </section>
+
+    <!-- Cómo Funciona -->
+    <section class="py-5" id="como-funciona">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold mb-3">¿Cómo Funciona?</h2>
+                <p class="text-muted">Proceso simple en 3 pasos</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card text-center p-4">
+                        <div class="card-icon">📝</div>
+                        <h5 class="card-title">1. Regístrate</h5>
+                        <p class="card-text">Crea tu cuenta con tus datos de empleado de COOMOTOR</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card text-center p-4">
+                        <div class="card-icon">👶</div>
+                        <h5 class="card-title">2. Registra a tus Hijos</h5>
+                        <p class="card-text">Agrega la información de tus hijos menores de 12 años</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card text-center p-4">
+                        <div class="card-icon">🎁</div>
+                        <h5 class="card-title">3. Postula</h5>
+                        <p class="card-text">Postula a tus hijos para que reciban su regalo navideño</p>
                     </div>
                 </div>
             </div>
+        </div>
+    </section>
 
-            <div class="section-title">
-                <h2>🎯 ¿Cómo Funciona la Magia COOMOTOR?</h2>
-                <p>Con la misma dedicación que ponemos en cada viaje, cuidamos cada detalle de esta experiencia navideña</p>
+    <!-- Stats -->
+    <section class="stats">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold mb-3">COOMOTOR en Números</h2>
+                <p class="text-muted">Más de 60 años conectando Colombia</p>
             </div>
             <div class="row">
-                <div class="col-md-4 mb-4">
-                    <div class="feature-card">
-                        <div class="feature-icon">🚌</div>
-                        <h4>1. Súbete a Bordo</h4>
-                        <p><strong>Como conductor o empleado COOMOTOR</strong>, ya eres parte de nuestra gran familia. Regístrate con tus datos y únete a esta travesía navideña especial que hemos preparado con amor.</p>
+                <div class="col-6 col-md-3">
+                    <div class="stat-card">
+                        <span class="stat-number">60+</span>
+                        <span class="stat-label">Años</span>
                     </div>
                 </div>
-                <div class="col-md-4 mb-4">
-                    <div class="feature-card">
-                        <div class="feature-icon">👨‍👩‍👧‍👦</div>
-                        <h4>2. Presenta a tu Familia</h4>
-                        <p><strong>Tus hijos son nuestra prioridad</strong>. Registra a tus pequeños (menores de 12 años) con el mismo cuidado que ponemos en cada pasajero que sube a nuestros buses.</p>
+                <div class="col-6 col-md-3">
+                    <div class="stat-card">
+                        <span class="stat-number">500+</span>
+                        <span class="stat-label">Empleados</span>
                     </div>
                 </div>
-                <div class="col-md-4 mb-4">
-                    <div class="feature-card">
-                        <div class="feature-icon">🎁</div>
-                        <h4>3. Destino: Felicidad</h4>
-                        <p><strong>El regalo perfecto los espera</strong>. Como en cada viaje COOMOTOR, garantizamos que lleguen seguros a su destino: una Navidad llena de alegría y sorpresas.</p>
+                <div class="col-6 col-md-3">
+                    <div class="stat-card">
+                        <span class="stat-number">200+</span>
+                        <span class="stat-label">Vehículos</span>
                     </div>
                 </div>
-            </div>
-
-            <!-- Sección de Tipos de Conductores COOMOTOR -->
-            <div class="row mt-5">
-                <div class="col-lg-12">
-                    <div class="section-title">
-                        <h3>🚛 Nuestra Flota, Nuestra Familia</h3>
-                        <p>Cada tipo de conductor tiene un rol especial en la gran familia COOMOTOR</p>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-3 mb-3">
-                            <div class="conductor-type-card">
-                                <div class="conductor-icon">🛣️</div>
-                                <h5>Conductores de Carretera</h5>
-                                <p>Los héroes de las largas distancias, conectando ciudades y corazones</p>
-                                <div class="conductor-subtypes">
-                                    <span class="subtype-badge">Nómina</span>
-                                    <span class="subtype-badge">Servicio Básico</span>
-                                    <span class="subtype-badge">Seguridad Social</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3 mb-3">
-                            <div class="conductor-type-card">
-                                <div class="conductor-icon">🏙️</div>
-                                <h5>Conductores Urbanos</h5>
-                                <p>El corazón de la ciudad, llevando esperanza en cada parada</p>
-                            </div>
-                        </div>
-                        <div class="col-md-3 mb-3">
-                            <div class="conductor-type-card">
-                                <div class="conductor-icon">🚐</div>
-                                <h5>Conductores de Furgones</h5>
-                                <p>Versatilidad y cercanía, llegando donde otros no pueden</p>
-                                <div class="conductor-subtypes">
-                                    <span class="subtype-badge">Nómina</span>
-                                    <span class="subtype-badge">Seguridad Social</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3 mb-3">
-                            <div class="conductor-type-card">
-                                <div class="conductor-icon">🚌</div>
-                                <h5>Distancia Corta</h5>
-                                <p>Conexiones rápidas y eficientes para el día a día</p>
-                            </div>
-                        </div>
+                <div class="col-6 col-md-3">
+                    <div class="stat-card">
+                        <span class="stat-number">15+</span>
+                        <span class="stat-label">Rutas</span>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Timeline de Fechas Importantes -->
-    <section id="fechas" class="timeline-section">
+    <!-- Tipos de Conductores -->
+    <section class="py-5">
         <div class="container">
-            <!-- Sección de Identidad COOMOTOR -->
-            <div class="coomotor-identity-section mb-5">
-                <div class="row align-items-center">
-                    <div class="col-lg-6">
-                        <div class="identity-content">
-                            <h2 style="font-family: 'Dancing Script', cursive; font-size: 3rem; color: var(--christmas-gold); margin-bottom: 30px;">
-                                🚌 El Espíritu COOMOTOR
-                            </h2>
-                            <div class="coomotor-mission">
-                                <h4 style="color: var(--christmas-gold); margin-bottom: 15px;">
-                                    <i class="bi bi-heart-fill me-2"></i>Nuestra Misión Navideña
-                                </h4>
-                                <p style="color: var(--warm-cream); font-size: 1.1rem; line-height: 1.7;">
-                                    Así como llevamos a las familias colombianas a sus destinos con seguridad y amor, 
-                                    ahora llevamos la magia navideña directamente a los corazones de nuestros colaboradores. 
-                                    <strong>Porque en COOMOTOR, cada viaje es una historia y cada historia merece un final feliz.</strong>
-                                </p>
-                            </div>
-                            <div class="coomotor-promise mt-4">
-                                <div class="promise-item">
-                                    <i class="bi bi-check-circle-fill text-success me-2"></i>
-                                    <span>Compromiso con nuestras familias trabajadoras</span>
-                                </div>
-                                <div class="promise-item">
-                                    <i class="bi bi-check-circle-fill text-success me-2"></i>
-                                    <span>Tradición de excelencia desde 1960</span>
-                                </div>
-                                <div class="promise-item">
-                                    <i class="bi bi-check-circle-fill text-success me-2"></i>
-                                    <span>Innovación con corazón colombiano</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="coomotor-fleet-showcase">
-                            <div class="fleet-title">
-                                <h4 style="color: var(--christmas-gold); text-align: center; margin-bottom: 30px;">
-                                    🚛 Nuestra Flota Navideña
-                                </h4>
-                            </div>
-                            <div class="fleet-vehicles">
-                                <div class="vehicle-item">
-                                    <span class="vehicle-emoji">🚌</span>
-                                    <span class="vehicle-name">Buses Intermunicipales</span>
-                                </div>
-                                <div class="vehicle-item">
-                                    <span class="vehicle-emoji">🚐</span>
-                                    <span class="vehicle-name">Furgones Ejecutivos</span>
-                                </div>
-                                <div class="vehicle-item">
-                                    <span class="vehicle-emoji">🚍</span>
-                                    <span class="vehicle-name">Transporte Urbano</span>
-                                </div>
-                                <div class="vehicle-item special">
-                                    <span class="vehicle-emoji">🎅</span>
-                                    <span class="vehicle-name">Trineo Navideño Especial</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div class="text-center mb-5">
+                <h2 class="fw-bold mb-3">Nuestros Conductores</h2>
+                <p class="text-muted">Todos son parte de nuestra familia</p>
             </div>
-
-            <div class="section-title">
-                <h2>📅 Cronograma Navideño COOMOTOR</h2>
-                <p>Como en cada ruta que planificamos, tenemos un itinerario perfecto para esta experiencia navideña</p>
-            </div>
-            <div class="timeline">
-                <div class="timeline-item">
-                    <div class="timeline-date">10 DIC</div>
-                    <div class="timeline-content">
-                        <h4>🚪 Abordaje Familiar</h4>
-                        <p>Como en nuestros buses, hay un horario de abordaje. Último día para que tu familia suba a bordo de esta experiencia navideña única. <strong>¡Todos a bordo del expreso navideño COOMOTOR!</strong></p>
+            <div class="row g-4">
+                <div class="col-6 col-md-3">
+                    <div class="card text-center p-3">
+                        <div style="font-size: 3rem;">🚌</div>
+                        <h6 class="mt-2 mb-1">Carretera</h6>
+                        <small class="text-muted">Nómina y Contratistas</small>
                     </div>
                 </div>
-                <div class="timeline-item">
-                    <div class="timeline-date">15 DIC</div>
-                    <div class="timeline-content">
-                        <h4>🎯 Destino Confirmado</h4>
-                        <p>Fecha límite para confirmar el destino de tus pequeños pasajeros. Después de esta fecha, nuestros conductores navideños comenzarán el viaje hacia la felicidad.</p>
+                <div class="col-6 col-md-3">
+                    <div class="card text-center p-3">
+                        <div style="font-size: 3rem;">🚐</div>
+                        <h6 class="mt-2 mb-1">Distancia Corta</h6>
+                        <small class="text-muted">Rutas regionales</small>
                     </div>
                 </div>
-                <div class="timeline-item">
-                    <div class="timeline-date">16-20 DIC</div>
-                    <div class="timeline-content">
-                        <h4>🚌 En Ruta hacia la Magia</h4>
-                        <p>Nuestro equipo de "conductores navideños" (administradores) revisa cada ruta con el mismo cuidado que ponemos en cada viaje COOMOTOR. Seguridad y amor en cada detalle.</p>
+                <div class="col-6 col-md-3">
+                    <div class="card text-center p-3">
+                        <div style="font-size: 3rem;">🚍</div>
+                        <h6 class="mt-2 mb-1">Urbanos</h6>
+                        <small class="text-muted">Transporte urbano</small>
                     </div>
                 </div>
-                <div class="timeline-item">
-                    <div class="timeline-date">21-24 DIC</div>
-                    <div class="timeline-content">
-                        <h4>🎅 ¡Llegada a Destino!</h4>
-                        <p>Como siempre en COOMOTOR, <strong>llegamos a tiempo y con seguridad</strong>. Los regalos llegan a su destino final: las sonrisas de nuestros pequeños pasajeros más especiales.</p>
+                <div class="col-6 col-md-3">
+                    <div class="card text-center p-3">
+                        <div style="font-size: 3rem;">🚚</div>
+                        <h6 class="mt-2 mb-1">Furgones</h6>
+                        <small class="text-muted">Nómina y Contratistas</small>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Footer Mágico -->
-    <footer class="footer">
+    <!-- Footer -->
+    <footer>
         <div class="container">
-            <div class="footer-content">
-                <h5>
-                    <i class="bi bi-bus-front-fill me-2"></i>
-                    COOMOTOR - Regalos Navideños 2024
-                </h5>
-                <p><strong>🚌 Desde 1960 conectando Colombia, desde 2024 conectando corazones navideños 🎄</strong></p>
-                <p>Somos más que transporte: somos familia, tradición y ahora... ¡magia navideña!</p>
-                
-                <!-- Valores COOMOTOR -->
-                <div class="coomotor-values">
-                    <div class="value-item">
-                        <i class="bi bi-heart-fill"></i>
-                        <span>Compromiso Familiar</span>
-                    </div>
-                    <div class="value-item">
-                        <i class="bi bi-shield-check"></i>
-                        <span>Seguridad Garantizada</span>
-                    </div>
-                    <div class="value-item">
-                        <i class="bi bi-people-fill"></i>
-                        <span>Unión Colombiana</span>
-                    </div>
-                    <div class="value-item">
-                        <i class="bi bi-star-fill"></i>
-                        <span>Excelencia en Servicio</span>
-                    </div>
-                </div>
-                
-                <p style="margin-top: 30px;">
-                    <small>
-                        Hecho con <span class="footer-heart">❤️</span> por la gran familia COOMOTOR<br>
-                        <strong>🚌 "Llevamos más que pasajeros, llevamos sueños" 🌟</strong>
-                    </small>
-                </p>
-                <p style="margin-top: 20px; color: var(--christmas-gold);">
-                    <strong>🎄 ¡Que esta Navidad nos una más como la gran familia COOMOTOR que somos! 🎅</strong>
-                </p>
-            </div>
+            <h5>🎄 COOMOTOR - Regalos Navideños 2024</h5>
+            <p class="mb-1">Cooperativa de Motoristas del Huila</p>
+            <p class="mb-3">Neiva, Huila - Colombia 🇨🇴</p>
+            <small>© 2024 COOMOTOR. Todos los derechos reservados.</small>
         </div>
     </footer>
 
-    <!-- Bot de Ayuda Navideño -->
-    <div class="chatbot-container" id="chatbotContainer">
-        <div class="chatbot-button" id="chatbotButton">
-            <div class="bot-avatar">🎅</div>
-            <div class="bot-notification" id="botNotification">
-                <span>¡Hola! Soy el Asistente Navideño COOMOTOR 🎄</span>
-            </div>
-        </div>
-        
-        <div class="chatbot-window" id="chatbotWindow">
-            <div class="chatbot-header">
-                <div class="bot-info">
-                    <div class="bot-avatar-large">🎅</div>
-                    <div class="bot-details">
-                        <h4>Asistente Navideño COOMOTOR</h4>
-                        <span class="bot-status">🟢 En línea - Listo para ayudar</span>
-                    </div>
-                </div>
-                <button class="close-chat" id="closeChat">
-                    <i class="bi bi-x-lg"></i>
-                </button>
-            </div>
-            
-            <div class="chatbot-messages" id="chatbotMessages">
-                <div class="message bot-message">
-                    <div class="message-avatar">🎅</div>
-                    <div class="message-content">
-                        <p>¡Ho ho ho! 🎄 ¡Bienvenido al sistema de regalos navideños COOMOTOR!</p>
-                        <p>Soy tu asistente navideño y estoy aquí para ayudarte con cualquier pregunta sobre nuestro programa especial.</p>
-                        <p><strong>¿En qué puedo ayudarte hoy?</strong></p>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="quick-questions">
-                <div class="quick-question" data-question="¿Cómo me registro?">
-                    🚌 ¿Cómo me registro?
-                </div>
-                <div class="quick-question" data-question="¿Qué documentos necesito?">
-                    📄 ¿Qué documentos necesito?
-                </div>
-                <div class="quick-question" data-question="¿Cuáles son las fechas importantes?">
-                    📅 Fechas importantes
-                </div>
-                <div class="quick-question" data-question="¿Quién puede participar?">
-                    👥 ¿Quién puede participar?
-                </div>
-            </div>
-            
-            <div class="chatbot-input">
-                <input type="text" id="chatInput" placeholder="Escribe tu pregunta aquí... 🎄" maxlength="200">
-                <button id="sendMessage">
-                    <i class="bi bi-send-fill"></i>
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Scripts Mágicos -->
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="js/auth-global.js"></script>
+    
     <script>
-        // ===== EFECTOS MÁGICOS =====
+        // Countdown
+        const countdownDate = new Date('2024-12-15T23:59:59').getTime();
         
-        // Page Loader
-        window.addEventListener('load', function() {
-            setTimeout(() => {
-                document.getElementById('pageLoader').style.opacity = '0';
-                setTimeout(() => {
-                    document.getElementById('pageLoader').style.display = 'none';
-                }, 500);
-            }, 1500);
-        });
-
-        // Navbar Scroll Effect
-        window.addEventListener('scroll', function() {
-            const navbar = document.getElementById('mainNavbar');
-            if (window.scrollY > 50) {
-                navbar.classList.add('scrolled');
-            } else {
-                navbar.classList.remove('scrolled');
-            }
-        });
-
-        // Countdown Timer Mágico
         function updateCountdown() {
-            const christmas = new Date('December 25, 2024 00:00:00').getTime();
             const now = new Date().getTime();
-            const distance = christmas - now;
-
+            const distance = countdownDate - now;
+            
+            if (distance < 0) {
+                document.getElementById('countdown').innerHTML = '<p class="text-center text-muted">¡El plazo ha finalizado!</p>';
+                return;
+            }
+            
             const days = Math.floor(distance / (1000 * 60 * 60 * 24));
             const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-            document.getElementById('days').textContent = days.toString().padStart(2, '0');
-            document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
-            document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
-            document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
-
-            if (distance < 0) {
-                document.getElementById('countdown').innerHTML = '<h2 style="color: var(--christmas-gold); font-family: Dancing Script, cursive;">🎄 ¡Feliz Navidad! 🎅</h2>';
-            }
+            
+            document.getElementById('days').textContent = String(days).padStart(2, '0');
+            document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+            document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+            document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
         }
-
-        setInterval(updateCountdown, 1000);
-        updateCountdown();
-
-        // Efecto de Nieve Mágica
-        function createSnowflake() {
-            const snowflakes = ['❄️', '❅', '🌨️', '⭐', '✨'];
-            const snowflake = document.createElement('div');
-            snowflake.classList.add('snowflake');
-            snowflake.innerHTML = snowflakes[Math.floor(Math.random() * snowflakes.length)];
-            snowflake.style.left = Math.random() * 100 + 'vw';
-            snowflake.style.animationDuration = Math.random() * 3 + 2 + 's';
-            snowflake.style.opacity = Math.random() * 0.8 + 0.2;
-            snowflake.style.fontSize = Math.random() * 10 + 10 + 'px';
-
-            document.body.appendChild(snowflake);
-
-            setTimeout(() => {
-                if (snowflake.parentNode) {
-                    snowflake.remove();
-                }
-            }, 5000);
-        }
-
-        // Crear copos de nieve cada 300ms
-        setInterval(createSnowflake, 300);
-
-        // Smooth Scrolling para enlaces internos
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
-        });
-
-        // Intersection Observer para animaciones
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
-            });
-        }, observerOptions);
-
-        // Observar elementos para animaciones
-        document.querySelectorAll('.feature-card, .timeline-item').forEach(el => {
-            el.style.opacity = '0';
-            el.style.transform = 'translateY(30px)';
-            el.style.transition = 'all 0.6s ease';
-            observer.observe(el);
-        });
-
-        // Verificar si el usuario está logueado
-        if (localStorage.getItem('coomotor_token') && localStorage.getItem('coomotor_user')) {
-            const user = JSON.parse(localStorage.getItem('coomotor_user'));
-            const navButtons = document.querySelector('.nav-buttons');
-            if (navButtons) {
-                navButtons.innerHTML = `
-                    <span class="text-light me-3" style="font-weight: 600;">
-                        <i class="bi bi-person-circle me-1"></i>
-                        ¡Hola, ${user.nombres}! 👋
-                    </span>
-                    <a href="${user.rol === 'admin' ? 'dashboards/admin.html' : 'dashboards/empleado.html'}" class="btn btn-christmas-login btn-magical">
-                        <i class="bi bi-speedometer2 me-1"></i>
-                        Mi Panel Mágico
-                    </a>
-                    <button class="btn btn-christmas-register btn-magical" onclick="cerrarSesion()">
-                        <i class="bi bi-box-arrow-right me-1"></i>
-                        Salir
-                    </button>
-                `;
-            }
-        }
-
-        // Efecto de partículas mágicas en hover de botones
-        document.querySelectorAll('.btn-magical').forEach(btn => {
-            btn.addEventListener('mouseenter', function() {
-                for (let i = 0; i < 5; i++) {
-                    setTimeout(() => {
-                        const sparkle = document.createElement('div');
-                        sparkle.className = 'magical-sparkle';
-                        sparkle.style.position = 'absolute';
-                        sparkle.style.left = Math.random() * this.offsetWidth + 'px';
-                        sparkle.style.top = Math.random() * this.offsetHeight + 'px';
-                        sparkle.style.pointerEvents = 'none';
-                        this.appendChild(sparkle);
-                        
-                        setTimeout(() => {
-                            if (sparkle.parentNode) {
-                                sparkle.remove();
-                            }
-                        }, 1000);
-                    }, i * 100);
-                }
-            });
-        });
-
-        // ===== BOT DE AYUDA NAVIDEÑO COOMOTOR CON AI =====
         
-        // Sistema de AI mejorado para el bot
-        class CoomotorAI {
-            constructor() {
-                this.context = {
-                    empresa: "COOMOTOR",
-                    programa: "Regalos Navideños 2024",
-                    historia: "Empresa de transporte desde 1960",
-                    objetivo: "Ayudar con el sistema de regalos navideños"
-                };
-                
-                this.knowledge = this.initializeKnowledge();
-                this.conversationHistory = [];
-            }
-
-            initializeKnowledge() {
-                return {
-                    // Registro y participación
-                    registro: {
-                        keywords: ['registro', 'registrar', 'registrarse', 'inscribir', 'como me registro', 'crear cuenta', 'unirse', 'participar'],
-                        response: `🚌 <strong>¡Súbete a bordo del expreso navideño COOMOTOR!</strong><br><br>
-                        Para registrarte es muy fácil:<br>
-                        1️⃣ Haz clic en el botón "Registrarse" (arriba a la derecha)<br>
-                        2️⃣ Completa tus datos personales y laborales<br>
-                        3️⃣ Selecciona tu tipo de conductor:<br>
-                        &nbsp;&nbsp;&nbsp;🛣️ Carretera (nómina, servicio básico, seguridad social)<br>
-                        &nbsp;&nbsp;&nbsp;🏙️ Urbanos<br>
-                        &nbsp;&nbsp;&nbsp;� Furgones (nómina, seguridad social)<br>
-                        &nbsp;&nbsp;&nbsp;🚍 Distancia corta<br>
-                        4️⃣ ¡Listo! Ya eres parte de la magia navideña 🎄<br><br>
-                        <em>Recuerda: Solo empleados y conductores activos de COOMOTOR pueden participar.</em>`,
-                        followUp: ['¿Qué documentos necesito?', '¿Quién puede participar?', '¿Cómo registro a mis hijos?']
-                    },
-
-                    documentos: {
-                        keywords: ['documentos', 'documento', 'necesito', 'requisitos', 'papeles', 'cedula', 'identificacion'],
-                        response: `� <strong>Documentos para el viaje navideño COOMOTOR:</strong><br><br>
-                        <strong>Para ti (empleado/conductor):</strong><br>
-                        • Cédula de ciudadanía colombiana o extranjería<br>
-                        • Número de celular activo<br>
-                        • Correo electrónico personal<br>
-                        • Información laboral (tipo de conductor)<br><br>
-                        <strong>Para tus hijos:</strong><br>
-                        • Registro civil (menores de 7 años)<br>
-                        • Tarjeta de identidad (7-12 años)<br>
-                        • Fecha de nacimiento exacta<br><br>
-                        <em>¡Con estos documentos ya puedes abordar nuestro expreso navideño! 🚌✨</em>`,
-                        followUp: ['¿Cuál es la edad límite?', '¿Cómo registro a mis hijos?', '¿Qué pasa si no tengo algún documento?']
-                    },
-
-                    fechas: {
-                        keywords: ['fechas', 'cuando', 'cronograma', 'calendario', 'tiempo', 'plazo', 'limite'],
-                        response: `📅 <strong>Itinerario del Expreso Navideño COOMOTOR 2024:</strong><br><br>
-                        🚪 <strong>Hasta 10 Diciembre:</strong> Abordaje familiar<br>
-                        &nbsp;&nbsp;&nbsp;• Registro de empleados/conductores<br>
-                        &nbsp;&nbsp;&nbsp;• Registro de hijos<br><br>
-                        🎯 <strong>Hasta 15 Diciembre:</strong> Confirmación de destino<br>
-                        &nbsp;&nbsp;&nbsp;• Postulaciones para regalos<br>
-                        &nbsp;&nbsp;&nbsp;• Última oportunidad para participar<br><br>
-                        🚌 <strong>16-20 Diciembre:</strong> En ruta hacia la magia<br>
-                        &nbsp;&nbsp;&nbsp;• Revisión de postulaciones<br>
-                        &nbsp;&nbsp;&nbsp;• Selección de regalos<br><br>
-                        🎅 <strong>21-24 Diciembre:</strong> ¡Llegada a destino!<br>
-                        &nbsp;&nbsp;&nbsp;• Entrega de regalos<br>
-                        &nbsp;&nbsp;&nbsp;• Felicidad garantizada<br><br>
-                        <em>Como siempre en COOMOTOR: ¡llegamos a tiempo y con seguridad! ⏰</em>`,
-                        followUp: ['¿Qué pasa si me registro tarde?', '¿Cómo sé si fui aprobado?', '¿Dónde entregan los regalos?']
-                    },
-
-                    participacion: {
-                        keywords: ['participar', 'quien puede', 'empleados', 'conductores', 'requisitos', 'elegible'],
-                        response: `👥 <strong>¡Toda la familia COOMOTOR está invitada a bordo!</strong><br><br>
-                        <strong>Pueden participar:</strong><br>
-                        🚌 <strong>Conductores de carretera:</strong><br>
-                        &nbsp;&nbsp;&nbsp;• Nómina • Servicio básico • Seguridad social<br><br>
-                        🏙️ <strong>Conductores urbanos</strong><br>
-                        🚐 <strong>Conductores de furgones:</strong><br>
-                        &nbsp;&nbsp;&nbsp;• Nómina • Seguridad social<br><br>
-                        🚍 <strong>Conductores de distancia corta</strong><br>
-                        👥 <strong>Empleados administrativos</strong><br><br>
-                        <strong>Requisito único:</strong> Ser parte activa de la gran familia COOMOTOR 💙<br><br>
-                        <em>¡Más de 60 años conectando Colombia, ahora conectando corazones navideños!</em>`,
-                        followUp: ['¿Cómo me registro?', '¿Qué documentos necesito?', '¿Puedo registrar a todos mis hijos?']
-                    },
-
-                    hijos: {
-                        keywords: ['hijos', 'niños', 'edad', 'limite', '12 años', 'menores', 'pequeños', 'familia'],
-                        response: `👶 <strong>Sobre nuestros pequeños pasajeros especiales:</strong><br><br>
-                        <strong>Requisitos para los niños:</strong><br>
-                        • Solo hijos <strong>menores de 12 años</strong><br>
-                        • Puedes registrar a TODOS tus hijos elegibles<br>
-                        • Cada niño puede recibir UN regalo<br>
-                        • Necesitas su documento de identidad<br>
-                        • Fecha de nacimiento exacta<br><br>
-                        <strong>¿Por qué 12 años?</strong><br>
-                        Queremos enfocar la magia en los más pequeñitos que aún creen en Santa Claus 🎅<br><br>
-                        <em>¡Porque cada niño COOMOTOR merece vivir la magia navideña! ✨</em>`,
-                        followUp: ['¿Cómo registro a mis hijos?', '¿Qué tipo de regalos dan?', '¿Qué pasa si mi hijo cumple 12 este año?']
-                    },
-
-                    regalos: {
-                        keywords: ['regalos', 'regalo', 'que dan', 'tipo', 'juguetes', 'sorpresa', 'presente'],
-                        response: `🎁 <strong>¡Regalos especiales seleccionados con amor!</strong><br><br>
-                        <strong>Nuestro equipo de "elfos COOMOTOR" selecciona regalos según:</strong><br>
-                        • Edad del niño (muy importante)<br>
-                        • Género (si lo especificas)<br>
-                        • Preferencias que registres<br>
-                        • Disponibilidad especial<br><br>
-                        <strong>Tipos de regalos:</strong><br>
-                        🧸 Juguetes educativos y divertidos<br>
-                        👕 Ropa y accesorios<br>
-                        👟 Calzado deportivo<br>
-                        📚 Material educativo<br>
-                        ⚽ Artículos deportivos<br>
-                        🎨 Material creativo<br><br>
-                        <em>¡La sorpresa es parte de la magia navideña COOMOTOR! �✨</em>`,
-                        followUp: ['¿Cómo registro preferencias?', '¿Cuándo entregan los regalos?', '¿Puedo elegir el regalo?']
-                    },
-
-                    login: {
-                        keywords: ['login', 'iniciar sesion', 'entrar', 'acceder', 'ingresar', 'panel', 'cuenta'],
-                        response: `🔑 <strong>Para abordar tu panel personal COOMOTOR:</strong><br><br>
-                        <strong>Pasos para iniciar sesión:</strong><br>
-                        1️⃣ Haz clic en "Iniciar Sesión" (botón rojo arriba)<br>
-                        2️⃣ Ingresa tu correo electrónico<br>
-                        3️⃣ Ingresa tu contraseña<br>
-                        4️⃣ ¡Bienvenido a bordo de tu panel! 🚌<br><br>
-                        <strong>¿Problemas para ingresar?</strong><br>
-                        • ¿Olvidaste tu contraseña? Contacta al administrador<br>
-                        • ¿No tienes cuenta? Primero debes registrarte<br>
-                        • ¿Error de credenciales? Verifica tu correo y contraseña<br><br>
-                        <em>Tu panel es como el tablero de tu bus: ¡todo bajo control! 🎛️</em>`,
-                        followUp: ['¿Cómo me registro?', '¿Qué puedo hacer en mi panel?', '¿Olvidé mi contraseña?']
-                    },
-
-                    panel: {
-                        keywords: ['panel', 'dashboard', 'que puedo hacer', 'funciones', 'opciones'],
-                        response: `🎛️ <strong>Tu Panel de Control Navideño COOMOTOR:</strong><br><br>
-                        <strong>Como empleado/conductor puedes:</strong><br>
-                        👶 Registrar información de tus hijos<br>
-                        🎁 Postular a cada hijo para regalos<br>
-                        📊 Ver estadísticas de tus postulaciones<br>
-                        ✅ Revisar el estado de aprobación<br>
-                        📝 Actualizar información personal<br>
-                        📅 Ver fechas importantes<br><br>
-                        <strong>Como administrador puedes:</strong><br>
-                        📋 Gestionar todas las postulaciones<br>
-                        ✅ Aprobar/rechazar solicitudes<br>
-                        📊 Ver estadísticas del programa completo<br>
-                        👥 Administrar empleados registrados<br><br>
-                        <em>¡Tu panel es tu centro de comando navideño! 🎅</em>`,
-                        followUp: ['¿Cómo registro a mis hijos?', '¿Cómo hago una postulación?', '¿Cómo veo el estado?']
-                    },
-
-                    coomotor: {
-                        keywords: ['coomotor', 'empresa', 'historia', 'años', 'transporte', '1960', 'colombia'],
-                        response: `🚌 <strong>¡Conoce la historia de nuestra gran familia!</strong><br><br>
-                        <strong>COOMOTOR desde 1960:</strong><br>
-                        🇨🇴 Más de 60 años conectando Colombia<br>
-                        👨‍👩‍👧‍👦 Miles de familias transportadas con amor<br>
-                        🛡️ Compromiso inquebrantable con la seguridad<br>
-                        ⭐ Calidad y excelencia en cada viaje<br>
-                        💙 Ahora llevamos magia navideña a nuestros colaboradores<br><br>
-                        <strong>Nuestros valores:</strong><br>
-                        ❤️ Compromiso familiar<br>
-                        🛡️ Seguridad garantizada<br>
-                        👥 Unión colombiana<br>
-                        ⭐ Excelencia en servicio<br><br>
-                        <em>"Llevamos más que pasajeros, llevamos sueños" 💙</em>`,
-                        followUp: ['¿Quién puede participar?', '¿Cómo me registro?', '¿Qué tipos de conductores hay?']
-                    },
-
-                    ayuda: {
-                        keywords: ['ayuda', 'help', 'soporte', 'contacto', 'problema', 'no entiendo', 'auxilio'],
-                        response: `🆘 <strong>¡Estoy aquí para ayudarte en todo momento!</strong><br><br>
-                        <strong>Puedo ayudarte con:</strong><br>
-                        📝 Proceso completo de registro<br>
-                        📅 Fechas y cronograma del programa<br>
-                        📄 Requisitos y documentos necesarios<br>
-                        🎛️ Funcionamiento del panel de usuario<br>
-                        🎁 Información sobre regalos y postulaciones<br>
-                        🚌 Historia y valores de COOMOTOR<br>
-                        👥 Quién puede participar y cómo<br><br>
-                        <strong>¿Tienes una pregunta específica?</strong><br>
-                        ¡Escríbela con tus propias palabras! Mi AI entiende el lenguaje natural 🤖<br><br>
-                        <em>¡Estoy aquí 24/7 para hacer tu experiencia navideña perfecta! 🎄</em>`,
-                        followUp: ['¿Cómo me registro?', '¿Cuáles son las fechas?', '¿Qué documentos necesito?']
-                    }
-                };
-            }
-
-            // Función principal de AI que interpreta el mensaje
-            interpretMessage(userMessage) {
-                const message = userMessage.toLowerCase().trim();
-                
-                // Validar entrada
-                if (!message || message.length === 0) {
-                    return {
-                        text: `🤖 <strong>¡Parece que no escribiste nada!</strong><br><br>
-                        Por favor escribe tu pregunta y estaré encantado de ayudarte con información sobre nuestro programa de regalos navideños COOMOTOR. 🎄`,
-                        followUp: ['¿Cómo me registro?', '¿Cuáles son las fechas?', '¿Qué documentos necesito?']
-                    };
-                }
-                
-                this.conversationHistory.push({ user: message, timestamp: Date.now() });
-
-                // Análisis de sentimiento y contexto
-                const analysis = this.analyzeMessage(message);
-                
-                // Buscar la mejor respuesta
-                const response = this.findBestResponse(message, analysis);
-                
-                return response;
-            }
-
-            // Analiza el mensaje para entender contexto y sentimiento
-            analyzeMessage(message) {
-                const analysis = {
-                    sentiment: 'neutral',
-                    urgency: 'normal',
-                    topics: [],
-                    intent: 'information'
-                };
-
-                // Detectar sentimiento
-                if (this.containsWords(message, ['urgente', 'rapido', 'ya', 'ahora', 'pronto'])) {
-                    analysis.urgency = 'high';
-                }
-                
-                if (this.containsWords(message, ['gracias', 'perfecto', 'excelente', 'genial'])) {
-                    analysis.sentiment = 'positive';
-                }
-                
-                if (this.containsWords(message, ['problema', 'error', 'no funciona', 'mal', 'ayuda'])) {
-                    analysis.sentiment = 'negative';
-                    analysis.intent = 'support';
-                }
-
-                // Detectar temas principales
-                for (const [topic, data] of Object.entries(this.knowledge)) {
-                    if (data.keywords.some(keyword => message.includes(keyword))) {
-                        analysis.topics.push(topic);
-                    }
-                }
-
-                return analysis;
-            }
-
-            // Encuentra la mejor respuesta basada en AI
-            findBestResponse(message, analysis) {
-                // Si hay temas específicos detectados, usar la respuesta más relevante
-                if (analysis.topics.length > 0) {
-                    const primaryTopic = analysis.topics[0];
-                    const response = this.knowledge[primaryTopic];
-                    
-                    return {
-                        text: this.personalizeResponse(response.response, analysis),
-                        followUp: response.followUp || null
-                    };
-                }
-
-                // Respuestas inteligentes para casos especiales
-                if (this.containsWords(message, ['hola', 'buenos dias', 'buenas tardes', 'buenas noches', 'saludos'])) {
-                    return {
-                        text: `🎅 <strong>¡Ho ho ho! ¡Hola y bienvenido a COOMOTOR!</strong><br><br>
-                        Soy tu asistente navideño personal y estoy aquí para ayudarte con todo lo relacionado al programa de regalos navideños 2024.<br><br>
-                        <strong>¿En qué puedo ayudarte hoy?</strong> Puedes preguntarme sobre:<br>
-                        • Cómo registrarte en el sistema<br>
-                        • Fechas importantes del programa<br>
-                        • Requisitos para participar<br>
-                        • Información sobre regalos<br><br>
-                        <em>¡Estoy aquí para hacer tu experiencia navideña perfecta! 🎄</em>`,
-                        followUp: ['¿Cómo me registro?', '¿Cuáles son las fechas?', '¿Quién puede participar?']
-                    };
-                }
-
-                if (this.containsWords(message, ['gracias', 'muchas gracias', 'perfecto', 'excelente'])) {
-                    return {
-                        text: `🎅 <strong>¡De nada! ¡Es un placer ayudarte!</strong><br><br>
-                        Me alegra mucho poder ser útil en tu experiencia navideña COOMOTOR. 
-                        Recuerda que estoy aquí 24/7 para cualquier pregunta que tengas.<br><br>
-                        <strong>¿Hay algo más en lo que pueda ayudarte?</strong><br><br>
-                        <em>¡Que tengas un día lleno de magia navideña! ✨🎄</em>`,
-                        followUp: ['¿Cómo registro a mis hijos?', '¿Cuándo entregan los regalos?', '¿Necesito más ayuda?']
-                    };
-                }
-
-                // Respuesta inteligente por defecto con sugerencias basadas en palabras clave
-                const suggestions = this.generateSmartSuggestions(message);
-                
-                return {
-                    text: `🤖 <strong>¡Entiendo que quieres saber sobre "${message}"!</strong><br><br>
-                    Aunque no tengo una respuesta exacta para esa pregunta específica, puedo ayudarte con información relacionada sobre nuestro programa de regalos navideños COOMOTOR.<br><br>
-                    <strong>Basándome en tu pregunta, creo que te puede interesar:</strong><br>
-                    ${suggestions}<br><br>
-                    <strong>¿Alguna de estas opciones responde a tu pregunta?</strong><br>
-                    Si no, intenta reformular tu pregunta con otras palabras. ¡Mi AI está aprendiendo! 🧠✨`,
-                    followUp: ['¿Cómo me registro?', '¿Cuáles son las fechas?', '¿Qué documentos necesito?']
-                };
-            }
-
-            // Personaliza la respuesta según el análisis
-            personalizeResponse(response, analysis) {
-                if (analysis.urgency === 'high') {
-                    response = `⚡ <strong>¡Respuesta rápida!</strong><br><br>` + response;
-                }
-                
-                if (analysis.sentiment === 'negative') {
-                    response = `🤗 <strong>¡No te preocupes, te ayudo!</strong><br><br>` + response;
-                }
-                
-                return response;
-            }
-
-            // Genera sugerencias inteligentes basadas en palabras clave
-            generateSmartSuggestions(message) {
-                const suggestions = [];
-                
-                if (this.containsWords(message, ['tiempo', 'cuando', 'fecha'])) {
-                    suggestions.push('📅 Fechas importantes del programa');
-                }
-                
-                if (this.containsWords(message, ['como', 'proceso', 'pasos'])) {
-                    suggestions.push('📝 Proceso de registro paso a paso');
-                }
-                
-                if (this.containsWords(message, ['niño', 'hijo', 'pequeño', 'familia'])) {
-                    suggestions.push('👶 Información sobre registro de hijos');
-                }
-                
-                if (this.containsWords(message, ['regalo', 'presente', 'sorpresa'])) {
-                    suggestions.push('🎁 Detalles sobre los regalos navideños');
-                }
-
-                return suggestions.length > 0 ? 
-                    suggestions.map(s => `• ${s}`).join('<br>') : 
-                    '• 📝 Información general sobre el programa<br>• 🎄 Ayuda con el sistema navideño';
-            }
-
-            // Función auxiliar para verificar palabras
-            containsWords(text, words) {
-                return words.some(word => text.includes(word));
-            }
-        }
-
-        // Inicializar AI del bot
-        const coomotorAI = new CoomotorAI();
-
-        // Variables del bot
-        let chatbotOpen = false;
-        let messageCount = 0;
-
-        // Inicializar bot
-        document.addEventListener('DOMContentLoaded', function() {
-            initializeChatbot();
-        });
-
-        function initializeChatbot() {
-            const chatbotButton = document.getElementById('chatbotButton');
-            const chatbotWindow = document.getElementById('chatbotWindow');
-            const closeChat = document.getElementById('closeChat');
-            const sendMessage = document.getElementById('sendMessage');
-            const chatInput = document.getElementById('chatInput');
-
-            // Abrir/cerrar chat
-            chatbotButton.addEventListener('click', toggleChat);
-            closeChat.addEventListener('click', toggleChat);
-
-            // Enviar mensaje
-            sendMessage.addEventListener('click', sendUserMessage);
-            chatInput.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    sendUserMessage();
-                }
-            });
-
-            // Add event listeners to initial quick questions
-            const quickQuestions = document.querySelectorAll('.quick-question');
-            quickQuestions.forEach(button => {
-                button.addEventListener('click', function() {
-                    const question = this.getAttribute('data-question');
-                    askQuestion(question);
-                });
-            });
-
-            // Ocultar notificación después de un tiempo
-            setTimeout(() => {
-                const notification = document.getElementById('botNotification');
-                if (notification) {
-                    notification.style.opacity = '0';
-                    setTimeout(() => {
-                        notification.style.display = 'none';
-                    }, 500);
-                }
-            }, 8000);
-        }
-
-        function toggleChat() {
-            const chatbotWindow = document.getElementById('chatbotWindow');
-            const notification = document.getElementById('botNotification');
-            
-            chatbotOpen = !chatbotOpen;
-            
-            if (chatbotOpen) {
-                chatbotWindow.classList.add('active');
-                if (notification) notification.style.display = 'none';
-                scrollToBottom();
-            } else {
-                chatbotWindow.classList.remove('active');
-            }
-        }
-
-        function sendUserMessage() {
-            const chatInput = document.getElementById('chatInput');
-            const message = chatInput.value.trim();
-            
-            if (message === '') {
-                // Shake animation for empty input
-                chatInput.style.animation = 'shake 0.5s ease-in-out';
-                setTimeout(() => {
-                    chatInput.style.animation = '';
-                }, 500);
-                return;
-            }
-            
-            // Agregar mensaje del usuario
-            addMessage(message, 'user');
-            chatInput.value = '';
-            
-            // Mostrar indicador de escritura
-            showTypingIndicator();
-            
-            // Usar AI para responder después de un delay realista
-            setTimeout(() => {
-                try {
-                    hideTypingIndicator();
-                    const response = coomotorAI.interpretMessage(message);
-                    addMessage(response.text, 'bot', response.followUp);
-                } catch (error) {
-                    console.error('Error en AI:', error);
-                    hideTypingIndicator();
-                    addMessage(`🤖 <strong>¡Ups! Tuve un pequeño problema técnico.</strong><br><br>
-                        Pero no te preocupes, ¡estoy aquí para ayudarte! Intenta hacer tu pregunta de nuevo o usa una de las opciones rápidas.<br><br>
-                        <em>¡La magia navideña COOMOTOR nunca se detiene! 🎄✨</em>`, 'bot', 
-                        ['¿Cómo me registro?', '¿Cuáles son las fechas?', '¿Qué documentos necesito?']);
-                }
-            }, Math.random() * 1000 + 1500); // Delay aleatorio entre 1.5-2.5 segundos
-        }
-
-        function askQuestion(question) {
-            const chatInput = document.getElementById('chatInput');
-            chatInput.value = question;
-            sendUserMessage();
-        }
-
-        function addMessage(content, sender, followUp = null) {
-            const messagesContainer = document.getElementById('chatbotMessages');
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${sender}-message`;
-            
-            const avatar = sender === 'bot' ? '🎅' : '👤';
-            
-            messageDiv.innerHTML = `
-                <div class="message-avatar">${avatar}</div>
-                <div class="message-content">
-                    <div>${content}</div>
-                    ${followUp ? createFollowUpButtons(followUp) : ''}
-                </div>
-            `;
-            
-            messagesContainer.appendChild(messageDiv);
-            
-            // Add event listeners to follow-up buttons
-            if (followUp) {
-                const followUpButtons = messageDiv.querySelectorAll('.follow-up-button');
-                followUpButtons.forEach(button => {
-                    button.addEventListener('click', function() {
-                        const question = this.getAttribute('data-question');
-                        askQuestion(question);
-                    });
-                });
-            }
-            
-            scrollToBottom();
-            messageCount++;
-        }
-
-        function createFollowUpButtons(followUpQuestions) {
-            let buttonsHtml = '<div class="follow-up-buttons">';
-            followUpQuestions.forEach((question, index) => {
-                // Use data attributes instead of onclick to avoid quote issues
-                buttonsHtml += `
-                    <button class="follow-up-button" data-question="${question}" data-index="${index}">
-                        ${question}
-                    </button>
-                `;
-            });
-            buttonsHtml += '</div>';
-            return buttonsHtml;
-        }
-
-        function showTypingIndicator() {
-            const messagesContainer = document.getElementById('chatbotMessages');
-            const typingDiv = document.createElement('div');
-            typingDiv.className = 'message bot-message';
-            typingDiv.id = 'typingIndicator';
-            
-            typingDiv.innerHTML = `
-                <div class="message-avatar">🎅</div>
-                <div class="message-content">
-                    <div class="typing-indicator">
-                        <div class="typing-dot"></div>
-                        <div class="typing-dot"></div>
-                        <div class="typing-dot"></div>
-                    </div>
-                </div>
-            `;
-            
-            messagesContainer.appendChild(typingDiv);
-            scrollToBottom();
-        }
-
-        function hideTypingIndicator() {
-            const typingIndicator = document.getElementById('typingIndicator');
-            if (typingIndicator) {
-                typingIndicator.remove();
-            }
-        }
-
-        function scrollToBottom() {
-            const messagesContainer = document.getElementById('chatbotMessages');
-            setTimeout(() => {
-                messagesContainer.scrollTop = messagesContainer.scrollHeight;
-            }, 100);
-        }
-
-        console.log('🎄 ¡Bot AI de COOMOTOR inicializado correctamente! 🤖✨');
-        console.log('✨ Que tengas una experiencia navideña increíble ✨');
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
     </script>
 </body>
 </html>

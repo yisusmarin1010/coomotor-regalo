@@ -10,15 +10,11 @@
     <link href="../css/responsive-global.css" rel="stylesheet">
     <style>
         :root {
-            --primary-red: #dc2626;
             --primary-green: #059669;
-            --accent-gold: #d97706;
-            --neutral-50: #f9fafb;
-            --neutral-100: #f3f4f6;
-            --neutral-200: #e5e7eb;
-            --neutral-600: #4b5563;
-            --neutral-800: #1f2937;
-            --neutral-900: #111827;
+            --primary-red: #dc2626;
+            --bg-light: #f9fafb;
+            --text-dark: #1f2937;
+            --text-light: #6b7280;
         }
 
         * {
@@ -29,9 +25,8 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background: var(--neutral-50);
-            color: var(--neutral-800);
-            line-height: 1.6;
+            background: var(--bg-light);
+            color: var(--text-dark);
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -41,52 +36,47 @@
         .login-container {
             max-width: 400px;
             width: 100%;
-            padding: 0 1rem;
+            padding: 1rem;
         }
 
         .login-card {
             background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            border: 1px solid var(--neutral-200);
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             overflow: hidden;
         }
 
         .login-header {
             background: var(--primary-green);
             color: white;
-            padding: 2rem;
+            padding: 1.5rem;
             text-align: center;
         }
 
         .login-header h1 {
-            font-size: 1.5rem;
+            font-size: 1.25rem;
             font-weight: 600;
-            margin-bottom: 0.5rem;
         }
 
         .login-header p {
-            opacity: 0.9;
-            margin: 0;
             font-size: 0.875rem;
+            margin: 0;
         }
 
         .login-body {
-            padding: 2rem;
+            padding: 1.5rem;
         }
 
         .form-label {
             font-weight: 500;
-            color: var(--neutral-800);
-            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
         }
 
         .form-control {
-            border: 1px solid var(--neutral-200);
+            border: 1px solid #e5e7eb;
             border-radius: 8px;
-            padding: 0.75rem 1rem;
-            font-size: 0.875rem;
-            transition: all 0.2s ease;
+            padding: 0.75rem;
+            font-size: 0.9rem;
         }
 
         .form-control:focus {
@@ -109,13 +99,8 @@
             transform: translateY(-50%);
             background: none;
             border: none;
-            color: var(--neutral-600);
+            color: var(--text-light);
             cursor: pointer;
-            padding: 0.25rem;
-        }
-
-        .password-toggle-btn:hover {
-            color: var(--primary-green);
         }
 
         .btn-christmas {
@@ -123,21 +108,20 @@
             border: none;
             color: white;
             font-weight: 500;
-            padding: 0.75rem 1.5rem;
+            padding: 0.75rem;
             border-radius: 8px;
-            transition: all 0.2s ease;
+            transition: all 0.3s;
         }
 
         .btn-christmas:hover {
             background: #047857;
-            color: white;
         }
 
         .registro-link {
             text-align: center;
-            margin-top: 1.5rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid var(--neutral-200);
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e5e7eb;
         }
 
         .registro-link a {
@@ -146,27 +130,13 @@
             font-weight: 500;
         }
 
-        .registro-link a:hover {
-            color: #047857;
-        }
-
-        .alert {
-            border-radius: 8px;
-            border: none;
-            margin-bottom: 1rem;
-        }
-
         @media (max-width: 768px) {
-            .login-container {
-                padding: 1rem;
+            .login-header h1 {
+                font-size: 1.1rem;
             }
             
             .login-body {
-                padding: 1.5rem;
-            }
-            
-            .login-header {
-                padding: 1.5rem;
+                padding: 1.25rem;
             }
         }
     </style>
