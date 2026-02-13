@@ -808,15 +808,12 @@
                             <button class="btn btn-outline-primary btn-sm" onclick="cargarMisDocumentos()">
                                 <i class="bi bi-arrow-clockwise"></i>
                             </button>
-                            <button class="btn btn-christmas btn-sm" onclick="mostrarModalSubirDocumento()">
+                            <button class="btn btn-christmas btn-sm" id="btnSubirDocumento" onclick="mostrarModalSubirDocumento()" style="display: none;">
                                 <i class="bi bi-plus"></i> Subir Documento
                             </button>
                         </div>
                     </div>
-                    <div class="alert alert-info">
-                        <i class="bi bi-info-circle me-2"></i>
-                        <strong>Importante:</strong> Sube los documentos requeridos (Registro Civil, Tarjeta de Identidad, etc.) para completar tu postulación. Los documentos serán revisados por el administrador.
-                    </div>
+                    <div id="alertaDocumentos"></div>
                     <div id="documentosContainer">
                         <div class="text-center py-4">
                             <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
@@ -877,9 +874,9 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script src="../js/auth-global.js?v=1.2"></script>
-    <script src="../js/documentos.js?v=1.2"></script>
-    <script src="../js/dashboard-empleado.js?v=1.2"></script>
+    <script src="../js/auth-global.js?v=2.0"></script>
+    <script src="../js/documentos.js?v=2.0"></script>
+    <script src="../js/dashboard-empleado.js?v=2.0"></script>
     <script>
         // Initialize AOS
         AOS.init({

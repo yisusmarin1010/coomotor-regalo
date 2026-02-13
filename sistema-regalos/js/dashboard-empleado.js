@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
     verificarAutenticacion();
     // cargarEstadisticas(); // Temporalmente deshabilitado
     cargarHijos();
+    verificarDocumentosSolicitados(); // Verificar si puede subir documentos
     inicializarNotificaciones();
     inicializarAnimaciones();
     configurarEventListeners();
@@ -1819,3 +1820,160 @@ document.addEventListener('DOMContentLoaded', function() {
         cargarDocumentosSolicitados();
     }, 1000);
 });
+
+
+// ============================================
+// VERIFICACIÓN DE DOCUMENTOS SOLICITADOS
+// ============================================
+
+// Verificar si el conductor puede subir documentos
+async function verificarDocumentosSolicitados() {
+    try {
+        console.log('🔍 Verificando si hay documentos solicitados...');
+        
+        const response = await fetch('/api/postulaciones', {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('coomotor_token')}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        if (response.ok) {
+            const result = await response.json();
+            if (result.success) {
+                const postulaciones = result.data || [];
+                
+                // Buscar si hay alguna postulación con documentos solicitados
+                const tieneDocumentosSolicitados = postulaciones.some(p => 
+                    p.estado_postulacion === 'documentos_solicitados'
+                );
+                
+                const btnSubirDocumento = document.getElementById('btnSubirDocumento');
+                const alertaDocumentos = document.getElementById('alertaDocumentos');
+                
+                if (tieneDocumentosSolicitados) {
+                    // Mostrar botón y alerta de documentos solicitados
+                    if (btnSubirDocumento) {
+                        btnSubirDocumento.style.display = 'inline-block';
+                    }
+                    
+                    if (alertaDocumentos) {
+                        alertaDocumentos.innerHTML = `
+                            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                                <strong>¡Acción Requerida!</strong> El administrador ha solicitado documentos para una de tus postulaciones. 
+                                Por favor, súbelos lo antes posible.
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                        `;
+                    }
+                    
+                    console.log('✅ Documentos solicitados - Botón habilitado');
+                } else {
+                    // Ocultar botón y mostrar mensaje informativo
+                    if (btnSubirDocumento) {
+                        btnSubirDocumento.style.display = 'none';
+                    }
+                    
+                    if (alertaDocumentos) {
+                        alertaDocumentos.innerHTML = `
+                            <div class="alert alert-info">
+                                <i class="bi bi-info-circle me-2"></i>
+                                <strong>Información:</strong> Podrás subir documentos una vez que el administrador revise tu postulación 
+                                y solicite la documentación necesaria.
+                            </div>
+                        `;
+                    }
+                    
+                    console.log('ℹ️ No hay documentos solicitados - Botón oculto');
+                }
+            }
+        }
+    } catch (error) {
+        console.error('❌ Error al verificar documentos solicitados:', error);
+        // En caso de error, ocultar el botón por seguridad
+        const btnSubirDocumento = document.getElementById('btnSubirDocumento');
+        if (btnSubirDocumento) {
+            btnSubirDocumento.style.display = 'none';
+        }
+    }
+}
+
+// Función para cargar y mostrar documentos
+async function cargarMisDocumentos() {
+    console.log('📄 Cargando mis documentos...');
+    
+    try {
+        const response = await fetch('/api/documentos/mis-documentos', {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('coomotor_token')}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        if (response.ok) {
+            const result = await response.json();
+            if (result.success) {
+                mostrarDocumentos(result.data || []);
+            }
+        }
+    } catch (error) {
+        console.error('❌ Error al cargar documentos:', error);
+        const container = document.getElementById('documentosContainer');
+        if (container) {
+            container.innerHTML = `
+                <div class="alert alert-danger">
+                    <i class="bi bi-exclamation-triangle me-2"></i>
+                    Error al cargar documentos. Por favor, intenta de nuevo.
+                </div>
+            `;
+        }
+    }
+}
+
+// Mostrar documentos en el contenedor
+function mostrarDocumentos(documentos) {
+    const container = document.getElementById('documentosContainer');
+    
+    if (!container) return;
+    
+    if (documentos.length === 0) {
+        container.innerHTML = `
+            <div class="text-center py-4">
+                <i class="bi bi-file-earmark-x" style="font-size: 3rem; color: var(--text-light); opacity: 0.5;"></i>
+                <p class="mt-3 mb-0" style="color: var(--text-light);">No has subido documentos aún</p>
+            </div>
+        `;
+        return;
+    }
+    
+    let html = '<div class="row g-3">';
+    
+    documentos.forEach(doc => {
+        const fecha = new Date(doc.fecha_subida).toLocaleDateString('es-CO');
+        const estadoBadge = doc.estado === 'aprobado' ? 'success' : 
+                           doc.estado === 'rechazado' ? 'danger' : 'warning';
+        
+        html += `
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h6 class="mb-0">${doc.tipo_documento}</h6>
+                            <span class="badge bg-${estadoBadge}">${doc.estado}</span>
+                        </div>
+                        <p class="text-muted mb-2" style="font-size: 0.85rem;">
+                            <i class="bi bi-calendar me-1"></i>${fecha}
+                        </p>
+                        <a href="${doc.ruta_archivo}" target="_blank" class="btn btn-sm btn-outline-primary">
+                            <i class="bi bi-eye me-1"></i>Ver Documento
+                        </a>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+    
+    html += '</div>';
+    container.innerHTML = html;
+}
