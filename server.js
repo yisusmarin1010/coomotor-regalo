@@ -23,6 +23,9 @@ const notificationService = require('./email-service-notifications');
 const app = express();
 const PORT = process.env.PORT || 10000; // Render usa variable PORT dinámica
 
+// Configurar trust proxy para Render y otros servicios de hosting
+app.set('trust proxy', 1); // Confiar en el primer proxy (Render, Heroku, etc.)
+
 // ============================================
 // CONFIGURACIÓN DE AZURE SQL DATABASE
 // ============================================
@@ -2096,7 +2099,9 @@ app.get('/api/hijos', authenticateToken, async (req, res) => {
                 SELECT h.*, p.id as postulacion_id, p.estado_postulacion
                 FROM hijos h
                 LEFT JOIN postulaciones_hijos p ON h.id = p.hijo_id
-                WHERE h.usuario_id = @userId AND h.estado = 'activo'
+                WHERE h.usuario_id = @userId 
+                  AND h.estado = 'activo'
+                  AND (p.estado_postulacion IS NULL OR p.estado_postulacion != 'rechazada')
                 ORDER BY h.fecha_registro DESC
             `);
         
@@ -2277,7 +2282,7 @@ app.get('/api/admin/estadisticas', authenticateToken, requireAdmin, async (req, 
 app.get('/api/admin/postulaciones', authenticateToken, requireAdmin, async (req, res) => {
     try {
         const { filtro = 'todas' } = req.query;
-        let whereClause = '';
+        let whereClause = "WHERE p.estado_postulacion != 'rechazada'"; // Excluir rechazadas por defecto
         
         if (filtro !== 'todas') {
             whereClause = `WHERE p.estado_postulacion = '${filtro}'`;
