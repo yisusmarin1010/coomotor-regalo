@@ -422,28 +422,31 @@
         </div>
 
         <!-- Actions -->
-        <div class="actions-row">
-            <div class="action-card">
-                <h3><i class="bi bi-person-plus-fill"></i> Registrar Hijo</h3>
-                <p>Registra a tus hijos menores de 12 años para postularlos.</p>
-                <button class="btn btn-christmas w-100" onclick="mostrarModalRegistroHijo()">
-                    <i class="bi bi-plus-circle"></i> Registrar Nuevo Hijo
-                </button>
-                <small class="d-block text-muted text-center mt-2" style="font-size: 0.7rem;">
-                    <i class="bi bi-info-circle"></i> Solo menores de 12 años
-                </small>
-            </div>
-            <div class="action-card">
-                <h3><i class="bi bi-gift-fill"></i> Postular para Regalo</h3>
-                <p>Postula a tus hijos registrados para que reciban su regalo.</p>
-                <button class="btn btn-outline-christmas w-100" onclick="mostrarModalPostulacion()">
-                    <i class="bi bi-heart-fill"></i> Hacer Postulación
-                </button>
-                <small class="d-block text-muted text-center mt-2" style="font-size: 0.7rem;">
-                    <i class="bi bi-clock"></i> Hasta el 15 de Diciembre
-                </small>
-            </div>
-        </div>
+        <div class="row">
+            <!-- Columna Principal -->
+            <div class="col-lg-9">
+                <div class="actions-row">
+                    <div class="action-card">
+                        <h3><i class="bi bi-person-plus-fill"></i> Registrar Hijo</h3>
+                        <p>Registra a tus hijos menores de 12 años para postularlos.</p>
+                        <button class="btn btn-christmas w-100" onclick="mostrarModalRegistroHijo()">
+                            <i class="bi bi-plus-circle"></i> Registrar Nuevo Hijo
+                        </button>
+                        <small class="d-block text-muted text-center mt-2" style="font-size: 0.7rem;">
+                            <i class="bi bi-info-circle"></i> Solo menores de 12 años
+                        </small>
+                    </div>
+                    <div class="action-card">
+                        <h3><i class="bi bi-gift-fill"></i> Postular para Regalo</h3>
+                        <p>Postula a tus hijos registrados para que reciban su regalo.</p>
+                        <button class="btn btn-outline-christmas w-100" onclick="mostrarModalPostulacion()">
+                            <i class="bi bi-heart-fill"></i> Hacer Postulación
+                        </button>
+                        <small class="d-block text-muted text-center mt-2" style="font-size: 0.7rem;">
+                            <i class="bi bi-clock"></i> Hasta el 15 de Diciembre
+                        </small>
+                    </div>
+                </div>
 
         <!-- Hijos Registrados -->
         <div class="action-card">
@@ -494,41 +497,14 @@
                 </div>
             </div>
         </div>
-
-        <!-- Timeline -->
-        <div class="row">
-            <div class="col-lg-8">
-                <div class="action-card">
-                    <h3><i class="bi bi-calendar-event-fill"></i> Cronograma 2024</h3>
-                    <div class="timeline">
-                        <div class="timeline-item">
-                            <h5>📝 Registro de Hijos</h5>
-                            <p>Hasta el <strong>10 de Diciembre</strong></p>
-                            <span class="badge bg-success">Activo</span>
-                        </div>
-                        <div class="timeline-item">
-                            <h5>🎁 Postulaciones</h5>
-                            <p>Hasta el <strong>15 de Diciembre</strong></p>
-                            <span class="badge bg-warning">Próximo</span>
-                        </div>
-                        <div class="timeline-item">
-                            <h5>⚖️ Revisión</h5>
-                            <p><strong>16 - 20 de Diciembre</strong></p>
-                            <span class="badge bg-secondary">Pendiente</span>
-                        </div>
-                        <div class="timeline-item">
-                            <h5>🎄 Entrega</h5>
-                            <p><strong>21 - 24 de Diciembre</strong></p>
-                            <span class="badge bg-danger">Próximo</span>
-                        </div>
-                    </div>
-                </div>
             </div>
-            <div class="col-lg-4">
-                <div class="action-card text-center">
-                    <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🎄</div>
-                    <h5 style="font-size: 0.95rem; font-weight: 700; color: var(--primary);">¡Faltan pocos días!</h5>
-                    <p style="font-size: 0.75rem; color: var(--text-light);">La magia navideña está cerca</p>
+
+            <!-- Columna Lateral - Cronograma y Countdown -->
+            <div class="col-lg-3">
+                <div class="action-card text-center" style="margin-bottom: 0.5rem;">
+                    <div style="font-size: 2rem; margin-bottom: 0.25rem;">🎄</div>
+                    <h5 style="font-size: 0.8rem; font-weight: 700; color: var(--primary); margin-bottom: 0.25rem;">¡Faltan pocos días!</h5>
+                    <p style="font-size: 0.65rem; color: var(--text-light); margin-bottom: 0.5rem;">La magia navideña está cerca</p>
                     <div class="countdown">
                         <div class="countdown-item">
                             <div class="countdown-number" id="days">00</div>
@@ -540,6 +516,32 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="action-card">
+                    <h3 style="margin-bottom: 0.5rem;"><i class="bi bi-calendar-event-fill"></i> Cronograma 2024</h3>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <h5>📝 Registro</h5>
+                            <p style="font-size: 0.65rem; margin: 0;">Hasta el 10 Dic</p>
+                            <span class="badge bg-success" style="font-size: 0.6rem;">Activo</span>
+                        </div>
+                        <div class="timeline-item">
+                            <h5>🎁 Postulaciones</h5>
+                            <p style="font-size: 0.65rem; margin: 0;">Hasta el 15 Dic</p>
+                            <span class="badge bg-warning" style="font-size: 0.6rem;">Próximo</span>
+                        </div>
+                        <div class="timeline-item">
+                            <h5>⚖️ Revisión</h5>
+                            <p style="font-size: 0.65rem; margin: 0;">16 - 20 Dic</p>
+                            <span class="badge bg-secondary" style="font-size: 0.6rem;">Pendiente</span>
+                        </div>
+                        <div class="timeline-item">
+                            <h5>🎄 Entrega</h5>
+                            <p style="font-size: 0.65rem; margin: 0;">21 - 24 Dic</p>
+                            <span class="badge bg-danger" style="font-size: 0.6rem;">Próximo</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -547,9 +549,9 @@
     <div id="modalsContainer"></div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../js/auth-global.js?v=2.4"></script>
-    <script src="../js/documentos.js?v=2.4"></script>
-    <script src="../js/dashboard-empleado.js?v=2.4"></script>
+    <script src="../js/auth-global.js?v=2.5"></script>
+    <script src="../js/documentos.js?v=2.5"></script>
+    <script src="../js/dashboard-empleado.js?v=2.5"></script>
     <script>
         function actualizarCountdown() {
             const navidad = new Date('2024-12-25T00:00:00');
