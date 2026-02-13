@@ -1,6 +1,9 @@
 // ============================================
 // DASHBOARD EMPLEADO AVANZADO - SISTEMA REGALOS NAVIDEÑOS
+// VERSION 2.0 - Filtrado de rechazadas
 // ============================================
+
+console.log('📦 Dashboard Empleado v2.0 - Cargado');
 
 let usuarioActual = null;
 let hijosRegistrados = [];
@@ -10,7 +13,8 @@ let estadisticasEnTiempoReal = {};
 
 // Inicializar dashboard con funcionalidades avanzadas
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('🔵 Inicializando dashboard empleado...');
+    console.log('🔵 Inicializando dashboard empleado v2.0...');
+    console.log('✅ Filtrado de rechazadas: ACTIVO');
     verificarAutenticacion();
     // cargarEstadisticas(); // Temporalmente deshabilitado
     cargarHijos();
@@ -268,10 +272,19 @@ async function cargarHijos() {
 function mostrarHijos() {
     const container = document.getElementById('hijosContainer');
     
+    console.log('👶 Total hijos registrados:', hijosRegistrados.length);
+    console.log('📋 Hijos con datos:', hijosRegistrados);
+    
     // Filtrar hijos con postulaciones rechazadas - no mostrarlos
-    const hijosFiltrados = hijosRegistrados.filter(hijo => 
-        hijo.estado_postulacion !== 'rechazada'
-    );
+    const hijosFiltrados = hijosRegistrados.filter(hijo => {
+        const esRechazado = hijo.estado_postulacion === 'rechazada';
+        if (esRechazado) {
+            console.log('❌ Hijo rechazado filtrado:', hijo.nombres, hijo.apellidos);
+        }
+        return !esRechazado;
+    });
+    
+    console.log('✅ Hijos después de filtrar rechazados:', hijosFiltrados.length);
     
     if (hijosFiltrados.length === 0) {
         container.innerHTML = `
