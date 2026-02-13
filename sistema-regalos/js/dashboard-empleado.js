@@ -1,9 +1,9 @@
 // ============================================
 // DASHBOARD EMPLEADO AVANZADO - SISTEMA REGALOS NAVIDEÑOS
-// VERSION 2.1 - Filtrado mejorado con subconsulta SQL
+// VERSION 2.2 - Filtrado corregido en JOIN SQL
 // ============================================
 
-console.log('📦 Dashboard Empleado v2.1 - Cargado');
+console.log('📦 Dashboard Empleado v2.2 - Cargado');
 
 let usuarioActual = null;
 let hijosRegistrados = [];
@@ -13,8 +13,8 @@ let estadisticasEnTiempoReal = {};
 
 // Inicializar dashboard con funcionalidades avanzadas
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('🔵 Inicializando dashboard empleado v2.1...');
-    console.log('✅ Filtrado de rechazadas: ACTIVO (SQL + JS)');
+    console.log('🔵 Inicializando dashboard empleado v2.2...');
+    console.log('✅ Filtrado de rechazadas: ACTIVO (SQL JOIN)');
     verificarAutenticacion();
     // cargarEstadisticas(); // Temporalmente deshabilitado
     cargarHijos();
@@ -275,16 +275,10 @@ function mostrarHijos() {
     console.log('👶 Total hijos registrados:', hijosRegistrados.length);
     console.log('📋 Hijos con datos:', hijosRegistrados);
     
-    // Filtrar hijos con postulaciones rechazadas - no mostrarlos
-    const hijosFiltrados = hijosRegistrados.filter(hijo => {
-        const esRechazado = hijo.estado_postulacion === 'rechazada';
-        if (esRechazado) {
-            console.log('❌ Hijo rechazado filtrado:', hijo.nombres, hijo.apellidos);
-        }
-        return !esRechazado;
-    });
+    // Ya no necesitamos filtrar aquí porque el backend lo hace en el JOIN
+    const hijosFiltrados = hijosRegistrados;
     
-    console.log('✅ Hijos después de filtrar rechazados:', hijosFiltrados.length);
+    console.log('✅ Hijos a mostrar:', hijosFiltrados.length);
     
     if (hijosFiltrados.length === 0) {
         container.innerHTML = `
@@ -717,17 +711,13 @@ function mostrarModalPostulacion() {
     console.log('🎁 Abriendo modal de postulación');
     console.log('📋 hijosRegistrados:', hijosRegistrados);
     
-    // Filtrar hijos rechazados
-    const hijosSinRechazar = hijosRegistrados.filter(hijo => {
-        const esRechazado = hijo.estado_postulacion === 'rechazada';
-        console.log(`  - ${hijo.nombres}: estado=${hijo.estado_postulacion}, rechazado=${esRechazado}`);
-        return !esRechazado;
-    });
+    // Ya no necesitamos filtrar rechazados porque el backend no los envía
+    const hijosSinRechazar = hijosRegistrados;
     
-    console.log('✅ Hijos sin rechazar:', hijosSinRechazar.length);
+    console.log('✅ Hijos disponibles:', hijosSinRechazar.length);
     
     if (hijosSinRechazar.length === 0) {
-        console.log('⚠️ No hay hijos sin rechazar');
+        console.log('⚠️ No hay hijos registrados');
         mostrarNotificacion('warning', 'Primero debes registrar al menos un hijo');
         return;
     }
@@ -1028,8 +1018,8 @@ function formatearFecha(fecha) {
 }
 
 function actualizarResumenHijos() {
-    // Filtrar hijos rechazados del conteo
-    const hijosFiltrados = hijosRegistrados.filter(h => h.estado_postulacion !== 'rechazada');
+    // Ya no necesitamos filtrar porque el backend no envía rechazados
+    const hijosFiltrados = hijosRegistrados;
     
     const totalHijos = hijosFiltrados.length;
     const postulados = hijosFiltrados.filter(h => h.postulacion_id).length;

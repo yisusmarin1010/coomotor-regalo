@@ -2101,14 +2101,10 @@ app.get('/api/hijos', authenticateToken, async (req, res) => {
                     p.id as postulacion_id,
                     p.estado_postulacion
                 FROM hijos h
-                LEFT JOIN postulaciones_hijos p ON h.id = p.hijo_id
+                LEFT JOIN postulaciones_hijos p ON h.id = p.hijo_id 
+                    AND p.estado_postulacion != 'rechazada'
                 WHERE h.usuario_id = @userId 
                   AND h.estado = 'activo'
-                  AND h.id NOT IN (
-                      SELECT hijo_id 
-                      FROM postulaciones_hijos 
-                      WHERE estado_postulacion = 'rechazada'
-                  )
                 ORDER BY h.fecha_registro DESC
             `);
         
