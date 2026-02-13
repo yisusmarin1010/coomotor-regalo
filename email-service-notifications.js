@@ -112,6 +112,25 @@ class NotificationService {
     async notificarCambioEstadoRegalo(datos) {
         return { success: true };
     }
+    // PLANTILLA: Revisión de Documento
+    async notificarRevisionDocumento(usuario, documento) {
+        const estadoTexto = documento.estado === 'aprobado' ? 'APROBADO ✅' : 'REQUIERE REVISIÓN ⚠️';
+        const estadoColor = documento.estado === 'aprobado' ? '#11998e' : '#ff6b6b';
+        const estadoEmoji = documento.estado === 'aprobado' ? '✅' : '📋';
+        
+        const tiposDocumento = {
+            'registro_civil': 'Registro Civil',
+            'tarjeta_identidad': 'Tarjeta de Identidad',
+            'cedula': 'Cédula de Ciudadanía',
+            'foto_hijo': 'Foto del Hijo/a',
+            'comprobante_residencia': 'Comprobante de Residencia',
+            'otro': 'Otro Documento'
+        };
+
+        const html = `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><style>@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');body{margin:0;padding:0;font-family:'Poppins',Arial,sans-serif}</style></head><body style="margin:0;padding:0;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%)"><table width="100%" cellpadding="0" cellspacing="0" style="padding:40px 20px"><tr><td align="center"><table width="600" cellpadding="0" cellspacing="0" style="background:white;border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.3)"><tr><td style="background:linear-gradient(135deg,#2e8b57 0%,#c41e3a 100%);padding:50px 30px;text-align:center"><div style="font-size:80px;margin-bottom:10px">📄</div><h1 style="margin:0;color:white;font-size:36px;font-weight:700;text-shadow:2px 2px 4px rgba(0,0,0,0.3)">COOMOTOR</h1><p style="margin:10px 0 0 0;color:rgba(255,255,255,0.9);font-size:16px">Revisión de Documento</p></td></tr><tr><td style="padding:50px 40px"><table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:30px"><tr><td align="center"><div style="background:linear-gradient(135deg,${estadoColor} 0%,${estadoColor}dd 100%);padding:30px;border-radius:15px;box-shadow:0 10px 30px rgba(0,0,0,0.3)"><div style="font-size:60px;margin-bottom:10px">${estadoEmoji}</div><h2 style="margin:0;color:white;font-size:28px;font-weight:700;text-shadow:1px 1px 2px rgba(0,0,0,0.2)">${estadoTexto}</h2></div></td></tr></table><p style="margin:0 0 20px 0;font-size:18px;line-height:1.6;color:#333">Estimado/a <strong style="color:#2e8b57">${usuario.nombres}</strong>,</p><p style="margin:0 0 25px 0;font-size:16px;line-height:1.8;color:#555">Tu documento <strong style="color:#667eea">${tiposDocumento[documento.tipo_documento] || documento.tipo_documento}</strong> ha sido revisado.</p><table width="100%" cellpadding="0" cellspacing="0" style="background:linear-gradient(135deg,#a8edea 0%,#fed6e3 100%);border-radius:12px;margin:30px 0;overflow:hidden"><tr><td style="padding:30px"><p style="margin:0 0 15px 0;font-size:14px;font-weight:600;color:#2e8b57;text-transform:uppercase;letter-spacing:1px">📋 Estado del Documento:</p><div style="background:white;padding:20px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.1)"><p style="margin:0 0 10px 0;font-size:18px;font-weight:700;color:${estadoColor}">${estadoTexto}</p>${documento.observaciones ? `<p style="margin:10px 0 0 0;font-size:15px;line-height:1.6;color:#555"><strong>Observaciones:</strong><br>${documento.observaciones}</p>` : ''}</div></td></tr></table>${documento.estado === 'rechazado' ? `<p style="margin:25px 0;font-size:16px;line-height:1.8;color:#555">Por favor, revisa las observaciones y sube nuevamente el documento corregido desde tu panel de conductor.</p>` : `<p style="margin:25px 0;font-size:16px;line-height:1.8;color:#555">Tu documento ha sido aprobado exitosamente. Puedes continuar con el proceso de postulación.</p>`}<table width="100%" cellpadding="0" cellspacing="0" style="margin-top:40px"><tr><td align="center" style="padding:25px;background:linear-gradient(135deg,#ffecd2 0%,#fcb69f 100%);border-radius:12px"><p style="margin:0;font-size:18px;font-weight:600;color:#c41e3a">Gracias por tu colaboración</p><p style="margin:10px 0 0 0;font-size:14px;color:#666">COOMOTOR - Juntos construimos futuro 🤝</p></td></tr></table></td></tr><tr><td style="background:linear-gradient(135deg,#2e8b57 0%,#1a5c3a 100%);padding:30px;text-align:center"><p style="margin:0 0 5px 0;font-size:14px;color:white;font-weight:600">COOMOTOR</p><p style="margin:0;font-size:12px;color:rgba(255,255,255,0.8)">Cooperativa de Motoristas del Huila</p><p style="margin:10px 0 0 0;font-size:12px;color:rgba(255,255,255,0.7)">Neiva, Huila - Colombia 🇨🇴</p></td></tr></table></td></tr></table></body></html>`;
+        
+        return await this.enviarEmail(usuario.correo, `📄 Revisión de Documento: ${tiposDocumento[documento.tipo_documento]} - COOMOTOR`, html);
+    }
 }
 
 module.exports = new NotificationService();

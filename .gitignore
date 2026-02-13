@@ -1,0 +1,36 @@
+# Dependencias
+node_modules/
+package-lock.json
+
+# Variables de entorno (NUNCA subir)
+.env
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db
+*.log
+
+# Carpeta de uploads (archivos subidos por usuarios)
+uploads/
+*.pdf
+*.png
+*.jpg
+*.jpeg
+
+# Archivos temporales
+*.tmp
+*.temp
+.cache/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Build
+dist/
+build/
+
+# Render
+.render/

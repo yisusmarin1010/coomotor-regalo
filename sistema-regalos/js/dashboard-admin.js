@@ -122,6 +122,9 @@ function mostrarSeccion(seccion) {
         case 'empleados':
             mostrarEmpleados();
             break;
+        case 'documentos':
+            mostrarDocumentos();
+            break;
         case 'regalos':
             mostrarRegalos();
             break;
@@ -662,6 +665,63 @@ function mostrarRegalos() {
             </div>
         </div>
     `;
+}
+
+// ============================================
+// GESTIÓN DE DOCUMENTOS
+// ============================================
+
+// Mostrar sección de documentos
+async function mostrarDocumentos() {
+    const container = document.getElementById('seccionesContainer');
+    
+    const html = `
+        <div class="action-card">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h3 class="action-title mb-0">
+                    <i class="bi bi-file-earmark-check me-2"></i>
+                    Gestión de Documentos
+                </h3>
+                <div class="d-flex gap-2">
+                    <select class="form-select form-select-sm" style="width: 150px; font-size: 0.75rem;" id="filtroEstadoDocumento" onchange="filtrarDocumentos()">
+                        <option value="">Todos los estados</option>
+                        <option value="pendiente" selected>Pendientes</option>
+                        <option value="aprobado">Aprobados</option>
+                        <option value="rechazado">Rechazados</option>
+                    </select>
+                    <button class="btn btn-primary btn-sm" onclick="cargarDocumentosAdmin()">
+                        <i class="bi bi-arrow-clockwise me-1"></i>
+                        Actualizar
+                    </button>
+                </div>
+            </div>
+            
+            <div class="alert alert-info" style="font-size: 0.75rem; padding: 0.75rem;">
+                <i class="bi bi-info-circle me-2"></i>
+                <strong>Gestión de Documentos:</strong> Revisa y aprueba/rechaza los documentos subidos por los conductores. Los documentos aprobados permitirán completar las postulaciones.
+            </div>
+            
+            <div id="documentosAdminContainer">
+                <div class="text-center py-4">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Cargando...</span>
+                    </div>
+                    <p class="mt-2" style="font-size: 0.75rem;">Cargando documentos...</p>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    container.innerHTML = html;
+    
+    // Cargar documentos pendientes por defecto
+    cargarDocumentosAdmin({ estado: 'pendiente' });
+}
+
+// Filtrar documentos
+function filtrarDocumentos() {
+    const estado = document.getElementById('filtroEstadoDocumento').value;
+    cargarDocumentosAdmin({ estado: estado || undefined });
 }
 
 // ============================================

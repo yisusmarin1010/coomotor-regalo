@@ -12,6 +12,8 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const validator = require('validator');
 const path = require('path');
+const multer = require('multer');
+const fs = require('fs');
 require('dotenv').config();
 
 // Importar servicio de notificaciones
@@ -1544,6 +1546,436 @@ app.post('/api/admin/enviar-alertas-plazo', authenticateToken, requireAdmin, asy
         res.status(500).json({
             success: false,
             error: 'Error interno del servidor'
+        });
+    }
+});
+
+// ============================================
+// CONFIGURACIÓN DE MULTER PARA SUBIDA DE ARCHIVOS
+// ============================================
+
+// Crear directorio uploads si no existe
+const uploadsDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir, { recursive: true });
+}
+
+// Configuración de almacenamiento
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, uploadsDir);
+    },
+    filename: function (req, file, cb) {
+        // Generar nombre único: timestamp-usuarioId-nombreOriginal
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        const ext = path.extname(file.originalname);
+        const nameWithoutExt = path.basename(file.originalname, ext);
+        cb(null, `${uniqueSuffix}-${nameWithoutExt}${ext}`);
+    }
+});
+
+// Filtro de archivos (solo PDF y PNG)
+const fileFilter = (req, file, cb) => {
+    const allowedTypes = ['application/pdf', 'image/png', 'image/jpeg', 'image/jpg'];
+    if (allowedTypes.includes(file.mimetype)) {
+        cb(null, true);
+    } else {
+        cb(new Error('Tipo de archivo no permitido. Solo se aceptan PDF, PNG y JPG'), false);
+    }
+};
+
+// Configurar multer
+const upload = multer({
+    storage: storage,
+    fileFilter: fileFilter,
+    limits: {
+        fileSize: 5 * 1024 * 1024 // 5MB máximo
+    }
+});
+
+// ============================================
+// ENDPOINTS DE DOCUMENTOS
+// ============================================
+
+// Subir documento (Conductor)
+app.post('/api/documentos/subir', authenticateToken, upload.single('documento'), async (req, res) => {
+    try {
+        if (!req.file) {
+            return res.status(400).json({
+                success: false,
+                error: 'No se proporcionó ningún archivo'
+            });
+        }
+
+        const { tipo_documento, hijo_id, descripcion } = req.body;
+        const usuario_id = req.user.userId;
+
+        // Validar tipo de documento
+        const tiposPermitidos = ['registro_civil', 'tarjeta_identidad', 'cedula', 'foto_hijo', 'comprobante_residencia', 'otro'];
+        if (!tiposPermitidos.includes(tipo_documento)) {
+            // Eliminar archivo subido
+            fs.unlinkSync(req.file.path);
+            return res.status(400).json({
+                success: false,
+                error: 'Tipo de documento no válido'
+            });
+        }
+
+        const pool = await sql.connect(dbConfig);
+
+        // Insertar documento en la base de datos
+        const result = await pool.request()
+            .input('usuario_id', sql.Int, usuario_id)
+            .input('hijo_id', sql.Int, hijo_id || null)
+            .input('tipo_documento', sql.VarChar(50), tipo_documento)
+            .input('nombre_archivo', sql.VarChar(255), req.file.filename)
+            .input('ruta_archivo', sql.VarChar(500), req.file.path)
+            .input('tamano_archivo', sql.Int, req.file.size)
+            .input('tipo_mime', sql.VarChar(100), req.file.mimetype)
+            .input('descripcion', sql.VarChar(500), descripcion || null)
+            .query(`
+                INSERT INTO documentos_usuarios 
+                (usuario_id, hijo_id, tipo_documento, nombre_archivo, ruta_archivo, tamano_archivo, tipo_mime, descripcion, estado, fecha_subida)
+                VALUES 
+                (@usuario_id, @hijo_id, @tipo_documento, @nombre_archivo, @ruta_archivo, @tamano_archivo, @tipo_mime, @descripcion, 'pendiente', GETDATE());
+                
+                SELECT SCOPE_IDENTITY() AS id;
+            `);
+
+        const documentoId = result.recordset[0].id;
+
+        res.json({
+            success: true,
+            message: 'Documento subido exitosamente',
+            data: {
+                id: documentoId,
+                nombre_archivo: req.file.filename,
+                tipo_documento: tipo_documento,
+                tamano: req.file.size
+            }
+        });
+
+    } catch (error) {
+        console.error('❌ Error al subir documento:', error);
+        // Eliminar archivo si hubo error
+        if (req.file && fs.existsSync(req.file.path)) {
+            fs.unlinkSync(req.file.path);
+        }
+        res.status(500).json({
+            success: false,
+            error: 'Error al subir el documento'
+        });
+    }
+});
+
+// Obtener documentos del usuario (Conductor)
+app.get('/api/documentos/mis-documentos', authenticateToken, async (req, res) => {
+    try {
+        const usuario_id = req.user.userId;
+        const pool = await sql.connect(dbConfig);
+
+        const result = await pool.request()
+            .input('usuario_id', sql.Int, usuario_id)
+            .query(`
+                SELECT 
+                    d.id,
+                    d.tipo_documento,
+                    d.nombre_archivo,
+                    d.tamano_archivo,
+                    d.tipo_mime,
+                    d.descripcion,
+                    d.estado,
+                    d.fecha_subida,
+                    d.fecha_revision,
+                    d.observaciones_admin,
+                    h.nombres + ' ' + h.apellidos AS nombre_hijo
+                FROM documentos_usuarios d
+                LEFT JOIN hijos h ON d.hijo_id = h.id
+                WHERE d.usuario_id = @usuario_id
+                ORDER BY d.fecha_subida DESC
+            `);
+
+        res.json({
+            success: true,
+            data: result.recordset
+        });
+
+    } catch (error) {
+        console.error('❌ Error al obtener documentos:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Error al obtener los documentos'
+        });
+    }
+});
+
+// Obtener todos los documentos (Admin)
+app.get('/api/admin/documentos', authenticateToken, requireAdmin, async (req, res) => {
+    try {
+        const { estado, usuario_id } = req.query;
+        const pool = await sql.connect(dbConfig);
+
+        let query = `
+            SELECT 
+                d.id,
+                d.usuario_id,
+                d.tipo_documento,
+                d.nombre_archivo,
+                d.tamano_archivo,
+                d.tipo_mime,
+                d.descripcion,
+                d.estado,
+                d.fecha_subida,
+                d.fecha_revision,
+                d.observaciones_admin,
+                u.nombres + ' ' + u.apellidos AS nombre_usuario,
+                u.correo AS correo_usuario,
+                u.tipo_conductor,
+                h.nombres + ' ' + h.apellidos AS nombre_hijo
+            FROM documentos_usuarios d
+            INNER JOIN usuarios u ON d.usuario_id = u.id
+            LEFT JOIN hijos h ON d.hijo_id = h.id
+            WHERE 1=1
+        `;
+
+        const request = pool.request();
+
+        if (estado) {
+            query += ` AND d.estado = @estado`;
+            request.input('estado', sql.VarChar(20), estado);
+        }
+
+        if (usuario_id) {
+            query += ` AND d.usuario_id = @usuario_id`;
+            request.input('usuario_id', sql.Int, usuario_id);
+        }
+
+        query += ` ORDER BY d.fecha_subida DESC`;
+
+        const result = await request.query(query);
+
+        res.json({
+            success: true,
+            data: result.recordset
+        });
+
+    } catch (error) {
+        console.error('❌ Error al obtener documentos (admin):', error);
+        res.status(500).json({
+            success: false,
+            error: 'Error al obtener los documentos'
+        });
+    }
+});
+
+// Descargar documento
+app.get('/api/documentos/descargar/:id', authenticateToken, async (req, res) => {
+    try {
+        const documentoId = req.params.id;
+        const usuario_id = req.user.userId;
+        const esAdmin = req.user.rol === 'admin';
+
+        const pool = await sql.connect(dbConfig);
+
+        // Obtener información del documento
+        const result = await pool.request()
+            .input('id', sql.Int, documentoId)
+            .query(`
+                SELECT 
+                    d.id,
+                    d.usuario_id,
+                    d.nombre_archivo,
+                    d.ruta_archivo,
+                    d.tipo_mime
+                FROM documentos_usuarios d
+                WHERE d.id = @id
+            `);
+
+        if (result.recordset.length === 0) {
+            return res.status(404).json({
+                success: false,
+                error: 'Documento no encontrado'
+            });
+        }
+
+        const documento = result.recordset[0];
+
+        // Verificar permisos (solo el dueño o admin pueden descargar)
+        if (!esAdmin && documento.usuario_id !== usuario_id) {
+            return res.status(403).json({
+                success: false,
+                error: 'No tienes permiso para descargar este documento'
+            });
+        }
+
+        // Verificar que el archivo existe
+        if (!fs.existsSync(documento.ruta_archivo)) {
+            return res.status(404).json({
+                success: false,
+                error: 'Archivo no encontrado en el servidor'
+            });
+        }
+
+        // Enviar archivo
+        res.setHeader('Content-Type', documento.tipo_mime);
+        res.setHeader('Content-Disposition', `attachment; filename="${documento.nombre_archivo}"`);
+        res.sendFile(path.resolve(documento.ruta_archivo));
+
+    } catch (error) {
+        console.error('❌ Error al descargar documento:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Error al descargar el documento'
+        });
+    }
+});
+
+// Revisar documento (Admin)
+app.put('/api/admin/documentos/:id/revisar', authenticateToken, requireAdmin, async (req, res) => {
+    try {
+        const documentoId = req.params.id;
+        const { estado, observaciones } = req.body;
+
+        // Validar estado
+        const estadosPermitidos = ['aprobado', 'rechazado'];
+        if (!estadosPermitidos.includes(estado)) {
+            return res.status(400).json({
+                success: false,
+                error: 'Estado no válido'
+            });
+        }
+
+        const pool = await sql.connect(dbConfig);
+
+        const result = await pool.request()
+            .input('id', sql.Int, documentoId)
+            .input('estado', sql.VarChar(20), estado)
+            .input('observaciones', sql.VarChar(500), observaciones || null)
+            .query(`
+                UPDATE documentos_usuarios
+                SET 
+                    estado = @estado,
+                    observaciones_admin = @observaciones,
+                    fecha_revision = GETDATE()
+                WHERE id = @id;
+
+                SELECT 
+                    d.*,
+                    u.nombres + ' ' + u.apellidos AS nombre_usuario,
+                    u.correo AS correo_usuario
+                FROM documentos_usuarios d
+                INNER JOIN usuarios u ON d.usuario_id = u.id
+                WHERE d.id = @id;
+            `);
+
+        if (result.recordset.length === 0) {
+            return res.status(404).json({
+                success: false,
+                error: 'Documento no encontrado'
+            });
+        }
+
+        const documento = result.recordset[0];
+
+        // Enviar notificación al usuario
+        try {
+            await notificationService.notificarRevisionDocumento(
+                {
+                    correo: documento.correo_usuario,
+                    nombres: documento.nombre_usuario
+                },
+                {
+                    tipo_documento: documento.tipo_documento,
+                    estado: estado,
+                    observaciones: observaciones
+                }
+            );
+        } catch (emailError) {
+            console.error('Error al enviar notificación:', emailError);
+        }
+
+        res.json({
+            success: true,
+            message: `Documento ${estado} exitosamente`,
+            data: documento
+        });
+
+    } catch (error) {
+        console.error('❌ Error al revisar documento:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Error al revisar el documento'
+        });
+    }
+});
+
+// Eliminar documento
+app.delete('/api/documentos/:id', authenticateToken, async (req, res) => {
+    try {
+        const documentoId = req.params.id;
+        const usuario_id = req.user.userId;
+        const esAdmin = req.user.rol === 'admin';
+
+        const pool = await sql.connect(dbConfig);
+
+        // Obtener información del documento
+        const result = await pool.request()
+            .input('id', sql.Int, documentoId)
+            .query(`
+                SELECT 
+                    d.id,
+                    d.usuario_id,
+                    d.ruta_archivo,
+                    d.estado
+                FROM documentos_usuarios d
+                WHERE d.id = @id
+            `);
+
+        if (result.recordset.length === 0) {
+            return res.status(404).json({
+                success: false,
+                error: 'Documento no encontrado'
+            });
+        }
+
+        const documento = result.recordset[0];
+
+        // Verificar permisos
+        if (!esAdmin && documento.usuario_id !== usuario_id) {
+            return res.status(403).json({
+                success: false,
+                error: 'No tienes permiso para eliminar este documento'
+            });
+        }
+
+        // No permitir eliminar documentos aprobados (solo admin puede)
+        if (documento.estado === 'aprobado' && !esAdmin) {
+            return res.status(403).json({
+                success: false,
+                error: 'No puedes eliminar un documento aprobado'
+            });
+        }
+
+        // Eliminar archivo físico
+        if (fs.existsSync(documento.ruta_archivo)) {
+            fs.unlinkSync(documento.ruta_archivo);
+        }
+
+        // Eliminar registro de la base de datos
+        await pool.request()
+            .input('id', sql.Int, documentoId)
+            .query(`DELETE FROM documentos_usuarios WHERE id = @id`);
+
+        res.json({
+            success: true,
+            message: 'Documento eliminado exitosamente'
+        });
+
+    } catch (error) {
+        console.error('❌ Error al eliminar documento:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Error al eliminar el documento'
         });
     }
 });
