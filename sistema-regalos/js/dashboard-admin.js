@@ -159,15 +159,51 @@ function mostrarInicio() {
             <p>Bienvenido al sistema administrativo de regalos navideños COOMOTOR 2024</p>
             
             <div class="row mt-4">
-                <div class="col-12">
+                <div class="col-md-6">
                     <div class="info-card">
                         <h5><i class="bi bi-calendar-event me-2"></i>Fechas Importantes</h5>
-                        <ul class="list-unstyled">
-                            <li><strong>Registro:</strong> Hasta el 10 de Diciembre</li>
-                            <li><strong>Postulaciones:</strong> Hasta el 15 de Diciembre</li>
-                            <li><strong>Revisión:</strong> 16 - 20 de Diciembre</li>
-                            <li><strong>Entrega:</strong> 21 - 24 de Diciembre</li>
+                        <ul class="list-unstyled mb-0">
+                            <li class="mb-2"><i class="bi bi-circle-fill text-success me-2" style="font-size: 0.5rem;"></i><strong>Registro:</strong> Hasta el 10 de Diciembre</li>
+                            <li class="mb-2"><i class="bi bi-circle-fill text-warning me-2" style="font-size: 0.5rem;"></i><strong>Postulaciones:</strong> Hasta el 15 de Diciembre</li>
+                            <li class="mb-2"><i class="bi bi-circle-fill text-info me-2" style="font-size: 0.5rem;"></i><strong>Revisión:</strong> 16 - 20 de Diciembre</li>
+                            <li class="mb-0"><i class="bi bi-circle-fill text-danger me-2" style="font-size: 0.5rem;"></i><strong>Entrega:</strong> 21 - 24 de Diciembre</li>
                         </ul>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="info-card">
+                        <h5><i class="bi bi-info-circle me-2"></i>Accesos Rápidos</h5>
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-outline-primary btn-sm" onclick="mostrarPostulaciones()">
+                                <i class="bi bi-list-check me-2"></i>Ver Postulaciones
+                            </button>
+                            <button class="btn btn-outline-success btn-sm" onclick="mostrarUsuarios()">
+                                <i class="bi bi-people me-2"></i>Gestionar Usuarios
+                            </button>
+                            <button class="btn btn-outline-info btn-sm" onclick="mostrarReportes()">
+                                <i class="bi bi-graph-up me-2"></i>Ver Reportes
+                            </button>
+                            <button class="btn btn-outline-warning btn-sm" onclick="mostrarMensajes()">
+                                <i class="bi bi-chat-dots me-2"></i>Mensajes de Contacto
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row mt-3">
+                <div class="col-12">
+                    <div class="alert alert-info mb-0" style="background: linear-gradient(135deg, #e0f2fe 0%, #dbeafe 100%); border: none; border-left: 4px solid #3b82f6;">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-lightbulb-fill text-primary me-3" style="font-size: 1.5rem;"></i>
+                            <div>
+                                <h6 class="mb-1" style="color: #1e40af; font-weight: 600;">Consejo del Sistema</h6>
+                                <p class="mb-0" style="color: #1e3a8a; font-size: 0.85rem;">
+                                    Revisa diariamente las postulaciones pendientes para mantener el proceso ágil. 
+                                    Recuerda solicitar documentos faltantes a tiempo para evitar retrasos en las aprobaciones.
+                                </p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
