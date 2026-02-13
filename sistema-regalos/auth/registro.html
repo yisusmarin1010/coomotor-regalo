@@ -12,7 +12,9 @@
         :root {
             --primary-green: #059669;
             --primary-red: #dc2626;
-            --bg-light: #f9fafb;
+            --accent-gold: #fbbf24;
+            --bg-gradient-start: #0f172a;
+            --bg-gradient-end: #1e293b;
             --text-dark: #1f2937;
             --text-light: #6b7280;
         }
@@ -25,60 +27,173 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background: var(--bg-light);
+            background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
             color: var(--text-dark);
-            padding: 1.5rem 0;
+            padding: 2rem 0;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Decoraciones navideñas de fondo */
+        body::before {
+            content: '⭐';
+            position: absolute;
+            font-size: 12rem;
+            opacity: 0.03;
+            top: 10%;
+            right: 5%;
+            animation: twinkle 3s ease-in-out infinite;
+        }
+
+        body::after {
+            content: '🎅';
+            position: absolute;
+            font-size: 10rem;
+            opacity: 0.03;
+            bottom: 10%;
+            left: 5%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.03; transform: scale(1); }
+            50% { opacity: 0.06; transform: scale(1.1); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
         }
 
         .registro-container {
-            max-width: 600px;
+            max-width: 700px;
             margin: 0 auto;
             padding: 0 1rem;
+            position: relative;
+            z-index: 1;
         }
 
         .registro-card {
             background: white;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
             overflow: hidden;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .registro-header {
-            background: var(--primary-green);
+            background: linear-gradient(135deg, var(--primary-green) 0%, #047857 100%);
             color: white;
-            padding: 1.5rem;
+            padding: 2.5rem 1.5rem;
             text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .registro-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        .registro-header-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            display: inline-block;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
 
         .registro-header h1 {
-            font-size: 1.25rem;
-            font-weight: 600;
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 1;
         }
 
         .registro-header p {
-            font-size: 0.875rem;
+            font-size: 0.95rem;
             margin: 0;
+            opacity: 0.95;
+            position: relative;
+            z-index: 1;
         }
 
         .registro-body {
+            padding: 2rem 1.5rem;
+        }
+
+        .form-section {
+            background: #f9fafb;
+            border-radius: 12px;
             padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid var(--primary-green);
+        }
+
+        .form-section-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--primary-green);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .form-label {
-            font-weight: 500;
-            font-size: 0.9rem;
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-label i {
+            color: var(--primary-green);
         }
 
         .form-control, .form-select {
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            padding: 0.75rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 0.875rem 1rem;
             font-size: 0.9rem;
+            transition: all 0.3s ease;
         }
 
         .form-control:focus, .form-select:focus {
             border-color: var(--primary-green);
-            box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
+            box-shadow: 0 0 0 4px rgba(5, 150, 105, 0.1);
+            transform: translateY(-2px);
         }
 
         .required {
@@ -87,51 +202,147 @@
 
         .subtipo-container {
             display: none;
+            animation: fadeIn 0.3s ease-in;
         }
 
         .subtipo-container.show {
             display: block;
         }
 
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         .btn-christmas {
-            background: var(--primary-green);
+            background: linear-gradient(135deg, var(--primary-green) 0%, #047857 100%);
             border: none;
             color: white;
-            font-weight: 500;
-            padding: 0.75rem;
-            border-radius: 8px;
-            transition: all 0.3s;
+            font-weight: 600;
+            padding: 1rem;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(5, 150, 105, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-christmas::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn-christmas:hover::before {
+            width: 400px;
+            height: 400px;
         }
 
         .btn-christmas:hover {
-            background: #047857;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(5, 150, 105, 0.4);
+        }
+
+        .btn-christmas:active {
+            transform: translateY(-1px);
         }
 
         .login-link {
             text-align: center;
-            margin-top: 1rem;
-            padding-top: 1rem;
-            border-top: 1px solid #e5e7eb;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 2px solid #f3f4f6;
+        }
+
+        .login-link p {
+            margin-bottom: 0.75rem;
+            color: var(--text-light);
         }
 
         .login-link a {
             color: var(--primary-green);
             text-decoration: none;
-            font-weight: 500;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .login-link a:hover {
+            color: #047857;
+            gap: 0.5rem;
         }
 
         .form-text {
             font-size: 0.75rem;
             color: var(--text-light);
+            margin-top: 0.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .password-strength {
+            height: 4px;
+            background: #e5e7eb;
+            border-radius: 2px;
+            margin-top: 0.5rem;
+            overflow: hidden;
+        }
+
+        .password-strength-bar {
+            height: 100%;
+            width: 0;
+            transition: all 0.3s ease;
+            border-radius: 2px;
+        }
+
+        .password-strength-bar.weak {
+            width: 33%;
+            background: var(--primary-red);
+        }
+
+        .password-strength-bar.medium {
+            width: 66%;
+            background: #f59e0b;
+        }
+
+        .password-strength-bar.strong {
+            width: 100%;
+            background: var(--primary-green);
         }
 
         @media (max-width: 768px) {
+            body {
+                padding: 1rem 0;
+            }
+
+            .registro-header {
+                padding: 2rem 1rem;
+            }
+
+            .registro-header-icon {
+                font-size: 2.5rem;
+            }
+
             .registro-header h1 {
-                font-size: 1.1rem;
+                font-size: 1.5rem;
             }
             
             .registro-body {
-                padding: 1.25rem;
+                padding: 1.5rem 1rem;
+            }
+
+            .form-section {
+                padding: 1rem;
             }
         }
     </style>
@@ -140,130 +351,187 @@
     <div class="registro-container">
         <div class="registro-card">
             <div class="registro-header">
-                <div class="mb-3">
-                    <i class="bi bi-gift-fill" style="font-size: 2rem;"></i>
+                <div class="registro-header-icon">
+                    🎁
                 </div>
-                <h1>Registro Regalos Navideños</h1>
-                <p>Sistema exclusivo para conductores y empleados COOMOTOR</p>
+                <h1>¡Únete a la Familia COOMOTOR!</h1>
+                <p>Registro para el Sistema de Regalos Navideños 2024</p>
             </div>
 
             <div class="registro-body">
                 <div id="alertContainer"></div>
 
                 <form id="registroForm">
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="nombres" class="form-label">
-                                Nombres <span class="required">*</span>
-                            </label>
-                            <input type="text" class="form-control" id="nombres" required>
+                    <!-- Sección: Información Personal -->
+                    <div class="form-section">
+                        <div class="form-section-title">
+                            <i class="bi bi-person-circle"></i>
+                            Información Personal
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="apellidos" class="form-label">
-                                Apellidos <span class="required">*</span>
-                            </label>
-                            <input type="text" class="form-control" id="apellidos" required>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="nombres" class="form-label">
+                                    <i class="bi bi-person"></i>
+                                    Nombres <span class="required">*</span>
+                                </label>
+                                <input type="text" class="form-control" id="nombres" placeholder="Ej: Juan Carlos" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="apellidos" class="form-label">
+                                    <i class="bi bi-person"></i>
+                                    Apellidos <span class="required">*</span>
+                                </label>
+                                <input type="text" class="form-control" id="apellidos" placeholder="Ej: Pérez González" required>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="celular" class="form-label">
+                                    <i class="bi bi-phone"></i>
+                                    Celular <span class="required">*</span>
+                                </label>
+                                <input type="tel" class="form-control" id="celular" placeholder="3001234567" required>
+                                <div class="form-text">
+                                    <i class="bi bi-info-circle"></i>
+                                    10 dígitos, debe iniciar con 3
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="correo" class="form-label">
+                                    <i class="bi bi-envelope"></i>
+                                    Correo Electrónico <span class="required">*</span>
+                                </label>
+                                <input type="email" class="form-control" id="correo" placeholder="tu@correo.com" required>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="celular" class="form-label">
-                                Celular <span class="required">*</span>
-                            </label>
-                            <input type="tel" class="form-control" id="celular" placeholder="3001234567" required>
+                    <!-- Sección: Documento de Identidad -->
+                    <div class="form-section">
+                        <div class="form-section-title">
+                            <i class="bi bi-card-text"></i>
+                            Documento de Identidad
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="correo" class="form-label">
-                                Correo Electrónico <span class="required">*</span>
-                            </label>
-                            <input type="email" class="form-control" id="correo" required>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="tipoDocumento" class="form-label">
+                                    <i class="bi bi-file-text"></i>
+                                    Tipo de Documento <span class="required">*</span>
+                                </label>
+                                <select class="form-select" id="tipoDocumento" required>
+                                    <option value="">Seleccionar...</option>
+                                    <option value="cedula">Cédula de Ciudadanía</option>
+                                    <option value="cedula_extranjeria">Cédula de Extranjería</option>
+                                    <option value="pasaporte">Pasaporte</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="numeroDocumento" class="form-label">
+                                    <i class="bi bi-hash"></i>
+                                    Número de Documento <span class="required">*</span>
+                                </label>
+                                <input type="text" class="form-control" id="numeroDocumento" placeholder="1234567890" required>
+                                <div class="form-text">
+                                    <i class="bi bi-info-circle"></i>
+                                    Entre 7 y 10 dígitos
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="tipoDocumento" class="form-label">
-                                Tipo de Documento <span class="required">*</span>
+                    <!-- Sección: Información Laboral -->
+                    <div class="form-section">
+                        <div class="form-section-title">
+                            <i class="bi bi-briefcase"></i>
+                            Información Laboral
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="tipoConductor" class="form-label">
+                                <i class="bi bi-truck"></i>
+                                Tipo de Conductor <span class="required">*</span>
                             </label>
-                            <select class="form-select" id="tipoDocumento" required>
+                            <select class="form-select" id="tipoConductor" required>
                                 <option value="">Seleccionar...</option>
-                                <option value="cedula">Cédula de Ciudadanía</option>
-                                <option value="cedula_extranjeria">Cédula de Extranjería</option>
-                                <option value="pasaporte">Pasaporte</option>
+                                <option value="carretera">🚌 Carretera</option>
+                                <option value="distancia_corta">🚐 Distancia Corta</option>
+                                <option value="urbanos">🚍 Urbanos</option>
+                                <option value="furgones">🚚 Furgones</option>
                             </select>
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="numeroDocumento" class="form-label">
-                                Número de Documento <span class="required">*</span>
+
+                        <!-- Subtipo para Carretera -->
+                        <div id="subtipoCarretera" class="subtipo-container mb-3">
+                            <label for="subtipoCarreteraSelect" class="form-label">
+                                <i class="bi bi-diagram-3"></i>
+                                Subtipo Carretera <span class="required">*</span>
                             </label>
-                            <input type="text" class="form-control" id="numeroDocumento" required>
+                            <select class="form-select" id="subtipoCarreteraSelect">
+                                <option value="">Seleccionar...</option>
+                                <option value="nomina">Nómina</option>
+                                <option value="servicio_basico">Servicio Básico</option>
+                                <option value="seguridad_social">Seguridad Social</option>
+                            </select>
+                        </div>
+
+                        <!-- Subtipo para Furgones -->
+                        <div id="subtipoFurgones" class="subtipo-container mb-3">
+                            <label for="subtipoFurgonesSelect" class="form-label">
+                                <i class="bi bi-diagram-3"></i>
+                                Subtipo Furgones <span class="required">*</span>
+                            </label>
+                            <select class="form-select" id="subtipoFurgonesSelect">
+                                <option value="">Seleccionar...</option>
+                                <option value="nomina">Nómina</option>
+                                <option value="seguridad_social">Seguridad Social</option>
+                            </select>
                         </div>
                     </div>
 
-                    <div class="mb-3">
-                        <label for="tipoConductor" class="form-label">
-                            Tipo de Conductor <span class="required">*</span>
-                        </label>
-                        <select class="form-select" id="tipoConductor" required>
-                            <option value="">Seleccionar...</option>
-                            <option value="carretera">Carretera</option>
-                            <option value="distancia_corta">Distancia Corta</option>
-                            <option value="urbanos">Urbanos</option>
-                            <option value="furgones">Furgones</option>
-                        </select>
-                    </div>
+                    <!-- Sección: Seguridad -->
+                    <div class="form-section">
+                        <div class="form-section-title">
+                            <i class="bi bi-shield-lock"></i>
+                            Seguridad de la Cuenta
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="password" class="form-label">
+                                <i class="bi bi-lock"></i>
+                                Contraseña <span class="required">*</span>
+                            </label>
+                            <input type="password" class="form-control" id="password" placeholder="••••••••" minlength="8" required>
+                            <div class="password-strength">
+                                <div class="password-strength-bar" id="passwordStrengthBar"></div>
+                            </div>
+                            <div class="form-text">
+                                <i class="bi bi-info-circle"></i>
+                                Mínimo 8 caracteres, incluye mayúsculas, minúsculas, números y símbolos
+                            </div>
+                        </div>
 
-                    <!-- Subtipo para Carretera -->
-                    <div id="subtipoCarretera" class="subtipo-container">
-                        <label for="subtipoCarreteraSelect" class="form-label">
-                            Subtipo Carretera <span class="required">*</span>
-                        </label>
-                        <select class="form-select" id="subtipoCarreteraSelect">
-                            <option value="">Seleccionar...</option>
-                            <option value="nomina">Nómina</option>
-                            <option value="servicio_basico">Servicio Básico</option>
-                            <option value="seguridad_social">Seguridad Social</option>
-                        </select>
-                    </div>
-
-                    <!-- Subtipo para Furgones -->
-                    <div id="subtipoFurgones" class="subtipo-container">
-                        <label for="subtipoFurgonesSelect" class="form-label">
-                            Subtipo Furgones <span class="required">*</span>
-                        </label>
-                        <select class="form-select" id="subtipoFurgonesSelect">
-                            <option value="">Seleccionar...</option>
-                            <option value="nomina">Nómina</option>
-                            <option value="seguridad_social">Seguridad Social</option>
-                        </select>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="password" class="form-label">
-                            Contraseña <span class="required">*</span>
-                        </label>
-                        <input type="password" class="form-control" id="password" minlength="6" required>
-                        <div class="form-text">Mínimo 6 caracteres</div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="confirmPassword" class="form-label">
-                            Confirmar Contraseña <span class="required">*</span>
-                        </label>
-                        <input type="password" class="form-control" id="confirmPassword" required>
+                        <div class="mb-3">
+                            <label for="confirmPassword" class="form-label">
+                                <i class="bi bi-lock-fill"></i>
+                                Confirmar Contraseña <span class="required">*</span>
+                            </label>
+                            <input type="password" class="form-control" id="confirmPassword" placeholder="••••••••" required>
+                        </div>
                     </div>
 
                     <button type="submit" class="btn btn-christmas w-100">
                         <i class="bi bi-person-plus-fill me-2"></i>
-                        Registrarse
+                        <span style="position: relative; z-index: 1;">Crear Mi Cuenta</span>
                     </button>
                 </form>
 
                 <div class="login-link">
-                    <p>¿Ya tienes cuenta? <a href="login.html">Iniciar Sesión</a></p>
-                    <p><a href="../index.html" class="text-decoration-none">
-                        <i class="bi bi-arrow-left me-1"></i>Volver al inicio
+                    <p>¿Ya tienes cuenta? <a href="login.html"><i class="bi bi-box-arrow-in-right"></i> Iniciar Sesión</a></p>
+                    <p><a href="../index.html">
+                        <i class="bi bi-arrow-left"></i> Volver al inicio
                     </a></p>
                 </div>
             </div>
@@ -273,5 +541,28 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../js/auth-global.js"></script>
     <script src="../js/auth-registro.js"></script>
+    <script>
+        // Indicador de fortaleza de contraseña
+        document.getElementById('password').addEventListener('input', function(e) {
+            const password = e.target.value;
+            const strengthBar = document.getElementById('passwordStrengthBar');
+            
+            let strength = 0;
+            if (password.length >= 8) strength++;
+            if (/[a-z]/.test(password)) strength++;
+            if (/[A-Z]/.test(password)) strength++;
+            if (/[0-9]/.test(password)) strength++;
+            if (/[@$!%*?&]/.test(password)) strength++;
+            
+            strengthBar.className = 'password-strength-bar';
+            if (strength <= 2) {
+                strengthBar.classList.add('weak');
+            } else if (strength <= 4) {
+                strengthBar.classList.add('medium');
+            } else {
+                strengthBar.classList.add('strong');
+            }
+        });
+    </script>
 </body>
 </html>

@@ -12,7 +12,9 @@
         :root {
             --primary-green: #059669;
             --primary-red: #dc2626;
-            --bg-light: #f9fafb;
+            --accent-gold: #fbbf24;
+            --bg-gradient-start: #0f172a;
+            --bg-gradient-end: #1e293b;
             --text-dark: #1f2937;
             --text-light: #6b7280;
         }
@@ -25,63 +27,151 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background: var(--bg-light);
-            color: var(--text-dark);
+            background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Decoraciones navideñas de fondo */
+        body::before {
+            content: '🎄';
+            position: absolute;
+            font-size: 15rem;
+            opacity: 0.03;
+            top: -5rem;
+            left: -5rem;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        body::after {
+            content: '🎁';
+            position: absolute;
+            font-size: 12rem;
+            opacity: 0.03;
+            bottom: -4rem;
+            right: -4rem;
+            animation: float 8s ease-in-out infinite reverse;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
         }
 
         .login-container {
-            max-width: 400px;
+            max-width: 450px;
             width: 100%;
             padding: 1rem;
+            position: relative;
+            z-index: 1;
         }
 
         .login-card {
             background: white;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
             overflow: hidden;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .login-header {
-            background: var(--primary-green);
+            background: linear-gradient(135deg, var(--primary-green) 0%, #047857 100%);
             color: white;
-            padding: 1.5rem;
+            padding: 2.5rem 1.5rem;
             text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        .login-header-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            display: inline-block;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
 
         .login-header h1 {
-            font-size: 1.25rem;
-            font-weight: 600;
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 1;
         }
 
         .login-header p {
-            font-size: 0.875rem;
+            font-size: 0.95rem;
             margin: 0;
+            opacity: 0.95;
+            position: relative;
+            z-index: 1;
         }
 
         .login-body {
-            padding: 1.5rem;
+            padding: 2rem 1.5rem;
         }
 
         .form-label {
-            font-weight: 500;
+            font-weight: 600;
             font-size: 0.9rem;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-label i {
+            color: var(--primary-green);
         }
 
         .form-control {
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            padding: 0.75rem;
-            font-size: 0.9rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 0.875rem 1rem;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
         }
 
         .form-control:focus {
             border-color: var(--primary-green);
-            box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
+            box-shadow: 0 0 0 4px rgba(5, 150, 105, 0.1);
+            transform: translateY(-2px);
         }
 
         .required {
@@ -94,49 +184,145 @@
 
         .password-toggle-btn {
             position: absolute;
-            right: 10px;
+            right: 12px;
             top: 50%;
             transform: translateY(-50%);
             background: none;
             border: none;
             color: var(--text-light);
             cursor: pointer;
+            padding: 0.5rem;
+            transition: color 0.3s;
+        }
+
+        .password-toggle-btn:hover {
+            color: var(--primary-green);
+        }
+
+        .form-check-input:checked {
+            background-color: var(--primary-green);
+            border-color: var(--primary-green);
         }
 
         .btn-christmas {
-            background: var(--primary-green);
+            background: linear-gradient(135deg, var(--primary-green) 0%, #047857 100%);
             border: none;
             color: white;
-            font-weight: 500;
-            padding: 0.75rem;
-            border-radius: 8px;
-            transition: all 0.3s;
+            font-weight: 600;
+            padding: 1rem;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(5, 150, 105, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-christmas::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn-christmas:hover::before {
+            width: 300px;
+            height: 300px;
         }
 
         .btn-christmas:hover {
-            background: #047857;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(5, 150, 105, 0.4);
+        }
+
+        .btn-christmas:active {
+            transform: translateY(-1px);
         }
 
         .registro-link {
             text-align: center;
-            margin-top: 1rem;
-            padding-top: 1rem;
-            border-top: 1px solid #e5e7eb;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 2px solid #f3f4f6;
+        }
+
+        .registro-link p {
+            margin-bottom: 0.75rem;
+            color: var(--text-light);
         }
 
         .registro-link a {
             color: var(--primary-green);
             text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .registro-link a:hover {
+            color: #047857;
+            gap: 0.5rem;
+        }
+
+        .forgot-password {
+            text-align: right;
+        }
+
+        .forgot-password a {
+            color: var(--primary-green);
+            text-decoration: none;
+            font-size: 0.875rem;
             font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .forgot-password a:hover {
+            color: #047857;
+            text-decoration: underline;
+        }
+
+        /* Nieve decorativa */
+        .snowflake {
+            position: absolute;
+            top: -10px;
+            color: white;
+            opacity: 0.7;
+            animation: fall linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh);
+            }
         }
 
         @media (max-width: 768px) {
+            .login-container {
+                padding: 0.5rem;
+            }
+
+            .login-header {
+                padding: 2rem 1rem;
+            }
+
+            .login-header-icon {
+                font-size: 2.5rem;
+            }
+
             .login-header h1 {
-                font-size: 1.1rem;
+                font-size: 1.5rem;
             }
             
             .login-body {
-                padding: 1.25rem;
+                padding: 1.5rem 1rem;
             }
         }
     </style>
@@ -145,11 +331,11 @@
     <div class="login-container">
         <div class="login-card">
             <div class="login-header">
-                <div class="mb-3">
-                    <i class="bi bi-gift-fill" style="font-size: 2rem;"></i>
+                <div class="login-header-icon">
+                    🎅
                 </div>
-                <h1>Bienvenido</h1>
-                <p>Sistema Regalos Navideños COOMOTOR</p>
+                <h1>¡Bienvenido de Vuelta!</h1>
+                <p>Sistema de Regalos Navideños COOMOTOR 2024</p>
             </div>
 
             <div class="login-body">
@@ -158,17 +344,19 @@
                 <form id="loginForm">
                     <div class="mb-3">
                         <label for="correo" class="form-label">
+                            <i class="bi bi-envelope-fill"></i>
                             Correo Electrónico <span class="required">*</span>
                         </label>
-                        <input type="email" class="form-control" id="correo" required>
+                        <input type="email" class="form-control" id="correo" placeholder="tu@correo.com" required>
                     </div>
 
                     <div class="mb-3">
                         <label for="password" class="form-label">
+                            <i class="bi bi-lock-fill"></i>
                             Contraseña <span class="required">*</span>
                         </label>
                         <div class="password-toggle">
-                            <input type="password" class="form-control" id="password" required>
+                            <input type="password" class="form-control" id="password" placeholder="••••••••" required>
                             <button type="button" class="password-toggle-btn" onclick="togglePassword()">
                                 <i class="bi bi-eye" id="passwordIcon"></i>
                             </button>
@@ -182,22 +370,22 @@
                         </label>
                     </div>
 
-                    <div class="mb-3 text-end">
-                        <a href="recuperar-password.html" class="text-decoration-none" style="color: var(--primary-green); font-size: 0.875rem;">
+                    <div class="mb-4 forgot-password">
+                        <a href="recuperar-password.html">
                             <i class="bi bi-key me-1"></i>¿Olvidaste tu contraseña?
                         </a>
                     </div>
 
                     <button type="submit" class="btn btn-christmas w-100">
                         <i class="bi bi-box-arrow-in-right me-2"></i>
-                        Iniciar Sesión
+                        <span style="position: relative; z-index: 1;">Iniciar Sesión</span>
                     </button>
                 </form>
 
                 <div class="registro-link">
-                    <p>¿No tienes cuenta? <a href="registro.html">Regístrate aquí</a></p>
-                    <p><a href="../index.html" class="text-decoration-none">
-                        <i class="bi bi-arrow-left me-1"></i>Volver al inicio
+                    <p>¿No tienes cuenta? <a href="registro.html"><i class="bi bi-person-plus"></i> Regístrate aquí</a></p>
+                    <p><a href="../index.html">
+                        <i class="bi bi-arrow-left"></i> Volver al inicio
                     </a></p>
                 </div>
             </div>
