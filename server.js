@@ -2096,14 +2096,26 @@ app.get('/api/hijos', authenticateToken, async (req, res) => {
         const result = await poolConnection.request()
             .input('userId', sql.Int, req.user.userId)
             .query(`
-                SELECT h.*, p.id as postulacion_id, p.estado_postulacion
+                SELECT 
+                    h.*,
+                    p.id as postulacion_id,
+                    p.estado_postulacion
                 FROM hijos h
                 LEFT JOIN postulaciones_hijos p ON h.id = p.hijo_id
                 WHERE h.usuario_id = @userId 
                   AND h.estado = 'activo'
-                  AND (p.estado_postulacion IS NULL OR p.estado_postulacion != 'rechazada')
+                  AND h.id NOT IN (
+                      SELECT hijo_id 
+                      FROM postulaciones_hijos 
+                      WHERE estado_postulacion = 'rechazada'
+                  )
                 ORDER BY h.fecha_registro DESC
             `);
+        
+        console.log(`📊 Hijos para usuario ${req.user.userId}:`, result.recordset.length);
+        result.recordset.forEach(hijo => {
+            console.log(`  - ${hijo.nombres}: postulacion_id=${hijo.postulacion_id}, estado=${hijo.estado_postulacion}`);
+        });
         
         res.json({ success: true, data: result.recordset });
     } catch (error) {

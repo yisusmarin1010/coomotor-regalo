@@ -1,9 +1,9 @@
 // ============================================
 // DASHBOARD EMPLEADO AVANZADO - SISTEMA REGALOS NAVIDEÑOS
-// VERSION 2.0 - Filtrado de rechazadas
+// VERSION 2.1 - Filtrado mejorado con subconsulta SQL
 // ============================================
 
-console.log('📦 Dashboard Empleado v2.0 - Cargado');
+console.log('📦 Dashboard Empleado v2.1 - Cargado');
 
 let usuarioActual = null;
 let hijosRegistrados = [];
@@ -13,8 +13,8 @@ let estadisticasEnTiempoReal = {};
 
 // Inicializar dashboard con funcionalidades avanzadas
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('🔵 Inicializando dashboard empleado v2.0...');
-    console.log('✅ Filtrado de rechazadas: ACTIVO');
+    console.log('🔵 Inicializando dashboard empleado v2.1...');
+    console.log('✅ Filtrado de rechazadas: ACTIVO (SQL + JS)');
     verificarAutenticacion();
     // cargarEstadisticas(); // Temporalmente deshabilitado
     cargarHijos();
@@ -714,17 +714,34 @@ async function registrarHijo() {
 
 // Modal de postulación mejorado
 function mostrarModalPostulacion() {
+    console.log('🎁 Abriendo modal de postulación');
+    console.log('📋 hijosRegistrados:', hijosRegistrados);
+    
     // Filtrar hijos rechazados
-    const hijosSinRechazar = hijosRegistrados.filter(hijo => hijo.estado_postulacion !== 'rechazada');
+    const hijosSinRechazar = hijosRegistrados.filter(hijo => {
+        const esRechazado = hijo.estado_postulacion === 'rechazada';
+        console.log(`  - ${hijo.nombres}: estado=${hijo.estado_postulacion}, rechazado=${esRechazado}`);
+        return !esRechazado;
+    });
+    
+    console.log('✅ Hijos sin rechazar:', hijosSinRechazar.length);
     
     if (hijosSinRechazar.length === 0) {
+        console.log('⚠️ No hay hijos sin rechazar');
         mostrarNotificacion('warning', 'Primero debes registrar al menos un hijo');
         return;
     }
     
-    const hijosDisponibles = hijosSinRechazar.filter(hijo => !hijo.postulacion_id);
+    const hijosDisponibles = hijosSinRechazar.filter(hijo => {
+        const tienePostulacion = !!hijo.postulacion_id;
+        console.log(`  - ${hijo.nombres}: tiene postulacion=${tienePostulacion}`);
+        return !tienePostulacion;
+    });
+    
+    console.log('✅ Hijos disponibles para postular:', hijosDisponibles.length);
     
     if (hijosDisponibles.length === 0) {
+        console.log('⚠️ Todos los hijos ya están postulados');
         mostrarNotificacion('info', 'Todos tus hijos ya han sido postulados');
         return;
     }
