@@ -2155,11 +2155,19 @@ app.post('/api/postulaciones', authenticateToken, async (req, res) => {
         const hijoResult = await poolConnection.request()
             .input('hijoId', sql.Int, hijo_id)
             .input('userId', sql.Int, req.user.userId)
-            .query('SELECT id FROM hijos WHERE id = @hijoId AND usuario_id = @userId AND estado = \'activo\'');
+            .query(`
+                SELECT h.id, h.nombres, h.apellidos, h.fecha_nacimiento,
+                       u.nombres as usuario_nombres, u.apellidos as usuario_apellidos, u.correo
+                FROM hijos h
+                INNER JOIN usuarios u ON h.usuario_id = u.id
+                WHERE h.id = @hijoId AND h.usuario_id = @userId AND h.estado = 'activo'
+            `);
         
         if (hijoResult.recordset.length === 0) {
             return res.status(404).json({ success: false, error: 'Hijo no encontrado' });
         }
+        
+        const hijo = hijoResult.recordset[0];
         
         // Verificar que no existe una postulación previa
         const postulacionExistente = await poolConnection.request()
@@ -2174,14 +2182,71 @@ app.post('/api/postulaciones', authenticateToken, async (req, res) => {
             .input('userId', sql.Int, req.user.userId)
             .input('hijoId', sql.Int, hijo_id)
             .query(`
-                INSERT INTO postulaciones_hijos (usuario_id, hijo_id, tipo_regalo_solicitado)
-                VALUES (@userId, @hijoId, 'juguete');
+                INSERT INTO postulaciones_hijos (usuario_id, hijo_id, tipo_regalo_solicitado, estado_postulacion)
+                VALUES (@userId, @hijoId, 'juguete', 'pendiente');
                 SELECT SCOPE_IDENTITY() AS id;
             `);
         
-        res.json({ success: true, data: { id: result.recordset[0].id }, message: 'Postulación creada exitosamente' });
+        const postulacionId = result.recordset[0].id;
+        
+        // Enviar email de confirmación al conductor
+        try {
+            const edad = calcularEdad(hijo.fecha_nacimiento);
+            await notificationService.notificarConfirmacionPostulacion({
+                email: hijo.correo,
+                nombreEmpleado: `${hijo.usuario_nombres} ${hijo.usuario_apellidos}`,
+                nombreHijo: `${hijo.nombres} ${hijo.apellidos}`,
+                edad: edad
+            });
+        } catch (emailError) {
+            console.error('Error al enviar email de confirmación:', emailError);
+        }
+        
+        res.json({ 
+            success: true, 
+            data: { id: postulacionId }, 
+            message: 'Postulación creada exitosamente. Recibirás un correo de confirmación.' 
+        });
     } catch (error) {
         console.error('Error al crear postulación:', error);
+        res.status(500).json({ success: false, error: 'Error interno del servidor' });
+    }
+});
+
+// Función auxiliar para calcular edad
+function calcularEdad(fechaNacimiento) {
+    const hoy = new Date();
+    const nacimiento = new Date(fechaNacimiento);
+    let edad = hoy.getFullYear() - nacimiento.getFullYear();
+    const mes = hoy.getMonth() - nacimiento.getMonth();
+    if (mes < 0 || (mes === 0 && hoy.getDate() < nacimiento.getDate())) {
+        edad--;
+    }
+    return edad;
+}
+
+// Obtener postulaciones del empleado actual
+app.get('/api/postulaciones', authenticateToken, async (req, res) => {
+    try {
+        const result = await poolConnection.request()
+            .input('userId', sql.Int, req.user.userId)
+            .query(`
+                SELECT 
+                    p.*,
+                    h.nombres as hijo_nombres,
+                    h.apellidos as hijo_apellidos,
+                    h.fecha_nacimiento as fecha_nacimiento_hijo,
+                    h.tipo_documento,
+                    h.numero_documento
+                FROM postulaciones_hijos p
+                INNER JOIN hijos h ON p.hijo_id = h.id
+                WHERE p.usuario_id = @userId
+                ORDER BY p.fecha_postulacion DESC
+            `);
+        
+        res.json({ success: true, data: result.recordset });
+    } catch (error) {
+        console.error('Error al obtener postulaciones del empleado:', error);
         res.status(500).json({ success: false, error: 'Error interno del servidor' });
     }
 });
@@ -2240,6 +2305,84 @@ app.get('/api/admin/postulaciones', authenticateToken, requireAdmin, async (req,
         res.json({ success: true, data: result.recordset });
     } catch (error) {
         console.error('Error al obtener postulaciones:', error);
+        res.status(500).json({ success: false, error: 'Error interno del servidor' });
+    }
+});
+
+// Solicitar documentos al conductor (Admin)
+app.put('/api/admin/postulaciones/:id/solicitar-documentos', authenticateToken, requireAdmin, async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { documentos_solicitados, mensaje } = req.body;
+        
+        if (!documentos_solicitados || documentos_solicitados.length === 0) {
+            return res.status(400).json({ 
+                success: false, 
+                error: 'Debes especificar al menos un documento a solicitar' 
+            });
+        }
+        
+        // Obtener información de la postulación
+        const postulacionResult = await poolConnection.request()
+            .input('id', sql.Int, id)
+            .query(`
+                SELECT 
+                    p.id,
+                    p.usuario_id,
+                    p.hijo_id,
+                    u.nombres as usuario_nombres,
+                    u.apellidos as usuario_apellidos,
+                    u.correo as usuario_correo,
+                    h.nombres as hijo_nombres,
+                    h.apellidos as hijo_apellidos
+                FROM postulaciones_hijos p
+                INNER JOIN usuarios u ON p.usuario_id = u.id
+                INNER JOIN hijos h ON p.hijo_id = h.id
+                WHERE p.id = @id
+            `);
+        
+        if (postulacionResult.recordset.length === 0) {
+            return res.status(404).json({ success: false, error: 'Postulación no encontrada' });
+        }
+        
+        const postulacion = postulacionResult.recordset[0];
+        
+        // Actualizar postulación con documentos solicitados
+        await poolConnection.request()
+            .input('id', sql.Int, id)
+            .input('documentos', sql.VarChar(1000), JSON.stringify(documentos_solicitados))
+            .input('mensaje', sql.VarChar(1000), mensaje || 'Por favor sube los siguientes documentos para continuar con tu postulación')
+            .query(`
+                UPDATE postulaciones_hijos
+                SET 
+                    estado_postulacion = 'documentos_solicitados',
+                    documentos_solicitados = @documentos,
+                    observaciones_admin = @mensaje,
+                    fecha_solicitud_documentos = GETDATE()
+                WHERE id = @id
+            `);
+        
+        // Enviar notificación al conductor
+        try {
+            await notificationService.notificarSolicitudDocumentos({
+                email: postulacion.usuario_correo,
+                nombreEmpleado: `${postulacion.usuario_nombres} ${postulacion.usuario_apellidos}`,
+                nombreHijo: `${postulacion.hijo_nombres} ${postulacion.hijo_apellidos}`,
+                documentosSolicitados: documentos_solicitados,
+                mensaje: mensaje || 'Por favor sube los siguientes documentos para continuar con tu postulación',
+                postulacionId: id
+            });
+        } catch (emailError) {
+            console.error('Error al enviar email de solicitud:', emailError);
+        }
+        
+        res.json({ 
+            success: true, 
+            message: 'Solicitud de documentos enviada exitosamente' 
+        });
+        
+    } catch (error) {
+        console.error('Error al solicitar documentos:', error);
         res.status(500).json({ success: false, error: 'Error interno del servidor' });
     }
 });

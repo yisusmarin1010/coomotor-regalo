@@ -1645,3 +1645,137 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }, 1000);
 });
+
+
+// ============================================
+// DOCUMENTOS SOLICITADOS POR EL ADMINISTRADOR
+// ============================================
+
+// Cargar documentos solicitados por el administrador
+async function cargarDocumentosSolicitados() {
+    try {
+        const response = await fetch('/api/postulaciones', {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('coomotor_token')}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        if (response.ok) {
+            const result = await response.json();
+            if (result.success) {
+                // Filtrar postulaciones con documentos solicitados
+                const postulacionesConDocs = result.data.filter(p => 
+                    p.estado_postulacion === 'documentos_solicitados' && 
+                    p.documentos_solicitados
+                );
+                
+                if (postulacionesConDocs.length > 0) {
+                    mostrarAlertaDocumentosSolicitados(postulacionesConDocs);
+                }
+            }
+        }
+    } catch (error) {
+        console.error('Error al cargar documentos solicitados:', error);
+    }
+}
+
+// Mostrar alerta de documentos solicitados
+function mostrarAlertaDocumentosSolicitados(postulaciones) {
+    // Buscar si ya existe el contenedor de alertas
+    let alertContainer = document.getElementById('alertaDocumentosSolicitados');
+    
+    if (!alertContainer) {
+        // Crear contenedor después del welcome
+        const welcomeDiv = document.querySelector('.welcome');
+        alertContainer = document.createElement('div');
+        alertContainer.id = 'alertaDocumentosSolicitados';
+        alertContainer.className = 'container-fluid';
+        alertContainer.style.maxWidth = '1600px';
+        alertContainer.style.padding = '0 1rem';
+        welcomeDiv.parentNode.insertBefore(alertContainer, welcomeDiv.nextSibling);
+    }
+    
+    let html = '';
+    
+    postulaciones.forEach(postulacion => {
+        let documentos = [];
+        try {
+            documentos = JSON.parse(postulacion.documentos_solicitados);
+        } catch (e) {
+            console.error('Error al parsear documentos:', e);
+            return;
+        }
+        
+        const nombresDocumentos = {
+            'registro_civil': 'Registro Civil',
+            'tarjeta_identidad': 'Tarjeta de Identidad',
+            'cedula': 'Cédula de Ciudadanía',
+            'foto_hijo': 'Foto del Hijo/a',
+            'comprobante_residencia': 'Comprobante de Residencia'
+        };
+        
+        const iconosDocumentos = {
+            'registro_civil': 'file-earmark-text',
+            'tarjeta_identidad': 'card-heading',
+            'cedula': 'person-badge',
+            'foto_hijo': 'camera',
+            'comprobante_residencia': 'house'
+        };
+        
+        html += `
+            <div class="alert alert-warning alert-dismissible fade show" role="alert" style="margin-bottom: 1rem; border-left: 4px solid #f59e0b;">
+                <div class="d-flex align-items-start">
+                    <div class="flex-shrink-0">
+                        <i class="bi bi-exclamation-triangle-fill" style="font-size: 2rem; color: #f59e0b;"></i>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <h5 class="alert-heading mb-2">
+                            <i class="bi bi-file-earmark-arrow-up me-2"></i>
+                            Documentos Solicitados para ${postulacion.hijo_nombres} ${postulacion.hijo_apellidos}
+                        </h5>
+                        <p class="mb-2">El administrador ha solicitado los siguientes documentos para completar la postulación:</p>
+                        
+                        <div class="row mb-3">
+                            ${documentos.map(doc => `
+                                <div class="col-md-6 mb-2">
+                                    <div class="d-flex align-items-center">
+                                        <i class="bi bi-${iconosDocumentos[doc] || 'file-earmark'} me-2" style="font-size: 1.25rem; color: #f59e0b;"></i>
+                                        <strong>${nombresDocumentos[doc] || doc}</strong>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                        
+                        ${postulacion.mensaje_admin ? `
+                            <div class="alert alert-light mb-3" style="font-size: 0.85rem;">
+                                <strong><i class="bi bi-chat-left-text me-2"></i>Mensaje del administrador:</strong><br>
+                                ${postulacion.mensaje_admin}
+                            </div>
+                        ` : ''}
+                        
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-warning" onclick="mostrarModalSubirDocumento(${postulacion.hijo_id})">
+                                <i class="bi bi-upload me-2"></i>Subir Documentos Ahora
+                            </button>
+                            <button class="btn btn-outline-secondary" onclick="verDetallesPostulacion(${postulacion.id})">
+                                <i class="bi bi-eye me-2"></i>Ver Detalles
+                            </button>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+        `;
+    });
+    
+    alertContainer.innerHTML = html;
+}
+
+// Llamar a cargarDocumentosSolicitados al iniciar el dashboard
+document.addEventListener('DOMContentLoaded', function() {
+    // Esperar un poco para que se cargue todo
+    setTimeout(() => {
+        cargarDocumentosSolicitados();
+    }, 1000);
+});

@@ -302,11 +302,31 @@ function mostrarTablaPostulaciones(postulaciones) {
                 <td>${estadoBadge}</td>
                 <td>
                     ${postulacion.estado_postulacion === 'pendiente' ? `
+                        <button class="btn btn-sm btn-warning me-1" onclick="mostrarModalSolicitarDocumentos(${postulacion.id}, '${postulacion.hijo_nombres} ${postulacion.hijo_apellidos}')" title="Solicitar documentos">
+                            <i class="bi bi-file-earmark-arrow-up"></i> Solicitar Docs
+                        </button>
                         <button class="btn btn-sm btn-success me-1" onclick="aprobarPostulacion(${postulacion.id})">
                             <i class="bi bi-check"></i>
                         </button>
                         <button class="btn btn-sm btn-danger" onclick="rechazarPostulacion(${postulacion.id})">
                             <i class="bi bi-x"></i>
+                        </button>
+                    ` : postulacion.estado_postulacion === 'documentos_solicitados' ? `
+                        <button class="btn btn-sm btn-info me-1" disabled>
+                            <i class="bi bi-hourglass-split"></i> Esperando Docs
+                        </button>
+                        <button class="btn btn-sm btn-outline-primary" onclick="verDetallePostulacion(${postulacion.id})">
+                            <i class="bi bi-eye"></i>
+                        </button>
+                    ` : postulacion.estado_postulacion === 'documentos_recibidos' ? `
+                        <button class="btn btn-sm btn-primary me-1" onclick="mostrarSeccion('documentos')">
+                            <i class="bi bi-file-check"></i> Ver Docs
+                        </button>
+                        <button class="btn btn-sm btn-success me-1" onclick="aprobarPostulacion(${postulacion.id})">
+                            <i class="bi bi-check"></i> Aprobar
+                        </button>
+                        <button class="btn btn-sm btn-danger" onclick="rechazarPostulacion(${postulacion.id})">
+                            <i class="bi bi-x"></i> Rechazar
                         </button>
                     ` : postulacion.estado_postulacion === 'aprobada' ? `
                         <button class="btn btn-sm btn-outline-primary me-1" onclick="verDetallePostulacion(${postulacion.id})">
@@ -629,9 +649,11 @@ function formatearFecha(fecha) {
 function obtenerBadgeEstado(estado) {
     const badges = {
         'pendiente': '<span class="badge bg-warning">Pendiente</span>',
+        'documentos_solicitados': '<span class="badge bg-info">Docs Solicitados</span>',
+        'documentos_recibidos': '<span class="badge bg-primary">Docs Recibidos</span>',
         'aprobada': '<span class="badge bg-success">Aprobada</span>',
         'rechazada': '<span class="badge bg-danger">Rechazada</span>',
-        'entregada': '<span class="badge bg-info">Entregada</span>'
+        'entregada': '<span class="badge bg-dark">Entregada</span>'
     };
     return badges[estado] || '<span class="badge bg-secondary">Desconocido</span>';
 }
@@ -1792,5 +1814,214 @@ async function eliminarAprobacion(postulacionId, nombreHijo) {
     } catch (error) {
         console.error('Error:', error);
         mostrarAlerta('danger', 'Error de conexión al eliminar la aprobación');
+    }
+}
+
+
+// ============================================
+// SOLICITAR DOCUMENTOS A CONDUCTOR
+// ============================================
+
+// Mostrar modal para solicitar documentos
+function mostrarModalSolicitarDocumentos(postulacionId, nombreHijo) {
+    const modalHTML = `
+        <div class="modal fade" id="modalSolicitarDocumentos" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header bg-warning text-dark">
+                        <h5 class="modal-title">
+                            <i class="bi bi-file-earmark-arrow-up me-2"></i>
+                            Solicitar Documentos
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle me-2"></i>
+                            <strong>Postulación de:</strong> ${nombreHijo}
+                        </div>
+                        
+                        <h6 class="mb-3">Selecciona los documentos que deseas solicitar:</h6>
+                        
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" value="registro_civil" id="doc_registro_civil">
+                            <label class="form-check-label" for="doc_registro_civil">
+                                <i class="bi bi-file-earmark-text me-2"></i>
+                                <strong>Registro Civil</strong>
+                                <br>
+                                <small class="text-muted">Documento de identidad del menor</small>
+                            </label>
+                        </div>
+                        
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" value="tarjeta_identidad" id="doc_tarjeta_identidad">
+                            <label class="form-check-label" for="doc_tarjeta_identidad">
+                                <i class="bi bi-card-heading me-2"></i>
+                                <strong>Tarjeta de Identidad</strong>
+                                <br>
+                                <small class="text-muted">Para mayores de 7 años</small>
+                            </label>
+                        </div>
+                        
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" value="cedula" id="doc_cedula">
+                            <label class="form-check-label" for="doc_cedula">
+                                <i class="bi bi-person-badge me-2"></i>
+                                <strong>Cédula de Ciudadanía</strong>
+                                <br>
+                                <small class="text-muted">Para mayores de edad</small>
+                            </label>
+                        </div>
+                        
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" value="foto_hijo" id="doc_foto_hijo">
+                            <label class="form-check-label" for="doc_foto_hijo">
+                                <i class="bi bi-camera me-2"></i>
+                                <strong>Foto del Hijo/a</strong>
+                                <br>
+                                <small class="text-muted">Fotografía reciente del menor</small>
+                            </label>
+                        </div>
+                        
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" value="comprobante_residencia" id="doc_comprobante_residencia">
+                            <label class="form-check-label" for="doc_comprobante_residencia">
+                                <i class="bi bi-house me-2"></i>
+                                <strong>Comprobante de Residencia</strong>
+                                <br>
+                                <small class="text-muted">Recibo de servicios públicos</small>
+                            </label>
+                        </div>
+                        
+                        <hr>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Mensaje personalizado (opcional)</label>
+                            <textarea class="form-control" id="mensajePersonalizado" rows="3" 
+                                placeholder="Agrega un mensaje adicional para el conductor..."></textarea>
+                            <small class="text-muted">Este mensaje se enviará junto con la solicitud de documentos</small>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-warning" onclick="solicitarDocumentos(${postulacionId})">
+                            <i class="bi bi-send me-2"></i>Enviar Solicitud
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    // Remover modal anterior si existe
+    const modalAnterior = document.getElementById('modalSolicitarDocumentos');
+    if (modalAnterior) {
+        modalAnterior.remove();
+    }
+    
+    // Agregar nuevo modal
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+    
+    // Mostrar modal
+    const modal = new bootstrap.Modal(document.getElementById('modalSolicitarDocumentos'));
+    modal.show();
+}
+
+// Solicitar documentos al conductor
+async function solicitarDocumentos(postulacionId) {
+    try {
+        // Recoger documentos seleccionados
+        const documentos = [];
+        const checkboxes = document.querySelectorAll('#modalSolicitarDocumentos input[type="checkbox"]:checked');
+        
+        if (checkboxes.length === 0) {
+            mostrarAlerta('warning', 'Debes seleccionar al menos un documento');
+            return;
+        }
+        
+        checkboxes.forEach(checkbox => {
+            documentos.push(checkbox.value);
+        });
+        
+        const mensaje = document.getElementById('mensajePersonalizado').value.trim();
+        
+        // Deshabilitar botón
+        const btnEnviar = document.querySelector('#modalSolicitarDocumentos .btn-warning');
+        const textoOriginal = btnEnviar.innerHTML;
+        btnEnviar.innerHTML = '<i class="bi bi-hourglass-split me-2"></i>Enviando...';
+        btnEnviar.disabled = true;
+        
+        // Enviar solicitud al backend
+        const response = await fetch(`/api/admin/postulaciones/${postulacionId}/solicitar-documentos`, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('coomotor_token')}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                documentos_solicitados: documentos,
+                mensaje: mensaje
+            })
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            // Cerrar modal
+            const modal = bootstrap.Modal.getInstance(document.getElementById('modalSolicitarDocumentos'));
+            modal.hide();
+            
+            // Mostrar mensaje de éxito
+            mostrarAlerta('success', '✅ Solicitud de documentos enviada exitosamente. El conductor recibirá un email con los detalles.');
+            
+            // Recargar lista de postulaciones
+            cargarPostulaciones();
+            cargarEstadisticas();
+        } else {
+            mostrarAlerta('danger', result.error || 'Error al enviar solicitud');
+            btnEnviar.innerHTML = textoOriginal;
+            btnEnviar.disabled = false;
+        }
+    } catch (error) {
+        console.error('Error al solicitar documentos:', error);
+        mostrarAlerta('danger', 'Error de conexión al enviar solicitud');
+        const btnEnviar = document.querySelector('#modalSolicitarDocumentos .btn-warning');
+        if (btnEnviar) {
+            btnEnviar.innerHTML = '<i class="bi bi-send me-2"></i>Enviar Solicitud';
+            btnEnviar.disabled = false;
+        }
+    }
+}
+
+// Eliminar aprobación de postulación
+async function eliminarAprobacion(postulacionId, nombreHijo) {
+    if (!confirm(`¿Estás seguro de eliminar la aprobación de ${nombreHijo}?\n\nEsto cambiará el estado de la postulación a pendiente.`)) {
+        return;
+    }
+    
+    try {
+        const response = await fetch(`/api/admin/postulaciones/${postulacionId}/rechazar`, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('coomotor_token')}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                motivo: 'Aprobación eliminada por el administrador'
+            })
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            mostrarAlerta('success', 'Aprobación eliminada exitosamente');
+            cargarPostulaciones();
+            cargarEstadisticas();
+        } else {
+            mostrarAlerta('danger', result.error || 'Error al eliminar aprobación');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        mostrarAlerta('danger', 'Error de conexión');
     }
 }
