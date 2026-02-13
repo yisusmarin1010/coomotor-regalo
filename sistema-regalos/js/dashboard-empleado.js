@@ -268,7 +268,12 @@ async function cargarHijos() {
 function mostrarHijos() {
     const container = document.getElementById('hijosContainer');
     
-    if (hijosRegistrados.length === 0) {
+    // Filtrar hijos con postulaciones rechazadas - no mostrarlos
+    const hijosFiltrados = hijosRegistrados.filter(hijo => 
+        hijo.estado_postulacion !== 'rechazada'
+    );
+    
+    if (hijosFiltrados.length === 0) {
         container.innerHTML = `
             <div class="empty-state text-center py-5">
                 <div class="empty-icon mb-3">
@@ -287,7 +292,7 @@ function mostrarHijos() {
     
     let html = '<div class="row">';
     
-    hijosRegistrados.forEach((hijo, index) => {
+    hijosFiltrados.forEach((hijo, index) => {
         const edad = calcularEdad(hijo.fecha_nacimiento);
         const tienePostulacion = hijo.postulacion_id ? true : false;
         const estadoPostulacion = hijo.estado_postulacion || 'sin_postular';
@@ -696,12 +701,15 @@ async function registrarHijo() {
 
 // Modal de postulación mejorado
 function mostrarModalPostulacion() {
-    if (hijosRegistrados.length === 0) {
+    // Filtrar hijos rechazados
+    const hijosSinRechazar = hijosRegistrados.filter(hijo => hijo.estado_postulacion !== 'rechazada');
+    
+    if (hijosSinRechazar.length === 0) {
         mostrarNotificacion('warning', 'Primero debes registrar al menos un hijo');
         return;
     }
     
-    const hijosDisponibles = hijosRegistrados.filter(hijo => !hijo.postulacion_id);
+    const hijosDisponibles = hijosSinRechazar.filter(hijo => !hijo.postulacion_id);
     
     if (hijosDisponibles.length === 0) {
         mostrarNotificacion('info', 'Todos tus hijos ya han sido postulados');
@@ -990,9 +998,12 @@ function formatearFecha(fecha) {
 }
 
 function actualizarResumenHijos() {
-    const totalHijos = hijosRegistrados.length;
-    const postulados = hijosRegistrados.filter(h => h.postulacion_id).length;
-    const aprobados = hijosRegistrados.filter(h => h.estado_postulacion === 'aprobada' || h.estado_postulacion === 'entregado').length;
+    // Filtrar hijos rechazados del conteo
+    const hijosFiltrados = hijosRegistrados.filter(h => h.estado_postulacion !== 'rechazada');
+    
+    const totalHijos = hijosFiltrados.length;
+    const postulados = hijosFiltrados.filter(h => h.postulacion_id).length;
+    const aprobados = hijosFiltrados.filter(h => h.estado_postulacion === 'aprobada' || h.estado_postulacion === 'entregado').length;
     
     const resumenContainer = document.getElementById('resumenHijos');
     if (resumenContainer) {

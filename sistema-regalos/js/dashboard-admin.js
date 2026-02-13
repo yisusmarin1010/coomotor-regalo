@@ -203,8 +203,11 @@ async function mostrarPostulaciones() {
                     <button class="btn btn-outline-primary" onclick="filtrarPostulaciones('todas')">Todas</button>
                     <button class="btn btn-outline-warning" onclick="filtrarPostulaciones('pendiente')">Pendientes</button>
                     <button class="btn btn-outline-success" onclick="filtrarPostulaciones('aprobada')">Aprobadas</button>
-                    <button class="btn btn-outline-danger" onclick="filtrarPostulaciones('rechazada')">Rechazadas</button>
                 </div>
+            </div>
+            <div class="alert alert-info" style="font-size: 0.75rem; padding: 0.75rem;">
+                <i class="bi bi-info-circle me-2"></i>
+                <strong>Nota:</strong> Las postulaciones rechazadas se ocultan automáticamente del panel.
             </div>
             <div id="postulacionesContainer">
                 <div class="d-flex justify-content-center p-4">
@@ -232,7 +235,9 @@ async function cargarPostulaciones(filtro = 'todas') {
         if (response.ok) {
             const result = await response.json();
             if (result.success) {
-                mostrarTablaPostulaciones(result.data);
+                // Filtrar postulaciones rechazadas - no mostrarlas en el panel
+                const postulacionesFiltradas = result.data.filter(p => p.estado_postulacion !== 'rechazada');
+                mostrarTablaPostulaciones(postulacionesFiltradas);
             }
         }
     } catch (error) {
