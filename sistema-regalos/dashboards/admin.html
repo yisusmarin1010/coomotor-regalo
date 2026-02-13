@@ -3,532 +3,330 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel Administrativo - Sistema Regalos Navideños COOMOTOR</title>
+    <title>Panel Admin - COOMOTOR</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="../css/responsive-global.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-green: #059669;
-            --primary-red: #dc2626;
-            --accent-gold: #fbbf24;
-            --accent-blue: #3b82f6;
-            --bg-gradient-start: #f9fafb;
-            --bg-gradient-end: #f3f4f6;
-            --text-dark: #1f2937;
-            --text-light: #6b7280;
-            --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            --card-shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --primary: #059669;
+            --danger: #dc2626;
+            --warning: #f59e0b;
+            --info: #3b82f6;
+            --success: #10b981;
+            --bg: #f8fafc;
+            --text: #1e293b;
+            --text-light: #64748b;
+            --border: #e2e8f0;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
-            color: var(--text-dark);
-            min-height: 100vh;
+            background: var(--bg);
+            color: var(--text);
+            font-size: 13px;
         }
 
-        /* Navbar mejorado */
         .navbar {
             background: white;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            padding: 1rem 0;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            padding: 0.625rem 0;
+            border-bottom: 1px solid var(--border);
         }
 
         .navbar-brand {
+            font-weight: 600;
+            color: var(--primary) !important;
+            font-size: 0.95rem;
+        }
+
+        .container-fluid { max-width: 1800px; padding: 1rem; }
+
+        .header {
+            background: white;
+            border-radius: 6px;
+            padding: 0.875rem 1rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            border-left: 3px solid var(--primary);
+        }
+
+        .header h1 {
+            font-size: 1.125rem;
             font-weight: 700;
-            color: var(--primary-green) !important;
-            font-size: 1.25rem;
+            margin: 0 0 0.25rem 0;
             display: flex;
             align-items: center;
             gap: 0.5rem;
         }
 
-        .navbar-brand i {
-            font-size: 1.5rem;
-        }
-
-        /* Container principal */
-        .main-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 1.5rem 1rem;
-        }
-
-        /* Header del admin mejorado */
-        .admin-header {
-            background: linear-gradient(135deg, white 0%, #f9fafb 100%);
-            border-radius: 12px;
-            padding: 1.25rem 1.5rem;
-            margin-bottom: 1.5rem;
-            box-shadow: var(--card-shadow);
-            border-left: 4px solid var(--primary-green);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .admin-header::before {
-            content: '🎄';
-            position: absolute;
-            font-size: 8rem;
-            opacity: 0.05;
-            right: -1rem;
-            top: -1rem;
-            transform: rotate(15deg);
-        }
-
-        .admin-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--text-dark);
-            margin-bottom: 0.25rem;
-            position: relative;
-            z-index: 1;
-        }
-
-        .admin-subtitle {
+        .header p {
+            font-size: 0.75rem;
             color: var(--text-light);
-            font-size: 0.875rem;
-            position: relative;
-            z-index: 1;
+            margin: 0;
         }
 
-        /* Stats grid mejorado */
-        .stats-grid {
+        /* Stats Grid - 4 columnas compactas */
+        .stats {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.75rem;
+            margin-bottom: 1rem;
         }
 
-        .stat-card {
+        .stat {
             background: white;
-            border-radius: 16px;
-            padding: 1.75rem;
-            box-shadow: var(--card-shadow);
+            border-radius: 6px;
+            padding: 0.875rem;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
             text-align: center;
-            transition: all 0.3s ease;
+            transition: all 0.2s;
+            border-top: 2px solid var(--primary);
+            cursor: pointer;
             position: relative;
-            overflow: hidden;
-            border-top: 4px solid var(--primary-green);
         }
 
-        .stat-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, var(--primary-green), var(--accent-gold));
-            transform: scaleX(0);
-            transition: transform 0.3s ease;
+        .stat:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
 
-        .stat-card:hover::before {
-            transform: scaleX(1);
-        }
-
-        .stat-card:hover {
-            transform: translateY(-8px);
-            box-shadow: var(--card-shadow-hover);
-        }
-
-        .stat-card.warning {
-            border-top-color: #f59e0b;
-        }
-
-        .stat-card.success {
-            border-top-color: #10b981;
-        }
-
-        .stat-card.info {
-            border-top-color: var(--accent-blue);
-        }
+        .stat.warning { border-top-color: var(--warning); }
+        .stat.success { border-top-color: var(--success); }
+        .stat.info { border-top-color: var(--info); }
+        .stat.danger { border-top-color: var(--danger); }
 
         .stat-icon {
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
-            display: inline-block;
+            font-size: 1.5rem;
+            margin-bottom: 0.375rem;
         }
 
         .stat-number {
-            font-size: 2rem;
+            font-size: 1.625rem;
             font-weight: 700;
-            color: var(--primary-green);
-            display: block;
+            color: var(--primary);
+            line-height: 1;
             margin-bottom: 0.25rem;
         }
 
         .stat-label {
+            font-size: 0.65rem;
             color: var(--text-light);
-            font-size: 0.75rem;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.3px;
+            line-height: 1.2;
         }
 
-        /* Quick actions mejorado */
-        .quick-actions {
+        /* Quick Actions - 6 columnas mini */
+        .actions {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-            gap: 1rem;
-            margin-bottom: 1.5rem;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 0.625rem;
+            margin-bottom: 1rem;
         }
 
-        .quick-action {
+        .action {
             background: white;
-            border-radius: 12px;
-            padding: 1.25rem 1rem;
-            box-shadow: var(--card-shadow);
-            cursor: pointer;
+            border-radius: 6px;
+            padding: 0.75rem 0.5rem;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
             text-align: center;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
+            transition: all 0.2s;
+            cursor: pointer;
             text-decoration: none;
             color: inherit;
+            border: 1px solid var(--border);
         }
 
-        .quick-action::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, var(--primary-green), #047857);
-            opacity: 0;
-            transition: opacity 0.3s ease;
+        .action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-color: var(--primary);
         }
 
-        .quick-action:hover::before {
-            opacity: 0.05;
-        }
-
-        .quick-action:hover {
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: var(--card-shadow-hover);
-        }
-
-        .quick-action i {
-            font-size: 2rem;
-            color: var(--primary-green);
-            margin-bottom: 0.75rem;
+        .action i {
+            font-size: 1.375rem;
+            color: var(--primary);
+            margin-bottom: 0.375rem;
             display: block;
-            transition: all 0.3s ease;
-            position: relative;
-            z-index: 1;
         }
 
-        .quick-action:hover i {
-            transform: scale(1.1) rotate(5deg);
-        }
-
-        .quick-action h5 {
-            font-weight: 600;
-            font-size: 0.9rem;
-            margin-bottom: 0.25rem;
-            color: var(--text-dark);
-            position: relative;
-            z-index: 1;
-        }
-
-        .quick-action p {
-            color: var(--text-light);
+        .action h5 {
             font-size: 0.7rem;
+            font-weight: 600;
             margin: 0;
-            position: relative;
-            z-index: 1;
-            line-height: 1.3;
-        }
-
-        /* Action card mejorado */
-        .action-card {
-            background: white;
-            border-radius: 16px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            box-shadow: var(--card-shadow);
-            transition: all 0.3s ease;
-        }
-
-        .action-card:hover {
-            box-shadow: var(--card-shadow-hover);
-        }
-
-        .action-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--text-dark);
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-
-        .action-title i {
-            color: var(--primary-green);
-        }
-
-        /* Sección de usuarios */
-        #seccionUsuarios {
-            animation: fadeIn 0.5s ease-in;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            line-height: 1.2;
         }
 
         /* Responsive */
+        @media (max-width: 1400px) {
+            .stats { grid-template-columns: repeat(4, 1fr); }
+            .actions { grid-template-columns: repeat(3, 1fr); }
+        }
+
         @media (max-width: 768px) {
-            .main-container {
-                padding: 1rem;
-            }
-            
-            .admin-header {
-                padding: 1.5rem;
-            }
-            
-            .admin-title {
-                font-size: 1.5rem;
-            }
-            
-            .stats-grid, .quick-actions {
-                grid-template-columns: 1fr;
-            }
-            
-            .stat-number {
-                font-size: 2rem;
-            }
-
-            .stat-icon {
-                font-size: 2rem;
-            }
+            .stats { grid-template-columns: repeat(2, 1fr); gap: 0.5rem; }
+            .actions { grid-template-columns: repeat(2, 1fr); gap: 0.5rem; }
+            .stat { padding: 0.75rem 0.5rem; }
+            .stat-number { font-size: 1.375rem; }
+            .stat-icon { font-size: 1.25rem; }
         }
 
-        /* Decoraciones navideñas sutiles */
-        @keyframes snowfall {
-            0% {
-                transform: translateY(-10px) translateX(0);
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(100vh) translateX(50px);
-                opacity: 0;
-            }
-        }
-
-        .snowflake {
-            position: fixed;
-            top: -10px;
-            color: white;
-            opacity: 0.6;
-            animation: snowfall linear infinite;
-            pointer-events: none;
-            z-index: 1;
-        }
+        .badge { font-size: 0.65rem; padding: 0.25rem 0.5rem; }
+        .btn-sm { padding: 0.3rem 0.625rem; font-size: 0.75rem; }
     </style>
 </head>
 <body>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg">
-        <div class="container">
+    <nav class="navbar">
+        <div class="container-fluid">
             <a class="navbar-brand" href="../index.html">
-                <i class="bi bi-shield-check-fill me-2"></i>
-                COOMOTOR Admin - Regalos Navideños
+                <i class="bi bi-shield-check"></i> COOMOTOR Admin
             </a>
-            <div class="ms-auto d-flex align-items-center gap-2">
-                <span class="text-muted" id="userInfo">
-                    <i class="bi bi-person-circle me-1"></i>
-                    Cargando...
+            <div class="d-flex align-items-center gap-2">
+                <span class="text-muted" style="font-size: 0.75rem;" id="userInfo">
+                    <i class="bi bi-person-circle"></i> Cargando...
                 </span>
-                <button class="btn btn-outline-danger btn-sm" onclick="cerrarSesion()" id="btnSalir">
-                    <i class="bi bi-box-arrow-right me-1"></i>
-                    Salir
+                <button class="btn btn-outline-danger btn-sm" onclick="cerrarSesion()">
+                    <i class="bi bi-box-arrow-right"></i> Salir
                 </button>
             </div>
         </div>
     </nav>
 
-    <!-- Main Content -->
-    <div class="container main-container">
-        <!-- Admin Header -->
-        <div class="admin-header">
+    <div class="container-fluid">
+        <div class="header">
             <div class="row align-items-center">
                 <div class="col-md-8">
-                    <h1 class="admin-title">
-                        <i class="bi bi-speedometer2"></i>
-                        Panel Administrativo
-                    </h1>
-                    <p class="admin-subtitle mb-0">Gestión del Sistema de Regalos Navideños COOMOTOR 2024</p>
+                    <h1><i class="bi bi-speedometer2"></i> Panel Administrativo</h1>
+                    <p>Gestión del Sistema de Regalos Navideños COOMOTOR 2024</p>
                 </div>
                 <div class="col-md-4 text-end">
-                    <div class="d-flex flex-column align-items-end gap-2">
-                        <span class="badge bg-success px-3 py-2">
-                            <i class="bi bi-calendar-event me-1"></i>
-                            Temporada Activa
-                        </span>
-                        <span class="text-muted" style="font-size: 0.875rem;">
-                            <i class="bi bi-clock me-1"></i>
-                            <span id="currentDateTime"></span>
-                        </span>
-                    </div>
+                    <span class="badge bg-success"><i class="bi bi-calendar-event"></i> Temporada Activa</span>
+                    <small class="d-block text-muted mt-1" style="font-size: 0.7rem;">
+                        <i class="bi bi-clock"></i> <span id="currentDateTime"></span>
+                    </small>
                 </div>
             </div>
         </div>
 
         <!-- Stats Grid -->
-        <div class="stats-grid">
-            <div class="stat-card">
+        <div class="stats">
+            <div class="stat">
                 <div class="stat-icon">👥</div>
                 <div class="stat-number" id="totalEmpleados">0</div>
-                <div class="stat-label">Empleados Registrados</div>
+                <div class="stat-label">Empleados</div>
             </div>
-            <div class="stat-card">
+            <div class="stat">
                 <div class="stat-icon">👶</div>
                 <div class="stat-number" id="totalHijos">0</div>
-                <div class="stat-label">Hijos Registrados</div>
+                <div class="stat-label">Hijos</div>
             </div>
-            <div class="stat-card warning">
+            <div class="stat warning">
                 <div class="stat-icon">⏳</div>
                 <div class="stat-number" id="postulacionesPendientes">0</div>
-                <div class="stat-label">Postulaciones Pendientes</div>
+                <div class="stat-label">Pendientes</div>
             </div>
-            <div class="stat-card success">
+            <div class="stat success">
                 <div class="stat-icon">✅</div>
                 <div class="stat-number" id="postulacionesAprobadas">0</div>
-                <div class="stat-label">Postulaciones Aprobadas</div>
+                <div class="stat-label">Aprobadas</div>
             </div>
-            <div class="stat-card info">
+            <div class="stat info">
                 <div class="stat-icon">📞</div>
                 <div class="stat-number" id="totalContactos">0</div>
-                <div class="stat-label">Mensajes de Contacto</div>
+                <div class="stat-label">Mensajes</div>
             </div>
-            <div class="stat-card warning">
+            <div class="stat warning">
                 <div class="stat-icon">📋</div>
                 <div class="stat-number" id="contactosPendientes">0</div>
-                <div class="stat-label">Contactos Pendientes</div>
+                <div class="stat-label">Contactos Pend.</div>
             </div>
-            <div class="stat-card">
+            <div class="stat">
                 <div class="stat-icon">🎁</div>
                 <div class="stat-number" id="regalosComprados">0</div>
-                <div class="stat-label">Regalos Comprados</div>
+                <div class="stat-label">Comprados</div>
             </div>
-            <div class="stat-card success">
+            <div class="stat success">
                 <div class="stat-icon">📦</div>
                 <div class="stat-number" id="regalosEntregados">0</div>
-                <div class="stat-label">Regalos Entregados</div>
+                <div class="stat-label">Entregados</div>
             </div>
         </div>
 
         <!-- Quick Actions -->
-        <div class="quick-actions">
-            <a href="javascript:void(0)" class="quick-action" onclick="mostrarSeccion('postulaciones')">
+        <div class="actions">
+            <a href="javascript:void(0)" class="action" onclick="mostrarSeccion('postulaciones')">
                 <i class="bi bi-list-check"></i>
                 <h5>Postulaciones</h5>
-                <p>Aprobar o rechazar</p>
             </a>
-            <a href="javascript:void(0)" class="quick-action" onclick="mostrarSeccion('empleados')">
+            <a href="javascript:void(0)" class="action" onclick="mostrarSeccion('empleados')">
                 <i class="bi bi-people"></i>
                 <h5>Empleados</h5>
-                <p>Ver registrados</p>
             </a>
-            <a href="javascript:void(0)" class="quick-action" onclick="mostrarSeccion('regalos')">
+            <a href="javascript:void(0)" class="action" onclick="mostrarSeccion('regalos')">
                 <i class="bi bi-gift"></i>
                 <h5>Regalos</h5>
-                <p>Asignar y gestionar</p>
             </a>
-            <a href="javascript:void(0)" class="quick-action" onclick="mostrarSeccion('contactos')">
+            <a href="javascript:void(0)" class="action" onclick="mostrarSeccion('contactos')">
                 <i class="bi bi-chat-dots"></i>
                 <h5>Mensajes</h5>
-                <p>Quejas y consultas</p>
             </a>
-            <a href="javascript:void(0)" class="quick-action" onclick="mostrarSeccion('reportes')">
+            <a href="javascript:void(0)" class="action" onclick="mostrarSeccion('reportes')">
                 <i class="bi bi-graph-up"></i>
                 <h5>Reportes</h5>
-                <p>Estadísticas</p>
             </a>
-            <a href="javascript:void(0)" class="quick-action" onclick="mostrarSeccion('usuarios')">
+            <a href="javascript:void(0)" class="action" onclick="mostrarSeccion('usuarios')">
                 <i class="bi bi-person-gear"></i>
                 <h5>Usuarios</h5>
-                <p>Gestionar cuentas</p>
             </a>
         </div>
 
-        <!-- Sección de Gestión de Usuarios -->
-        <div class="action-card" id="seccionUsuarios" style="display: none;">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h3 class="action-title mb-0">
-                    <i class="bi bi-person-gear me-2"></i>
-                    Gestión de Usuarios
+        <!-- Sección Usuarios -->
+        <div class="action-card" id="seccionUsuarios" style="display: none; background: white; border-radius: 6px; padding: 1rem; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h3 style="font-size: 1rem; font-weight: 700; margin: 0;">
+                    <i class="bi bi-person-gear"></i> Gestión de Usuarios
                 </h3>
                 <div class="d-flex gap-2">
-                    <input type="text" class="form-control form-control-sm" style="width: 250px;"
-                           id="buscarUsuario" placeholder="🔍 Buscar por nombre o correo...">
-                    <select class="form-select form-select-sm" style="width: 150px;" id="filtroEstado" onchange="cargarUsuarios()">
-                        <option value="">Todos los estados</option>
+                    <input type="text" class="form-control form-control-sm" style="width: 200px; font-size: 0.75rem;"
+                           id="buscarUsuario" placeholder="🔍 Buscar...">
+                    <select class="form-select form-select-sm" style="width: 120px; font-size: 0.75rem;" id="filtroEstado" onchange="cargarUsuarios()">
+                        <option value="">Todos</option>
                         <option value="activo" selected>Activos</option>
                         <option value="inactivo">Inactivos</option>
-                        <option value="suspendido">Suspendidos</option>
                     </select>
                     <button class="btn btn-primary btn-sm" onclick="cargarUsuarios()">
-                        <i class="bi bi-arrow-clockwise me-1"></i>
-                        Actualizar
+                        <i class="bi bi-arrow-clockwise"></i>
                     </button>
                 </div>
             </div>
-            
-            <div class="alert alert-info">
-                <i class="bi bi-info-circle me-2"></i>
-                <strong>Gestión de Usuarios:</strong> Aquí puedes ver, editar, activar/desactivar y eliminar usuarios del sistema.
-            </div>
-            
             <div id="usuariosContainer">
-                <div class="text-center py-4">
-                    <div class="spinner-border text-primary" role="status">
-                        <span class="visually-hidden">Cargando...</span>
-                    </div>
-                    <p class="mt-2">Cargando usuarios...</p>
+                <div class="text-center py-3">
+                    <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
+                    <p class="mt-2" style="font-size: 0.75rem;">Cargando...</p>
                 </div>
             </div>
         </div>
 
         <!-- Secciones dinámicas -->
-        <div id="seccionesContainer">
-            <!-- Las secciones se cargarán dinámicamente -->
-        </div>
+        <div id="seccionesContainer"></div>
     </div>
 
-    <!-- Modals -->
     <div id="modalsContainer"></div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../js/auth-global.js"></script>
     <script src="../js/dashboard-admin.js"></script>
     <script>
-        // Actualizar fecha y hora
         function actualizarFechaHora() {
             const ahora = new Date();
             const opciones = { 
-                weekday: 'long', 
-                year: 'numeric', 
-                month: 'long', 
+                weekday: 'short', 
                 day: 'numeric',
+                month: 'short',
                 hour: '2-digit',
                 minute: '2-digit'
             };
@@ -536,10 +334,9 @@
                 ahora.toLocaleDateString('es-CO', opciones);
         }
         
-        // Inicializar
         document.addEventListener('DOMContentLoaded', function() {
             actualizarFechaHora();
-            setInterval(actualizarFechaHora, 60000); // Actualizar cada minuto
+            setInterval(actualizarFechaHora, 60000);
         });
     </script>
 </body>

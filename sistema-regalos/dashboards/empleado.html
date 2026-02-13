@@ -3,344 +3,256 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mi Panel - Sistema Regalos Navideños COOMOTOR</title>
+    <title>Mi Panel - COOMOTOR</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="../css/responsive-global.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-green: #059669;
-            --primary-red: #dc2626;
-            --accent-gold: #fbbf24;
-            --accent-blue: #3b82f6;
-            --bg-gradient-start: #f9fafb;
-            --bg-gradient-end: #f3f4f6;
-            --text-dark: #1f2937;
-            --text-light: #6b7280;
-            --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            --card-shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --primary: #059669;
+            --danger: #dc2626;
+            --warning: #f59e0b;
+            --info: #3b82f6;
+            --success: #10b981;
+            --bg: #f8fafc;
+            --text: #1e293b;
+            --text-light: #64748b;
+            --border: #e2e8f0;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
-            color: var(--text-dark);
-            min-height: 100vh;
+            background: var(--bg);
+            color: var(--text);
+            font-size: 13px;
         }
 
-        /* Navbar mejorado */
         .navbar {
             background: white;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            padding: 1rem 0;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            padding: 0.625rem 0;
+            border-bottom: 1px solid var(--border);
         }
 
         .navbar-brand {
-            font-weight: 700;
-            color: var(--primary-green) !important;
-            font-size: 1.25rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .navbar-brand i {
-            font-size: 1.5rem;
-        }
-
-        /* Container principal */
-        .main-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 1.5rem 1rem;
-        }
-
-        /* Welcome card mejorado */
-        .welcome-card {
-            background: linear-gradient(135deg, white 0%, #f9fafb 100%);
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-            box-shadow: var(--card-shadow);
-            position: relative;
-            overflow: hidden;
-            border-left: 4px solid var(--primary-green);
-        }
-
-        .welcome-card::before {
-            content: '🎅';
-            position: absolute;
-            font-size: 8rem;
-            opacity: 0.03;
-            right: -1rem;
-            top: -2rem;
-            transform: rotate(-15deg);
-        }
-
-        .welcome-title {
-            font-size: 1.75rem;
-            font-weight: 700;
-            color: var(--primary-green);
-            margin-bottom: 0.5rem;
-            position: relative;
-            z-index: 1;
-        }
-
-        .welcome-subtitle {
-            color: var(--text-light);
+            font-weight: 600;
+            color: var(--primary) !important;
             font-size: 0.95rem;
-            margin-bottom: 1rem;
-            position: relative;
-            z-index: 1;
         }
 
-        /* Stats grid mejorado */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
+        .container-fluid { max-width: 1600px; padding: 1rem; }
 
-        .stat-card {
+        .welcome {
             background: white;
-            border-radius: 12px;
-            padding: 1.25rem 1rem;
-            box-shadow: var(--card-shadow);
+            border-radius: 6px;
+            padding: 1rem 1.25rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            border-left: 3px solid var(--primary);
+        }
+
+        .welcome h1 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin: 0 0 0.375rem 0;
+            color: var(--primary);
+        }
+
+        .welcome p {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin: 0 0 0.625rem 0;
+        }
+
+        /* Stats Grid - 4 columnas */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .stat {
+            background: white;
+            border-radius: 6px;
+            padding: 0.875rem;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
             text-align: center;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            border-top: 3px solid var(--primary-green);
+            transition: all 0.2s;
+            border-top: 2px solid var(--primary);
         }
 
-        .stat-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, var(--primary-green), var(--accent-gold));
-            transform: scaleX(0);
-            transition: transform 0.3s ease;
-        }
-
-        .stat-card:hover::before {
-            transform: scaleX(1);
-        }
-
-        .stat-card:hover {
-            transform: translateY(-8px);
-            box-shadow: var(--card-shadow-hover);
+        .stat:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
 
         .stat-icon {
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
-            display: inline-block;
+            font-size: 1.5rem;
+            margin-bottom: 0.375rem;
         }
 
         .stat-number {
-            font-size: 2rem;
+            font-size: 1.625rem;
             font-weight: 700;
-            color: var(--primary-green);
-            display: block;
+            color: var(--primary);
+            line-height: 1;
             margin-bottom: 0.25rem;
         }
 
         .stat-label {
+            font-size: 0.65rem;
             color: var(--text-light);
-            font-size: 0.75rem;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.3px;
-        }
-
-        .progress-container {
-            margin-top: 1rem;
+            line-height: 1.2;
         }
 
         .progress {
-            height: 8px;
-            border-radius: 10px;
-            background: #e5e7eb;
+            height: 4px;
+            margin-top: 0.5rem;
+            background: #e2e8f0;
         }
 
         .progress-bar {
-            background: linear-gradient(90deg, var(--primary-green), var(--accent-gold));
-            border-radius: 10px;
-            transition: width 0.6s ease;
+            background: linear-gradient(90deg, var(--primary), var(--success));
         }
 
-        /* Action cards mejorados */
-        .action-card {
-            background: white;
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-            box-shadow: var(--card-shadow);
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .action-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 3px;
-            height: 100%;
-            background: linear-gradient(180deg, var(--primary-green), var(--accent-gold));
-        }
-
-        .action-card:hover {
-            box-shadow: var(--card-shadow-hover);
-            transform: translateY(-4px);
-        }
-
-        .action-title {
-            font-size: 1.15rem;
-            font-weight: 700;
-            color: var(--text-dark);
-            margin-bottom: 0.75rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .action-title i {
-            color: var(--primary-green);
-            font-size: 1.25rem;
-        }
-
-        .action-description {
-            color: var(--text-light);
-            font-size: 0.875rem;
-            line-height: 1.5;
+        /* Resumen compacto */
+        .resumen {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.75rem;
             margin-bottom: 1rem;
         }
 
-        /* Botones mejorados */
+        .resumen-item {
+            background: white;
+            border-radius: 6px;
+            padding: 0.875rem;
+            text-align: center;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+
+        .resumen-numero {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            line-height: 1;
+            margin-bottom: 0.25rem;
+        }
+
+        .resumen-texto {
+            font-size: 0.65rem;
+            color: var(--text-light);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        /* Action cards compactas */
+        .actions-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .action-card {
+            background: white;
+            border-radius: 6px;
+            padding: 1rem;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            border-left: 3px solid var(--primary);
+        }
+
+        .action-card h3 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            margin: 0 0 0.375rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.375rem;
+        }
+
+        .action-card p {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            margin: 0 0 0.75rem 0;
+            line-height: 1.4;
+        }
+
         .btn-christmas {
-            background: linear-gradient(135deg, var(--primary-green) 0%, #047857 100%);
+            background: linear-gradient(135deg, var(--primary), #047857);
             border: none;
             color: white;
             font-weight: 600;
-            padding: 0.75rem 1.25rem;
-            border-radius: 10px;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 8px rgba(5, 150, 105, 0.3);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn-christmas::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.3);
-            transform: translate(-50%, -50%);
-            transition: width 0.6s, height 0.6s;
-        }
-
-        .btn-christmas:hover::before {
-            width: 300px;
-            height: 300px;
+            padding: 0.625rem 1rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            transition: all 0.2s;
+            box-shadow: 0 2px 4px rgba(5, 150, 105, 0.2);
         }
 
         .btn-christmas:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(5, 150, 105, 0.4);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(5, 150, 105, 0.3);
         }
 
         .btn-outline-christmas {
-            border: 2px solid var(--primary-green);
-            color: var(--primary-green);
-            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            background: white;
             font-weight: 600;
-            padding: 0.75rem 1.25rem;
-            border-radius: 10px;
-            transition: all 0.3s ease;
+            padding: 0.625rem 1rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            transition: all 0.2s;
         }
 
         .btn-outline-christmas:hover {
-            background: var(--primary-green);
+            background: var(--primary);
             color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
         }
 
-        /* Empty state mejorado */
-        .empty-state {
-            text-align: center;
-            padding: 3rem 2rem;
-            color: var(--text-light);
-        }
-
-        .empty-state i {
-            font-size: 4rem;
-            margin-bottom: 1.5rem;
-            color: var(--primary-green);
-            opacity: 0.5;
-        }
-
-        .empty-state h4 {
-            font-weight: 700;
-            color: var(--text-dark);
-            margin-bottom: 0.75rem;
-        }
-
-        /* Countdown mejorado */
-        .countdown-timer {
+        /* Countdown compacto */
+        .countdown {
             display: flex;
             justify-content: center;
-            gap: 1rem;
-            flex-wrap: wrap;
+            gap: 0.75rem;
         }
 
         .countdown-item {
+            background: white;
+            padding: 0.625rem 0.5rem;
+            border-radius: 6px;
             text-align: center;
-            background: linear-gradient(135deg, #f9fafb 0%, white 100%);
-            padding: 1rem 0.75rem;
-            border-radius: 10px;
-            min-width: 80px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            border-top: 3px solid var(--primary-red);
+            min-width: 60px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            border-top: 2px solid var(--danger);
         }
 
         .countdown-number {
-            font-size: 1.75rem;
+            font-size: 1.375rem;
             font-weight: 700;
-            color: var(--primary-red);
-            display: block;
+            color: var(--danger);
+            line-height: 1;
             margin-bottom: 0.25rem;
         }
 
         .countdown-label {
-            font-size: 0.7rem;
+            font-size: 0.625rem;
             color: var(--text-light);
             font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
         }
 
-        /* Timeline mejorado */
+        /* Timeline compacto */
         .timeline {
             position: relative;
-            padding-left: 2rem;
+            padding-left: 1.5rem;
         }
 
         .timeline::before {
@@ -349,561 +261,249 @@
             left: 0;
             top: 0;
             bottom: 0;
-            width: 3px;
-            background: linear-gradient(180deg, var(--primary-green), var(--accent-gold));
-            border-radius: 2px;
+            width: 2px;
+            background: linear-gradient(180deg, var(--primary), var(--success));
         }
 
         .timeline-item {
             position: relative;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
+            padding: 0.75rem;
+            margin-bottom: 0.75rem;
             background: white;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-            transition: all 0.3s ease;
+            border-radius: 6px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            font-size: 0.75rem;
         }
 
         .timeline-item::before {
             content: '';
             position: absolute;
-            left: -2.5rem;
-            top: 1.5rem;
-            width: 12px;
-            height: 12px;
-            background: var(--primary-green);
+            left: -1.875rem;
+            top: 0.75rem;
+            width: 8px;
+            height: 8px;
+            background: var(--primary);
             border-radius: 50%;
-            border: 3px solid white;
-            box-shadow: 0 0 0 3px var(--primary-green);
+            border: 2px solid white;
+            box-shadow: 0 0 0 2px var(--primary);
         }
 
-        .timeline-item:hover {
-            transform: translateX(8px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-
-        .text-christmas {
-            color: var(--primary-green);
-            font-weight: 700;
-        }
-
-        /* Resumen mejorado */
-        .resumen-item {
-            padding: 1rem;
-            text-align: center;
-            background: linear-gradient(135deg, #f9fafb 0%, white 100%);
-            border-radius: 10px;
-            transition: all 0.3s ease;
-        }
-
-        .resumen-item:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-
-        .resumen-numero {
-            display: block;
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--primary-green);
-            margin-bottom: 0.25rem;
-        }
-
-        .resumen-texto {
-            display: block;
-            color: var(--text-light);
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-        }
-
-        /* Hijos cards mejorados */
-        .hijo-card {
-            background: white;
-            border-radius: 16px;
-            padding: 1.75rem;
-            border: 2px solid #e5e7eb;
-            box-shadow: var(--card-shadow);
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hijo-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, var(--primary-green), var(--accent-gold));
-            transform: scaleX(0);
-            transition: transform 0.3s ease;
-        }
-
-        .hijo-card:hover::before {
-            transform: scaleX(1);
-        }
-
-        .hijo-card:hover {
-            box-shadow: var(--card-shadow-hover);
-            transform: translateY(-4px);
-            border-color: var(--primary-green);
-        }
-
-        .hijo-header {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 1rem;
-            padding-bottom: 1rem;
-            border-bottom: 2px solid #f3f4f6;
-        }
-
-        .hijo-avatar {
-            font-size: 3rem;
-            color: var(--primary-green);
-        }
-
-        .hijo-info-header h5 {
-            margin: 0;
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: var(--text-dark);
-        }
-
-        .edad-badge {
-            display: inline-block;
-            background: linear-gradient(135deg, var(--primary-green), #047857);
-            color: white;
-            padding: 0.375rem 1rem;
-            border-radius: 20px;
+        .timeline-item h5 {
             font-size: 0.8rem;
-            font-weight: 600;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 0 0 0.25rem 0;
         }
 
-        .detail-item {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            margin-bottom: 0.75rem;
+        .timeline-item p {
+            margin: 0;
             color: var(--text-light);
-            font-size: 0.95rem;
-        }
-
-        .detail-item i {
-            color: var(--primary-green);
-            font-size: 1.1rem;
         }
 
         /* Responsive */
+        @media (max-width: 1200px) {
+            .stats { grid-template-columns: repeat(2, 1fr); }
+            .actions-row { grid-template-columns: 1fr; }
+        }
+
         @media (max-width: 768px) {
-            .main-container {
-                padding: 1rem;
-            }
-            
-            .welcome-card {
-                padding: 1.5rem;
-            }
-            
-            .welcome-title {
-                font-size: 1.75rem;
-            }
-            
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .stat-number {
-                font-size: 2rem;
-            }
-            
-            .countdown-item {
-                min-width: 80px;
-                padding: 1rem 0.75rem;
-            }
-            
-            .countdown-number {
-                font-size: 2rem;
-            }
-
-            .timeline {
-                padding-left: 1.5rem;
-            }
-
-            .timeline-item::before {
-                left: -2rem;
-            }
+            .stats, .resumen { grid-template-columns: repeat(2, 1fr); gap: 0.5rem; }
+            .stat, .resumen-item { padding: 0.75rem 0.5rem; }
+            .stat-number, .resumen-numero { font-size: 1.375rem; }
         }
 
-        /* Animaciones */
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .badge { font-size: 0.65rem; padding: 0.25rem 0.5rem; }
+        .btn-sm { padding: 0.3rem 0.625rem; font-size: 0.75rem; }
+        
+        .empty-state {
+            text-align: center;
+            padding: 2rem 1rem;
+            color: var(--text-light);
         }
 
-        .fade-in {
-            animation: fadeIn 0.6s ease forwards;
+        .empty-state i {
+            font-size: 2.5rem;
+            color: var(--primary);
+            opacity: 0.5;
+            margin-bottom: 0.75rem;
         }
     </style>
 </head>
 <body>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg">
-        <div class="container">
+    <nav class="navbar">
+        <div class="container-fluid">
             <a class="navbar-brand" href="../index.html">
-                <i class="bi bi-gift-fill me-2"></i>
-                COOMOTOR Regalos Navideños
+                <i class="bi bi-gift"></i> COOMOTOR Regalos
             </a>
-            <div class="navbar-nav ms-auto d-flex align-items-center gap-2">
-                <span class="text-muted" id="userInfo">
-                    <i class="bi bi-person-circle me-1"></i>
-                    Cargando...
+            <div class="d-flex align-items-center gap-2">
+                <span class="text-muted" style="font-size: 0.75rem;" id="userInfo">
+                    <i class="bi bi-person-circle"></i> Cargando...
                 </span>
                 <button class="btn btn-outline-danger btn-sm" onclick="cerrarSesion()">
-                    <i class="bi bi-box-arrow-right me-1"></i>
-                    Salir
+                    <i class="bi bi-box-arrow-right"></i> Salir
                 </button>
             </div>
         </div>
     </nav>
 
-    <!-- Main Content -->
-    <div class="container main-container">
-        <!-- Welcome Card -->
-        <div class="welcome-card fade-in">
-            <div class="row align-items-center">
-                <div class="col-md-10">
-                    <h1 class="welcome-title">
-                        <i class="bi bi-gift-fill"></i>
-                        ¡Bienvenido al Sistema de Regalos!
-                    </h1>
-                    <p class="welcome-subtitle">Postula a tus hijos para recibir un regalo especial esta Navidad 🎅</p>
-                    <div class="d-flex gap-2 flex-wrap">
-                        <span class="badge bg-success px-3 py-2" style="font-size: 0.8rem;">
-                            <i class="bi bi-calendar-event me-1"></i>
-                            Temporada Navideña 2024
-                        </span>
-                        <span class="badge bg-danger px-3 py-2" style="font-size: 0.8rem;">
-                            <i class="bi bi-clock me-1"></i>
-                            <span id="tiempoRestante">Calculando...</span>
-                        </span>
-                    </div>
-                </div>
-                <div class="col-md-2 text-end d-none d-md-block">
-                    <div style="font-size: 3.5rem; opacity: 0.8;">🎄</div>
-                </div>
+    <div class="container-fluid">
+        <div class="welcome">
+            <h1><i class="bi bi-gift-fill"></i> ¡Bienvenido al Sistema de Regalos!</h1>
+            <p>Postula a tus hijos para recibir un regalo especial esta Navidad 🎅</p>
+            <div class="d-flex gap-2 flex-wrap">
+                <span class="badge bg-success"><i class="bi bi-calendar-event"></i> Temporada 2024</span>
+                <span class="badge bg-danger"><i class="bi bi-clock"></i> <span id="tiempoRestante">Calculando...</span></span>
             </div>
         </div>
 
         <!-- Stats Grid -->
-        <div class="stats-grid">
-            <div class="stat-card">
+        <div class="stats">
+            <div class="stat">
                 <div class="stat-icon">👶</div>
                 <div class="stat-number" id="totalHijos">0</div>
                 <div class="stat-label">Hijos Registrados</div>
-                <div class="progress-container">
-                    <div class="progress">
-                        <div class="progress-bar" id="progresoPostulaciones" style="width: 0%"></div>
-                    </div>
-                    <small class="text-muted mt-1">Progreso de postulaciones</small>
-                </div>
+                <div class="progress"><div class="progress-bar" id="progresoPostulaciones" style="width: 0%"></div></div>
             </div>
-            <div class="stat-card">
+            <div class="stat">
                 <div class="stat-icon">🎁</div>
                 <div class="stat-number" id="totalPostulaciones">0</div>
                 <div class="stat-label">Postulaciones</div>
-                <div class="progress-container">
-                    <div class="progress">
-                        <div class="progress-bar" id="progresoAprobaciones" style="width: 0%"></div>
-                    </div>
-                    <small class="text-muted mt-1">Progreso de aprobaciones</small>
-                </div>
+                <div class="progress"><div class="progress-bar" id="progresoAprobaciones" style="width: 0%"></div></div>
             </div>
-            <div class="stat-card">
+            <div class="stat">
                 <div class="stat-icon">✅</div>
                 <div class="stat-number" id="postulacionesAprobadas">0</div>
                 <div class="stat-label">Aprobadas</div>
-                <div class="progress-container">
-                    <div class="progress">
-                        <div class="progress-bar" id="progresoEntregas" style="width: 0%"></div>
-                    </div>
-                    <small class="text-muted mt-1">Progreso de entregas</small>
-                </div>
+                <div class="progress"><div class="progress-bar" id="progresoEntregas" style="width: 0%"></div></div>
             </div>
-            <div class="stat-card">
+            <div class="stat">
                 <div class="stat-icon">📦</div>
                 <div class="stat-number" id="regalosEntregados">0</div>
                 <div class="stat-label">Entregados</div>
-                <div class="mt-2">
-                    <span class="badge bg-success" id="porcentajeExito">0% Completado</span>
-                </div>
+                <span class="badge bg-success mt-2" id="porcentajeExito">0%</span>
             </div>
         </div>
 
-        <!-- Resumen rápido -->
-        <div class="row mb-4">
-            <div class="col-12">
-                <div class="action-card">
-                    <div class="row text-center" id="resumenHijos">
-                        <div class="col-md-4">
-                            <div class="resumen-item">
-                                <span class="resumen-numero">0</span>
-                                <span class="resumen-texto">Total Hijos</span>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="resumen-item">
-                                <span class="resumen-numero">0</span>
-                                <span class="resumen-texto">Postulados</span>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="resumen-item">
-                                <span class="resumen-numero">0</span>
-                                <span class="resumen-texto">Aprobados</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <!-- Resumen -->
+        <div class="resumen" id="resumenHijos">
+            <div class="resumen-item">
+                <div class="resumen-numero">0</div>
+                <div class="resumen-texto">Total Hijos</div>
+            </div>
+            <div class="resumen-item">
+                <div class="resumen-numero">0</div>
+                <div class="resumen-texto">Postulados</div>
+            </div>
+            <div class="resumen-item">
+                <div class="resumen-numero">0</div>
+                <div class="resumen-texto">Aprobados</div>
             </div>
         </div>
 
-        <!-- Actions Section -->
-        <div class="row">
-            <div class="col-lg-6">
-                <div class="action-card">
-                    <h3 class="action-title">
-                        <i class="bi bi-person-plus-fill me-2"></i>
-                        Registrar Hijo
-                    </h3>
-                    <p class="action-description">
-                        Registra la información de tus hijos menores de 12 años para poder postularlos a los regalos navideños de COOMOTOR.
-                    </p>
-                    <div class="d-grid gap-2">
-                        <button class="btn btn-christmas btn-lg" onclick="mostrarModalRegistroHijo()" id="btnRegistrarHijo">
-                            <i class="bi bi-plus-circle me-2"></i>
-                            Registrar Nuevo Hijo
-                        </button>
-                        <small class="text-muted text-center">
-                            <i class="bi bi-info-circle me-1"></i>
-                            Solo hijos menores de 12 años
-                        </small>
-                    </div>
-                </div>
+        <!-- Actions -->
+        <div class="actions-row">
+            <div class="action-card">
+                <h3><i class="bi bi-person-plus-fill"></i> Registrar Hijo</h3>
+                <p>Registra a tus hijos menores de 12 años para postularlos.</p>
+                <button class="btn btn-christmas w-100" onclick="mostrarModalRegistroHijo()">
+                    <i class="bi bi-plus-circle"></i> Registrar Nuevo Hijo
+                </button>
+                <small class="d-block text-muted text-center mt-2" style="font-size: 0.7rem;">
+                    <i class="bi bi-info-circle"></i> Solo menores de 12 años
+                </small>
             </div>
-            <div class="col-lg-6">
-                <div class="action-card">
-                    <h3 class="action-title">
-                        <i class="bi bi-gift-fill me-2"></i>
-                        Postular para Regalo
-                    </h3>
-                    <p class="action-description">
-                        Postula a tus hijos registrados para que reciban un regalo especial esta Navidad. ¡Es completamente gratis!
-                    </p>
-                    <div class="d-grid gap-2">
-                        <button class="btn btn-outline-christmas btn-lg" onclick="mostrarModalPostulacion()" id="btnHacerPostulacion">
-                            <i class="bi bi-heart-fill me-2"></i>
-                            Hacer Postulación
-                        </button>
-                        <small class="text-muted text-center">
-                            <i class="bi bi-clock me-1"></i>
-                            Postulaciones hasta el 15 de Diciembre
-                        </small>
-                    </div>
-                </div>
+            <div class="action-card">
+                <h3><i class="bi bi-gift-fill"></i> Postular para Regalo</h3>
+                <p>Postula a tus hijos registrados para que reciban su regalo.</p>
+                <button class="btn btn-outline-christmas w-100" onclick="mostrarModalPostulacion()">
+                    <i class="bi bi-heart-fill"></i> Hacer Postulación
+                </button>
+                <small class="d-block text-muted text-center mt-2" style="font-size: 0.7rem;">
+                    <i class="bi bi-clock"></i> Hasta el 15 de Diciembre
+                </small>
             </div>
         </div>
 
         <!-- Hijos Registrados -->
         <div class="action-card">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h3 class="action-title mb-0">
-                    <i class="bi bi-people-fill me-2"></i>
-                    Mis Hijos Registrados
-                </h3>
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h3 class="mb-0"><i class="bi bi-people-fill"></i> Mis Hijos</h3>
                 <div class="d-flex gap-2">
                     <button class="btn btn-outline-primary btn-sm" onclick="cargarHijos()">
-                        <i class="bi bi-arrow-clockwise me-1"></i>
-                        Actualizar
+                        <i class="bi bi-arrow-clockwise"></i>
                     </button>
                     <button class="btn btn-christmas btn-sm" onclick="mostrarModalRegistroHijo()">
-                        <i class="bi bi-plus me-1"></i>
-                        Agregar
+                        <i class="bi bi-plus"></i> Agregar
                     </button>
                 </div>
             </div>
             <div id="hijosContainer">
                 <div class="empty-state">
-                    <div class="empty-icon">
-                        <i class="bi bi-person-plus"></i>
-                    </div>
-                    <h4>No tienes hijos registrados</h4>
-                    <p>Registra a tus hijos para poder postularlos a los regalos navideños</p>
-                    <button class="btn btn-christmas btn-lg" onclick="mostrarModalRegistroHijo()">
-                        <i class="bi bi-plus-circle me-2"></i>Registrar Primer Hijo
+                    <i class="bi bi-person-plus"></i>
+                    <h4 style="font-size: 0.95rem; font-weight: 700;">No tienes hijos registrados</h4>
+                    <p style="font-size: 0.75rem;">Registra a tus hijos para postularlos</p>
+                    <button class="btn btn-christmas" onclick="mostrarModalRegistroHijo()">
+                        <i class="bi bi-plus-circle"></i> Registrar Primer Hijo
                     </button>
                 </div>
             </div>
         </div>
 
-        <!-- Mis Mensajes y Respuestas -->
-        <div class="action-card">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h3 class="action-title mb-0">
-                    <i class="bi bi-chat-dots-fill me-2"></i>
-                    Mis Mensajes y Respuestas
-                </h3>
-                <div class="d-flex gap-2">
-                    <button class="btn btn-outline-primary btn-sm" onclick="cargarMisMensajes()">
-                        <i class="bi bi-arrow-clockwise me-1"></i>
-                        Actualizar
-                    </button>
-                    <a href="../contacto.html" class="btn btn-christmas btn-sm">
-                        <i class="bi bi-plus me-1"></i>
-                        Nuevo Mensaje
-                    </a>
-                </div>
-            </div>
-            <div id="mensajesContainer">
-                <div class="text-center py-4">
-                    <div class="spinner-border text-primary" role="status">
-                        <span class="visually-hidden">Cargando...</span>
-                    </div>
-                    <p class="mt-2">Cargando tus mensajes...</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Timeline de Fechas Importantes -->
-        <div class="action-card">
-            <h3 class="action-title">
-                <i class="bi bi-calendar-event-fill me-2"></i>
-                Cronograma Navideño 2024
-            </h3>
-            <div class="row">
-                <div class="col-lg-8">
+        <!-- Timeline -->
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="action-card">
+                    <h3><i class="bi bi-calendar-event-fill"></i> Cronograma 2024</h3>
                     <div class="timeline">
                         <div class="timeline-item">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div>
-                                    <h5 class="text-christmas">📝 Registro de Hijos</h5>
-                                    <p class="mb-1">Hasta el <strong>10 de Diciembre</strong></p>
-                                    <small class="text-muted">Registra a tus hijos en el sistema</small>
-                                </div>
-                                <span class="badge bg-success">Activo</span>
-                            </div>
+                            <h5>📝 Registro de Hijos</h5>
+                            <p>Hasta el <strong>10 de Diciembre</strong></p>
+                            <span class="badge bg-success">Activo</span>
                         </div>
                         <div class="timeline-item">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div>
-                                    <h5 class="text-christmas">🎁 Postulaciones</h5>
-                                    <p class="mb-1">Hasta el <strong>15 de Diciembre</strong></p>
-                                    <small class="text-muted">Postula a tus hijos para los regalos</small>
-                                </div>
-                                <span class="badge bg-warning">Próximo</span>
-                            </div>
+                            <h5>🎁 Postulaciones</h5>
+                            <p>Hasta el <strong>15 de Diciembre</strong></p>
+                            <span class="badge bg-warning">Próximo</span>
                         </div>
                         <div class="timeline-item">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div>
-                                    <h5 class="text-christmas">⚖️ Revisión y Aprobación</h5>
-                                    <p class="mb-1"><strong>16 - 20 de Diciembre</strong></p>
-                                    <small class="text-muted">Revisión de postulaciones por administración</small>
-                                </div>
-                                <span class="badge bg-secondary">Pendiente</span>
-                            </div>
+                            <h5>⚖️ Revisión</h5>
+                            <p><strong>16 - 20 de Diciembre</strong></p>
+                            <span class="badge bg-secondary">Pendiente</span>
                         </div>
                         <div class="timeline-item">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div>
-                                    <h5 class="text-christmas">🎄 Entrega de Regalos</h5>
-                                    <p class="mb-1"><strong>21 - 24 de Diciembre</strong></p>
-                                    <small class="text-muted">Entrega de regalos a los niños</small>
-                                </div>
-                                <span class="badge bg-danger">Próximo</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="text-center">
-                        <div class="mb-3">
-                            <i class="bi bi-calendar-heart" style="font-size: 3rem; color: var(--primary-green);"></i>
-                        </div>
-                        <h5 class="text-christmas">¡Faltan pocos días!</h5>
-                        <p class="text-muted">La magia navideña está cerca</p>
-                        <div class="countdown-timer" id="countdownTimer">
-                            <div class="countdown-item">
-                                <span class="countdown-number" id="days">00</span>
-                                <span class="countdown-label">Días</span>
-                            </div>
-                            <div class="countdown-item">
-                                <span class="countdown-number" id="hours">00</span>
-                                <span class="countdown-label">Horas</span>
-                            </div>
+                            <h5>🎄 Entrega</h5>
+                            <p><strong>21 - 24 de Diciembre</strong></p>
+                            <span class="badge bg-danger">Próximo</span>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-
-        <!-- Información adicional -->
-        <div class="row">
-            <div class="col-lg-6">
-                <div class="action-card">
-                    <h4 class="text-christmas mb-3">
-                        <i class="bi bi-question-circle me-2"></i>
-                        ¿Necesitas Ayuda?
-                    </h4>
-                    <p class="mb-3">Si tienes dudas sobre el proceso de registro o postulación, estamos aquí para ayudarte.</p>
-                    <div class="d-grid gap-2">
-                        <a href="../contacto.html" class="btn btn-outline-primary">
-                            <i class="bi bi-envelope me-2"></i>
-                            Contactar Soporte
-                        </a>
-                        <button class="btn btn-outline-secondary" onclick="mostrarAyuda()">
-                            <i class="bi bi-info-circle me-2"></i>
-                            Ver Guía Rápida
-                        </button>
+            <div class="col-lg-4">
+                <div class="action-card text-center">
+                    <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🎄</div>
+                    <h5 style="font-size: 0.95rem; font-weight: 700; color: var(--primary);">¡Faltan pocos días!</h5>
+                    <p style="font-size: 0.75rem; color: var(--text-light);">La magia navideña está cerca</p>
+                    <div class="countdown">
+                        <div class="countdown-item">
+                            <div class="countdown-number" id="days">00</div>
+                            <div class="countdown-label">Días</div>
+                        </div>
+                        <div class="countdown-item">
+                            <div class="countdown-number" id="hours">00</div>
+                            <div class="countdown-label">Horas</div>
+                        </div>
                     </div>
-                </div>
-            </div>
-            <div class="col-lg-6">
-                <div class="action-card">
-                    <h4 class="text-christmas mb-3">
-                        <i class="bi bi-heart me-2"></i>
-                        Mensaje de COOMOTOR
-                    </h4>
-                    <blockquote class="blockquote">
-                        <p class="mb-3">"En COOMOTOR, tu familia es nuestra familia. Queremos hacer de esta Navidad un momento especial para todos nuestros colaboradores y sus hijos."</p>
-                        <footer class="blockquote-footer">
-                            <cite title="Dirección COOMOTOR">Dirección General COOMOTOR</cite>
-                        </footer>
-                    </blockquote>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Modals Container -->
     <div id="modalsContainer"></div>
 
-    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../js/auth-global.js"></script>
     <script src="../js/dashboard-empleado.js"></script>
-    
-    <!-- Simple countdown script -->
     <script>
-        // Countdown timer
         function actualizarCountdown() {
             const navidad = new Date('2024-12-25T00:00:00');
             const ahora = new Date();
@@ -919,58 +519,9 @@
             }
         }
         
-        // Función para mostrar ayuda
-        function mostrarAyuda() {
-            const modal = `
-                <div class="modal fade" id="modalAyuda" tabindex="-1">
-                    <div class="modal-dialog modal-lg">
-                        <div class="modal-content">
-                            <div class="modal-header" style="background: var(--primary-green); color: white;">
-                                <h5 class="modal-title">
-                                    <i class="bi bi-question-circle me-2"></i>
-                                    Guía Rápida del Sistema
-                                </h5>
-                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <h6 class="text-christmas">📝 Paso 1: Registrar Hijos</h6>
-                                        <p>Registra a todos tus hijos menores de 12 años con su información completa.</p>
-                                        
-                                        <h6 class="text-christmas">🎁 Paso 2: Hacer Postulación</h6>
-                                        <p>Postula a cada hijo registrado para que reciba su regalo navideño.</p>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <h6 class="text-christmas">⏳ Paso 3: Esperar Aprobación</h6>
-                                        <p>El equipo administrativo revisará y aprobará las postulaciones.</p>
-                                        
-                                        <h6 class="text-christmas">🎄 Paso 4: Recibir Regalo</h6>
-                                        <p>Los regalos se entregarán entre el 21 y 24 de diciembre.</p>
-                                    </div>
-                                </div>
-                                <div class="alert alert-info mt-3">
-                                    <i class="bi bi-info-circle me-2"></i>
-                                    <strong>Recuerda:</strong> Solo se pueden registrar hijos menores de 12 años y las postulaciones cierran el 15 de diciembre.
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                                <a href="../contacto.html" class="btn btn-christmas">Contactar Soporte</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-            
-            document.getElementById('modalsContainer').innerHTML = modal;
-            new bootstrap.Modal(document.getElementById('modalAyuda')).show();
-        }
-        
-        // Inicializar
         document.addEventListener('DOMContentLoaded', function() {
             actualizarCountdown();
-            setInterval(actualizarCountdown, 60000); // Actualizar cada minuto
+            setInterval(actualizarCountdown, 60000);
         });
     </script>
 </body>
