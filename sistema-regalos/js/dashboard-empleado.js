@@ -1,9 +1,9 @@
 // ============================================
 // DASHBOARD EMPLEADO AVANZADO - SISTEMA REGALOS NAVIDEÑOS
-// VERSION 2.2 - Filtrado corregido en JOIN SQL
+// VERSION 2.3 - Logs de diagnóstico mejorados
 // ============================================
 
-console.log('📦 Dashboard Empleado v2.2 - Cargado');
+console.log('📦 Dashboard Empleado v2.3 - Cargado');
 
 let usuarioActual = null;
 let hijosRegistrados = [];
@@ -13,7 +13,7 @@ let estadisticasEnTiempoReal = {};
 
 // Inicializar dashboard con funcionalidades avanzadas
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('🔵 Inicializando dashboard empleado v2.2...');
+    console.log('🔵 Inicializando dashboard empleado v2.3...');
     console.log('✅ Filtrado de rechazadas: ACTIVO (SQL JOIN)');
     verificarAutenticacion();
     // cargarEstadisticas(); // Temporalmente deshabilitado
@@ -63,8 +63,6 @@ function configurarEventListeners() {
             console.log('🖱️ Click en btnRegistrarHijo');
             mostrarModalRegistroHijo();
         });
-    } else {
-        console.error('❌ btnRegistrarHijo no encontrado');
     }
     
     // Botón de hacer postulación
@@ -74,8 +72,6 @@ function configurarEventListeners() {
             console.log('🖱️ Click en btnHacerPostulacion');
             mostrarModalPostulacion();
         });
-    } else {
-        console.error('❌ btnHacerPostulacion no encontrado');
     }
     
     // Actualizar estadísticas cada 30 segundos - DESHABILITADO TEMPORALMENTE
@@ -257,6 +253,11 @@ async function cargarHijos() {
         if (response.ok) {
             const result = await response.json();
             if (result.success) {
+                console.log('📥 Respuesta del backend /api/hijos:', result.data);
+                console.log('📊 Total hijos recibidos del backend:', result.data.length);
+                result.data.forEach(hijo => {
+                    console.log(`  - ${hijo.nombres} ${hijo.apellidos}: postulacion_id=${hijo.postulacion_id}, estado=${hijo.estado_postulacion}`);
+                });
                 hijosRegistrados = result.data;
                 mostrarHijos();
                 actualizarResumenHijos();
@@ -1434,18 +1435,26 @@ async function cargarMisMensajes() {
         }
     } catch (error) {
         console.error('❌ Error al cargar mensajes:', error);
-        document.getElementById('mensajesContainer').innerHTML = `
-            <div class="alert alert-danger">
-                <i class="bi bi-exclamation-triangle me-2"></i>
-                Error al cargar tus mensajes. Por favor, intenta de nuevo.
-            </div>
-        `;
+        const container = document.getElementById('mensajesContainer');
+        if (container) {
+            container.innerHTML = `
+                <div class="alert alert-danger">
+                    <i class="bi bi-exclamation-triangle me-2"></i>
+                    Error al cargar tus mensajes. Por favor, intenta de nuevo.
+                </div>
+            `;
+        }
     }
 }
 
 // Mostrar mensajes en el dashboard
 function mostrarMensajes(mensajes) {
     const container = document.getElementById('mensajesContainer');
+    
+    if (!container) {
+        console.warn('⚠️ mensajesContainer no encontrado en esta página');
+        return;
+    }
     
     if (mensajes.length === 0) {
         container.innerHTML = `
