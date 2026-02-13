@@ -10,16 +10,6 @@ document.addEventListener('DOMContentLoaded', function() {
     verificarAutenticacion();
     cargarEstadisticas();
     mostrarSeccion('inicio');
-    
-    // Agregar event listener adicional al botón de salir
-    const btnSalir = document.getElementById('btnSalir');
-    if (btnSalir) {
-        btnSalir.addEventListener('click', function(e) {
-            e.preventDefault();
-            console.log('🔴 Botón Salir clickeado');
-            cerrarSesion();
-        });
-    }
 });
 
 // Verificar autenticación
@@ -729,9 +719,6 @@ function mostrarTablaEmpleados(empleados) {
     
     container.innerHTML = html;
 }
-
-// La función cerrarSesion está definida en auth-global.js
-// No es necesario redefinirla aquí
 
 // Funciones de utilidad
 function calcularEdad(fechaNacimiento) {
