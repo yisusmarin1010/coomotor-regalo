@@ -6,210 +6,350 @@
     <title>Mi Panel - COOMOTOR</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <style>
         :root {
-            --primary: #059669;
+            --primary: #16a34a;
+            --primary-dark: #15803d;
+            --primary-light: #22c55e;
             --danger: #dc2626;
             --warning: #f59e0b;
             --info: #3b82f6;
             --success: #10b981;
-            --bg: #f8fafc;
-            --text: #1e293b;
+            --bg: #f1f5f9;
+            --text: #0f172a;
             --text-light: #64748b;
             --border: #e2e8f0;
+            --card-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            --card-shadow-hover: 0 10px 30px rgba(0,0,0,0.1);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
         
         body {
             font-family: 'Inter', sans-serif;
-            background: var(--bg);
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
             color: var(--text);
             font-size: 14px;
+            min-height: 100vh;
         }
 
+        /* Navbar mejorado con gradiente */
         .navbar {
-            background: white;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-            padding: 0.625rem 0;
-            border-bottom: 1px solid var(--border);
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            box-shadow: 0 4px 20px rgba(22, 163, 74, 0.15);
+            padding: 1rem 0;
+            border-bottom: none;
         }
 
         .navbar-brand {
-            font-weight: 600;
-            color: var(--primary) !important;
-            font-size: 0.95rem;
+            font-weight: 700;
+            color: white !important;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: transform 0.2s;
         }
 
-        .container-fluid { max-width: 1600px; padding: 1rem; }
+        .navbar-brand:hover {
+            transform: scale(1.05);
+        }
 
+        .navbar-brand i {
+            font-size: 1.3rem;
+        }
+
+        #userInfo {
+            color: rgba(255, 255, 255, 0.9) !important;
+            font-weight: 500;
+            font-size: 0.875rem !important;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        #userInfo i {
+            font-size: 1.2rem;
+        }
+
+        .btn-outline-danger {
+            border-color: rgba(255, 255, 255, 0.3);
+            color: white;
+            font-weight: 600;
+        }
+
+        .btn-outline-danger:hover {
+            background: rgba(220, 38, 38, 0.9);
+            border-color: rgba(220, 38, 38, 0.9);
+            color: white;
+        }
+
+        .container-fluid { 
+            max-width: 1600px; 
+            padding: 1.5rem; 
+        }
+
+        /* Welcome Card con diseño moderno */
         .welcome {
-            background: white;
-            border-radius: 6px;
-            padding: 0.75rem 1rem;
-            margin-bottom: 0.75rem;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-            border-left: 3px solid var(--primary);
+            background: linear-gradient(135deg, white 0%, #f8fafc 100%);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--card-shadow-hover);
+            border-left: 4px solid var(--primary);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .welcome::before {
+            content: '🎄';
+            position: absolute;
+            right: -20px;
+            top: -20px;
+            font-size: 120px;
+            opacity: 0.05;
+            transform: rotate(15deg);
         }
 
         .welcome h1 {
-            font-size: 1.1rem;
-            font-weight: 700;
-            margin: 0 0 0.25rem 0;
-            color: var(--primary);
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin: 0 0 0.5rem 0;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .welcome p {
-            font-size: 0.75rem;
+            font-size: 0.95rem;
             color: var(--text-light);
-            margin: 0 0 0.5rem 0;
+            margin: 0 0 1rem 0;
+            font-weight: 500;
         }
 
-        /* Stats Grid - 4 columnas MÁS compacto */
+        .welcome .badge {
+            font-size: 0.8rem;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-weight: 600;
+        }
+
+        /* Stats Grid con animaciones */
         .stats {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 0.5rem;
-            margin-bottom: 0.75rem;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
         }
 
         .stat {
             background: white;
-            border-radius: 6px;
-            padding: 0.625rem;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: var(--card-shadow);
             text-align: center;
-            transition: all 0.2s;
-            border-top: 2px solid var(--primary);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--primary-light));
         }
 
         .stat:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transform: translateY(-5px);
+            box-shadow: var(--card-shadow-hover);
+            border-color: var(--primary);
         }
 
         .stat-icon {
-            font-size: 1.5rem;
-            margin-bottom: 0.375rem;
+            font-size: 2.5rem;
+            margin-bottom: 0.75rem;
+            display: inline-block;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
 
         .stat-number {
-            font-size: 1.625rem;
-            font-weight: 700;
-            color: var(--primary);
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             line-height: 1;
-            margin-bottom: 0.25rem;
+            margin-bottom: 0.5rem;
         }
 
         .stat-label {
-            font-size: 0.65rem;
+            font-size: 0.75rem;
             color: var(--text-light);
             font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 0.3px;
+            letter-spacing: 0.5px;
             line-height: 1.2;
         }
 
         .progress {
-            height: 4px;
-            margin-top: 0.5rem;
-            background: #e2e8f0;
+            height: 6px;
+            margin-top: 1rem;
+            background: var(--border);
+            border-radius: 10px;
+            overflow: hidden;
         }
 
         .progress-bar {
             background: linear-gradient(90deg, var(--primary), var(--success));
+            border-radius: 10px;
+            transition: width 0.6s ease;
         }
 
-        /* Resumen MÁS compacto */
+        /* Resumen mejorado */
         .resumen {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 0.5rem;
-            margin-bottom: 0.75rem;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
         }
 
         .resumen-item {
-            background: white;
-            border-radius: 6px;
-            padding: 0.625rem;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 12px;
+            padding: 1.25rem;
             text-align: center;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            box-shadow: var(--card-shadow);
+            color: white;
+            transition: transform 0.3s;
+        }
+
+        .resumen-item:hover {
+            transform: scale(1.05);
         }
 
         .resumen-numero {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--primary);
+            font-size: 2rem;
+            font-weight: 800;
             line-height: 1;
-            margin-bottom: 0.25rem;
+            margin-bottom: 0.5rem;
         }
 
         .resumen-texto {
-            font-size: 0.65rem;
-            color: var(--text-light);
+            font-size: 0.75rem;
             font-weight: 600;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
+            opacity: 0.9;
         }
 
-        /* Action cards MÁS compactas */
+        /* Action cards premium */
         .actions-row {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 0.5rem;
-            margin-bottom: 0.75rem;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
         }
 
         .action-card {
             background: white;
-            border-radius: 6px;
-            padding: 0.625rem;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-            border-left: 3px solid var(--primary);
-            margin-bottom: 0.5rem;
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--border);
+            margin-bottom: 1rem;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .action-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--primary), var(--success));
+        }
+
+        .action-card:hover {
+            box-shadow: var(--card-shadow-hover);
+            transform: translateY(-3px);
         }
 
         .action-card h3 {
-            font-size: 0.9rem;
+            font-size: 1.1rem;
             font-weight: 700;
-            margin: 0 0 0.25rem 0;
+            margin: 0 0 0.75rem 0;
             display: flex;
             align-items: center;
-            gap: 0.25rem;
+            gap: 0.5rem;
+            color: var(--text);
+        }
+
+        .action-card h3 i {
+            color: var(--primary);
+            font-size: 1.3rem;
         }
 
         .action-card p {
-            font-size: 0.8rem;
+            font-size: 0.9rem;
             color: var(--text-light);
-            margin: 0 0 0.5rem 0;
-            line-height: 1.3;
+            margin: 0 0 1rem 0;
+            line-height: 1.6;
         }
         
         .action-card .alert {
-            font-size: 0.75rem !important;
-            padding: 0.5rem !important;
-            margin-bottom: 0.625rem !important;
+            font-size: 0.85rem !important;
+            padding: 0.875rem !important;
+            margin-bottom: 1rem !important;
+            border-radius: 8px;
+            border: none;
+            background: #eff6ff;
+            color: #1e40af;
         }
         
         .action-card .mb-3 {
-            margin-bottom: 0.625rem !important;
+            margin-bottom: 1rem !important;
         }
 
+        /* Botones modernos con gradientes */
         .btn-christmas {
-            background: linear-gradient(135deg, var(--primary), #047857);
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             border: none;
             color: white;
             font-weight: 600;
-            padding: 0.5rem 0.875rem;
-            border-radius: 6px;
-            font-size: 0.8rem;
-            transition: all 0.2s;
-            box-shadow: 0 2px 4px rgba(5, 150, 105, 0.2);
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(22, 163, 74, 0.3);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .btn-christmas:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 8px rgba(5, 150, 105, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(22, 163, 74, 0.4);
         }
 
         .btn-outline-christmas {
@@ -217,53 +357,67 @@
             color: var(--primary);
             background: white;
             font-weight: 600;
-            padding: 0.5rem 0.875rem;
-            border-radius: 6px;
-            font-size: 0.8rem;
-            transition: all 0.2s;
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .btn-outline-christmas:hover {
             background: var(--primary);
             color: white;
+            transform: translateY(-2px);
         }
 
-        /* Countdown compacto */
+        /* Countdown moderno */
         .countdown {
             display: flex;
             justify-content: center;
-            gap: 0.5rem;
+            gap: 0.75rem;
+            flex-wrap: wrap;
         }
 
         .countdown-item {
-            background: white;
-            padding: 0.5rem 0.375rem;
-            border-radius: 6px;
+            background: linear-gradient(135deg, white, #f8fafc);
+            padding: 1rem 0.75rem;
+            border-radius: 12px;
             text-align: center;
-            min-width: 50px;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-            border-top: 2px solid var(--danger);
+            min-width: 70px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--border);
+            transition: transform 0.3s;
+        }
+
+        .countdown-item:hover {
+            transform: scale(1.05);
         }
 
         .countdown-number {
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: var(--danger);
+            font-size: 1.75rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--danger), #b91c1c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             line-height: 1;
-            margin-bottom: 0.25rem;
+            margin-bottom: 0.5rem;
         }
 
         .countdown-label {
-            font-size: 0.6rem;
+            font-size: 0.7rem;
             color: var(--text-light);
             font-weight: 600;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        /* Timeline compacto */
+        /* Timeline premium */
         .timeline {
             position: relative;
-            padding-left: 1.5rem;
+            padding-left: 2rem;
         }
 
         .timeline::before {
@@ -272,81 +426,175 @@
             left: 0;
             top: 0;
             bottom: 0;
-            width: 2px;
+            width: 3px;
             background: linear-gradient(180deg, var(--primary), var(--success));
+            border-radius: 10px;
         }
 
         .timeline-item {
             position: relative;
-            padding: 0.5rem;
-            margin-bottom: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
             background: white;
-            border-radius: 6px;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-            font-size: 0.75rem;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            font-size: 0.85rem;
+            border: 1px solid var(--border);
+            transition: all 0.3s;
+        }
+
+        .timeline-item:hover {
+            box-shadow: var(--card-shadow-hover);
+            transform: translateX(5px);
         }
 
         .timeline-item::before {
             content: '';
             position: absolute;
-            left: -1.875rem;
-            top: 0.5rem;
-            width: 8px;
-            height: 8px;
+            left: -2.375rem;
+            top: 1rem;
+            width: 12px;
+            height: 12px;
             background: var(--primary);
             border-radius: 50%;
-            border: 2px solid white;
+            border: 3px solid white;
             box-shadow: 0 0 0 2px var(--primary);
         }
 
         .timeline-item h5 {
-            font-size: 0.8rem;
+            font-size: 0.95rem;
             font-weight: 700;
             color: var(--primary);
-            margin: 0 0 0.25rem 0;
+            margin: 0 0 0.5rem 0;
         }
 
         .timeline-item p {
-            margin: 0;
+            margin: 0 0 0.5rem 0;
             color: var(--text-light);
+            font-size: 0.8rem;
         }
 
-        /* Responsive */
-        @media (max-width: 1200px) {
-            .stats { grid-template-columns: repeat(2, 1fr); }
-            .actions-row { grid-template-columns: 1fr; }
+        /* Badges mejorados */
+        .badge { 
+            font-size: 0.75rem; 
+            padding: 0.35rem 0.75rem;
+            border-radius: 50px;
+            font-weight: 600;
         }
 
-        @media (max-width: 768px) {
-            .stats, .resumen { grid-template-columns: repeat(2, 1fr); gap: 0.5rem; }
-            .stat, .resumen-item { padding: 0.75rem 0.5rem; }
-            .stat-number, .resumen-numero { font-size: 1.375rem; }
+        .btn-sm { 
+            padding: 0.5rem 1rem; 
+            font-size: 0.85rem;
+            border-radius: 8px;
+            font-weight: 600;
         }
-
-        .badge { font-size: 0.7rem; padding: 0.25rem 0.5rem; }
-        .btn-sm { padding: 0.3rem 0.625rem; font-size: 0.8rem; }
         
+        /* Empty state mejorado */
         .empty-state {
             text-align: center;
-            padding: 1rem 0.75rem;
+            padding: 2rem 1rem;
             color: var(--text-light);
+            background: linear-gradient(135deg, #f8fafc, white);
+            border-radius: 12px;
+            border: 2px dashed var(--border);
         }
 
         .empty-state i {
-            font-size: 2rem;
+            font-size: 3rem;
             color: var(--primary);
-            opacity: 0.5;
-            margin-bottom: 0.5rem;
+            opacity: 0.6;
+            margin-bottom: 1rem;
+            display: block;
         }
         
         .empty-state h4 {
-            font-size: 0.95rem !important;
-            margin-bottom: 0.375rem !important;
+            font-size: 1.1rem !important;
+            margin-bottom: 0.5rem !important;
+            font-weight: 700 !important;
+            color: var(--text);
         }
         
         .empty-state p {
-            font-size: 0.8rem !important;
-            margin-bottom: 0.625rem !important;
+            font-size: 0.9rem !important;
+            margin-bottom: 1rem !important;
+        }
+
+        /* Spinner mejorado */
+        .spinner-border {
+            color: var(--primary) !important;
+        }
+
+        /* Responsive mejorado */
+        @media (max-width: 1200px) {
+            .stats { 
+                grid-template-columns: repeat(2, 1fr); 
+            }
+            .actions-row { 
+                grid-template-columns: 1fr; 
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container-fluid {
+                padding: 1rem;
+            }
+
+            .stats, .resumen { 
+                grid-template-columns: repeat(2, 1fr); 
+                gap: 0.75rem; 
+            }
+            
+            .stat, .resumen-item { 
+                padding: 1rem; 
+            }
+            
+            .stat-number, .resumen-numero { 
+                font-size: 2rem; 
+            }
+
+            .welcome {
+                padding: 1rem;
+            }
+
+            .welcome h1 {
+                font-size: 1.2rem;
+            }
+        }
+
+        /* Animaciones adicionales */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .action-card,
+        .stat,
+        .resumen-item {
+            animation: slideIn 0.5s ease-out;
+        }
+
+        /* Scrollbar personalizado */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark);
         }
     </style>
 </head>
@@ -354,11 +602,13 @@
     <nav class="navbar">
         <div class="container-fluid">
             <a class="navbar-brand" href="../index.html">
-                <i class="bi bi-gift"></i> COOMOTOR Regalos
+                <i class="bi bi-gift-fill"></i>
+                <span>COOMOTOR Regalos</span>
             </a>
-            <div class="d-flex align-items-center gap-2">
-                <span class="text-muted" style="font-size: 0.75rem;" id="userInfo">
-                    <i class="bi bi-person-circle"></i> Cargando...
+            <div class="d-flex align-items-center gap-3">
+                <span class="text-muted" style="font-size: 0.875rem;" id="userInfo">
+                    <i class="bi bi-person-circle"></i>
+                    <span>Cargando...</span>
                 </span>
                 <button class="btn btn-outline-danger btn-sm" onclick="cerrarSesion()">
                     <i class="bi bi-box-arrow-right"></i> Salir
@@ -368,36 +618,46 @@
     </nav>
 
     <div class="container-fluid">
-        <div class="welcome">
+        <div class="welcome" data-aos="fade-down">
             <h1><i class="bi bi-gift-fill"></i> ¡Bienvenido al Sistema de Regalos!</h1>
             <p>Postula a tus hijos para recibir un regalo especial esta Navidad 🎅</p>
             <div class="d-flex gap-2 flex-wrap">
-                <span class="badge bg-success"><i class="bi bi-calendar-event"></i> Temporada 2024</span>
-                <span class="badge bg-danger"><i class="bi bi-clock"></i> <span id="tiempoRestante">Calculando...</span></span>
+                <span class="badge bg-success">
+                    <i class="bi bi-calendar-event"></i> Temporada 2024
+                </span>
+                <span class="badge bg-danger">
+                    <i class="bi bi-clock"></i> <span id="tiempoRestante">Calculando...</span>
+                </span>
             </div>
         </div>
 
         <!-- Stats Grid -->
         <div class="stats">
-            <div class="stat">
+            <div class="stat" data-aos="fade-up" data-aos-delay="100">
                 <div class="stat-icon">👶</div>
                 <div class="stat-number" id="totalHijos">0</div>
                 <div class="stat-label">Hijos Registrados</div>
-                <div class="progress"><div class="progress-bar" id="progresoPostulaciones" style="width: 0%"></div></div>
+                <div class="progress">
+                    <div class="progress-bar" id="progresoPostulaciones" style="width: 0%"></div>
+                </div>
             </div>
-            <div class="stat">
+            <div class="stat" data-aos="fade-up" data-aos-delay="200">
                 <div class="stat-icon">🎁</div>
                 <div class="stat-number" id="totalPostulaciones">0</div>
                 <div class="stat-label">Postulaciones</div>
-                <div class="progress"><div class="progress-bar" id="progresoAprobaciones" style="width: 0%"></div></div>
+                <div class="progress">
+                    <div class="progress-bar" id="progresoAprobaciones" style="width: 0%"></div>
+                </div>
             </div>
-            <div class="stat">
+            <div class="stat" data-aos="fade-up" data-aos-delay="300">
                 <div class="stat-icon">✅</div>
                 <div class="stat-number" id="postulacionesAprobadas">0</div>
                 <div class="stat-label">Aprobadas</div>
-                <div class="progress"><div class="progress-bar" id="progresoEntregas" style="width: 0%"></div></div>
+                <div class="progress">
+                    <div class="progress-bar" id="progresoEntregas" style="width: 0%"></div>
+                </div>
             </div>
-            <div class="stat">
+            <div class="stat" data-aos="fade-up" data-aos-delay="400">
                 <div class="stat-icon">📦</div>
                 <div class="stat-number" id="regalosEntregados">0</div>
                 <div class="stat-label">Entregados</div>
@@ -406,7 +666,7 @@
         </div>
 
         <!-- Resumen -->
-        <div class="resumen" id="resumenHijos">
+        <div class="resumen" id="resumenHijos" data-aos="fade-up">
             <div class="resumen-item">
                 <div class="resumen-numero">0</div>
                 <div class="resumen-texto">Total Hijos</div>
@@ -426,85 +686,87 @@
             <!-- Columna Principal -->
             <div class="col-lg-9">
                 <div class="actions-row">
-                    <div class="action-card">
+                    <div class="action-card" data-aos="fade-right">
                         <h3><i class="bi bi-person-plus-fill"></i> Registrar Hijo</h3>
                         <p>Registra a tus hijos menores de 12 años para postularlos.</p>
                         <button class="btn btn-christmas w-100" onclick="mostrarModalRegistroHijo()">
-                            <i class="bi bi-plus-circle"></i> Registrar Nuevo Hijo
+                            <i class="bi bi-plus-circle-fill"></i> 
+                            <span>Registrar Nuevo Hijo</span>
                         </button>
-                        <small class="d-block text-muted text-center mt-2" style="font-size: 0.7rem;">
+                        <small class="d-block text-muted text-center mt-2" style="font-size: 0.75rem;">
                             <i class="bi bi-info-circle"></i> Solo menores de 12 años
                         </small>
                     </div>
-                    <div class="action-card">
+                    <div class="action-card" data-aos="fade-left">
                         <h3><i class="bi bi-gift-fill"></i> Postular para Regalo</h3>
                         <p>Postula a tus hijos registrados para que reciban su regalo.</p>
                         <button class="btn btn-outline-christmas w-100" onclick="mostrarModalPostulacion()">
-                            <i class="bi bi-heart-fill"></i> Hacer Postulación
+                            <i class="bi bi-heart-fill"></i> 
+                            <span>Hacer Postulación</span>
                         </button>
-                        <small class="d-block text-muted text-center mt-2" style="font-size: 0.7rem;">
+                        <small class="d-block text-muted text-center mt-2" style="font-size: 0.75rem;">
                             <i class="bi bi-clock"></i> Hasta el 15 de Diciembre
                         </small>
                     </div>
                 </div>
 
-        <!-- Hijos Registrados -->
-        <div class="action-card">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h3 class="mb-0"><i class="bi bi-people-fill"></i> Mis Hijos</h3>
-                <div class="d-flex gap-2">
-                    <button class="btn btn-outline-primary btn-sm" onclick="cargarHijos()">
-                        <i class="bi bi-arrow-clockwise"></i>
-                    </button>
-                    <button class="btn btn-christmas btn-sm" onclick="mostrarModalRegistroHijo()">
-                        <i class="bi bi-plus"></i> Agregar
-                    </button>
+                <!-- Hijos Registrados -->
+                <div class="action-card" data-aos="fade-up">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h3 class="mb-0"><i class="bi bi-people-fill"></i> Mis Hijos</h3>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-outline-primary btn-sm" onclick="cargarHijos()">
+                                <i class="bi bi-arrow-clockwise"></i>
+                            </button>
+                            <button class="btn btn-christmas btn-sm" onclick="mostrarModalRegistroHijo()">
+                                <i class="bi bi-plus"></i> Agregar
+                            </button>
+                        </div>
+                    </div>
+                    <div id="hijosContainer">
+                        <div class="empty-state">
+                            <i class="bi bi-person-plus"></i>
+                            <h4>No tienes hijos registrados</h4>
+                            <p>Registra a tus hijos para postularlos</p>
+                            <button class="btn btn-christmas" onclick="mostrarModalRegistroHijo()">
+                                <i class="bi bi-plus-circle"></i> Registrar Primer Hijo
+                            </button>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div id="hijosContainer">
-                <div class="empty-state">
-                    <i class="bi bi-person-plus"></i>
-                    <h4 style="font-size: 0.95rem; font-weight: 700;">No tienes hijos registrados</h4>
-                    <p style="font-size: 0.75rem;">Registra a tus hijos para postularlos</p>
-                    <button class="btn btn-christmas" onclick="mostrarModalRegistroHijo()">
-                        <i class="bi bi-plus-circle"></i> Registrar Primer Hijo
-                    </button>
-                </div>
-            </div>
-        </div>
 
-        <!-- Mis Documentos -->
-        <div class="action-card">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h3 class="mb-0"><i class="bi bi-file-earmark-text-fill"></i> Mis Documentos</h3>
-                <div class="d-flex gap-2">
-                    <button class="btn btn-outline-primary btn-sm" onclick="cargarMisDocumentos()">
-                        <i class="bi bi-arrow-clockwise"></i>
-                    </button>
-                    <button class="btn btn-christmas btn-sm" onclick="mostrarModalSubirDocumento()">
-                        <i class="bi bi-plus"></i> Subir Documento
-                    </button>
+                <!-- Mis Documentos -->
+                <div class="action-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h3 class="mb-0"><i class="bi bi-file-earmark-text-fill"></i> Mis Documentos</h3>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-outline-primary btn-sm" onclick="cargarMisDocumentos()">
+                                <i class="bi bi-arrow-clockwise"></i>
+                            </button>
+                            <button class="btn btn-christmas btn-sm" onclick="mostrarModalSubirDocumento()">
+                                <i class="bi bi-plus"></i> Subir Documento
+                            </button>
+                        </div>
+                    </div>
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle me-2"></i>
+                        <strong>Importante:</strong> Sube los documentos requeridos (Registro Civil, Tarjeta de Identidad, etc.) para completar tu postulación. Los documentos serán revisados por el administrador.
+                    </div>
+                    <div id="documentosContainer">
+                        <div class="text-center py-4">
+                            <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
+                            <p class="mt-2" style="font-size: 0.85rem; color: var(--text-light);">Cargando documentos...</p>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="alert alert-info" style="font-size: 0.75rem; padding: 0.75rem; margin-bottom: 1rem;">
-                <i class="bi bi-info-circle me-2"></i>
-                <strong>Importante:</strong> Sube los documentos requeridos (Registro Civil, Tarjeta de Identidad, etc.) para completar tu postulación. Los documentos serán revisados por el administrador.
-            </div>
-            <div id="documentosContainer">
-                <div class="text-center py-3">
-                    <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
-                    <p class="mt-2" style="font-size: 0.75rem;">Cargando documentos...</p>
-                </div>
-            </div>
-        </div>
             </div>
 
             <!-- Columna Lateral - Cronograma y Countdown -->
             <div class="col-lg-3">
-                <div class="action-card text-center" style="margin-bottom: 0.5rem;">
-                    <div style="font-size: 2rem; margin-bottom: 0.25rem;">🎄</div>
-                    <h5 style="font-size: 0.8rem; font-weight: 700; color: var(--primary); margin-bottom: 0.25rem;">¡Faltan pocos días!</h5>
-                    <p style="font-size: 0.65rem; color: var(--text-light); margin-bottom: 0.5rem;">La magia navideña está cerca</p>
+                <div class="action-card text-center" style="margin-bottom: 1rem;" data-aos="fade-left">
+                    <div style="font-size: 3rem; margin-bottom: 0.5rem;">🎄</div>
+                    <h5 style="font-size: 1rem; font-weight: 700; color: var(--primary); margin-bottom: 0.5rem;">¡Faltan pocos días!</h5>
+                    <p style="font-size: 0.8rem; color: var(--text-light); margin-bottom: 1rem;">La magia navideña está cerca</p>
                     <div class="countdown">
                         <div class="countdown-item">
                             <div class="countdown-number" id="days">00</div>
@@ -517,28 +779,28 @@
                     </div>
                 </div>
 
-                <div class="action-card">
-                    <h3 style="margin-bottom: 0.5rem;"><i class="bi bi-calendar-event-fill"></i> Cronograma 2024</h3>
+                <div class="action-card" data-aos="fade-left" data-aos-delay="100">
+                    <h3 style="margin-bottom: 1rem;"><i class="bi bi-calendar-event-fill"></i> Cronograma 2024</h3>
                     <div class="timeline">
                         <div class="timeline-item">
                             <h5>📝 Registro</h5>
-                            <p style="font-size: 0.65rem; margin: 0;">Hasta el 10 Dic</p>
-                            <span class="badge bg-success" style="font-size: 0.6rem;">Activo</span>
+                            <p>Hasta el 10 Dic</p>
+                            <span class="badge bg-success">Activo</span>
                         </div>
                         <div class="timeline-item">
                             <h5>🎁 Postulaciones</h5>
-                            <p style="font-size: 0.65rem; margin: 0;">Hasta el 15 Dic</p>
-                            <span class="badge bg-warning" style="font-size: 0.6rem;">Próximo</span>
+                            <p>Hasta el 15 Dic</p>
+                            <span class="badge bg-warning text-dark">Próximo</span>
                         </div>
                         <div class="timeline-item">
                             <h5>⚖️ Revisión</h5>
-                            <p style="font-size: 0.65rem; margin: 0;">16 - 20 Dic</p>
-                            <span class="badge bg-secondary" style="font-size: 0.6rem;">Pendiente</span>
+                            <p>16 - 20 Dic</p>
+                            <span class="badge bg-secondary">Pendiente</span>
                         </div>
                         <div class="timeline-item">
                             <h5>🎄 Entrega</h5>
-                            <p style="font-size: 0.65rem; margin: 0;">21 - 24 Dic</p>
-                            <span class="badge bg-danger" style="font-size: 0.6rem;">Próximo</span>
+                            <p>21 - 24 Dic</p>
+                            <span class="badge bg-danger">Próximo</span>
                         </div>
                     </div>
                 </div>
@@ -549,10 +811,18 @@
     <div id="modalsContainer"></div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="../js/auth-global.js?v=2.6"></script>
     <script src="../js/documentos.js?v=2.6"></script>
     <script src="../js/dashboard-empleado.js?v=2.6"></script>
     <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 600,
+            once: true,
+            offset: 50
+        });
+
         function actualizarCountdown() {
             const navidad = new Date('2024-12-25T00:00:00');
             const ahora = new Date();
