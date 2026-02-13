@@ -171,21 +171,41 @@ function mostrarInicio() {
                     </div>
                 </div>
                 <div class="col-md-6">
-                    <div class="info-card">
-                        <h5><i class="bi bi-info-circle me-2"></i>Accesos Rápidos</h5>
-                        <div class="d-grid gap-2">
-                            <button class="btn btn-outline-primary btn-sm" onclick="mostrarPostulaciones()">
-                                <i class="bi bi-list-check me-2"></i>Ver Postulaciones
-                            </button>
-                            <button class="btn btn-outline-success btn-sm" onclick="mostrarUsuarios()">
-                                <i class="bi bi-people me-2"></i>Gestionar Usuarios
-                            </button>
-                            <button class="btn btn-outline-info btn-sm" onclick="mostrarReportes()">
-                                <i class="bi bi-graph-up me-2"></i>Ver Reportes
-                            </button>
-                            <button class="btn btn-outline-warning btn-sm" onclick="mostrarMensajes()">
-                                <i class="bi bi-chat-dots me-2"></i>Mensajes de Contacto
-                            </button>
+                    <div class="info-card" style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border-left: 4px solid #3b82f6;">
+                        <h5><i class="bi bi-graph-up-arrow me-2 text-primary"></i>Resumen del Sistema</h5>
+                        <div class="row text-center mt-3">
+                            <div class="col-6 mb-3">
+                                <div style="background: white; padding: 1rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                                    <div style="font-size: 2rem; font-weight: 800; color: #059669;" id="totalUsuariosInicio">
+                                        <div class="spinner-border spinner-border-sm text-success" role="status"></div>
+                                    </div>
+                                    <div style="font-size: 0.75rem; color: #6b7280; font-weight: 600; text-transform: uppercase;">Usuarios</div>
+                                </div>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <div style="background: white; padding: 1rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                                    <div style="font-size: 2rem; font-weight: 800; color: #f59e0b;" id="totalPostulacionesInicio">
+                                        <div class="spinner-border spinner-border-sm text-warning" role="status"></div>
+                                    </div>
+                                    <div style="font-size: 0.75rem; color: #6b7280; font-weight: 600; text-transform: uppercase;">Postulaciones</div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div style="background: white; padding: 1rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                                    <div style="font-size: 2rem; font-weight: 800; color: #3b82f6;" id="pendientesInicio">
+                                        <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
+                                    </div>
+                                    <div style="font-size: 0.75rem; color: #6b7280; font-weight: 600; text-transform: uppercase;">Pendientes</div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div style="background: white; padding: 1rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                                    <div style="font-size: 2rem; font-weight: 800; color: #10b981;" id="aprobadasInicio">
+                                        <div class="spinner-border spinner-border-sm text-success" role="status"></div>
+                                    </div>
+                                    <div style="font-size: 0.75rem; color: #6b7280; font-weight: 600; text-transform: uppercase;">Aprobadas</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -209,6 +229,64 @@ function mostrarInicio() {
             </div>
         </div>
     `;
+    
+    // Cargar estadísticas para el resumen
+    cargarEstadisticasInicio();
+}
+
+// Cargar estadísticas para la sección de inicio
+async function cargarEstadisticasInicio() {
+    try {
+        // Cargar total de usuarios
+        const usuariosResponse = await fetch('/api/admin/empleados', {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('coomotor_token')}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        if (usuariosResponse.ok) {
+            const usuariosResult = await usuariosResponse.json();
+            const totalUsuarios = usuariosResult.data?.length || 0;
+            document.getElementById('totalUsuariosInicio').textContent = totalUsuarios;
+        }
+        
+        // Cargar postulaciones
+        const postulacionesResponse = await fetch('/api/admin/postulaciones', {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('coomotor_token')}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        if (postulacionesResponse.ok) {
+            const postulacionesResult = await postulacionesResponse.json();
+            const postulaciones = postulacionesResult.data || [];
+            
+            document.getElementById('totalPostulacionesInicio').textContent = postulaciones.length;
+            
+            const pendientes = postulaciones.filter(p => 
+                p.estado_postulacion === 'pendiente' || 
+                p.estado_postulacion === 'documentos_solicitados' ||
+                p.estado_postulacion === 'documentos_recibidos'
+            ).length;
+            
+            const aprobadas = postulaciones.filter(p => 
+                p.estado_postulacion === 'aprobada' || 
+                p.estado_postulacion === 'entregado'
+            ).length;
+            
+            document.getElementById('pendientesInicio').textContent = pendientes;
+            document.getElementById('aprobadasInicio').textContent = aprobadas;
+        }
+    } catch (error) {
+        console.error('Error al cargar estadísticas de inicio:', error);
+        // Mostrar 0 en caso de error
+        document.getElementById('totalUsuariosInicio').textContent = '0';
+        document.getElementById('totalPostulacionesInicio').textContent = '0';
+        document.getElementById('pendientesInicio').textContent = '0';
+        document.getElementById('aprobadasInicio').textContent = '0';
+    }
 }
 
 // Mostrar sección de postulaciones
