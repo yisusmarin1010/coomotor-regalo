@@ -63,20 +63,6 @@ function cerrarSesion(event) {
 window.cerrarSesion = cerrarSesion;
 window.logout = cerrarSesion;
 
-// También agregar listener para el evento DOMContentLoaded
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('🔐 Sistema de autenticación inicializado');
-    
-    // Buscar todos los botones de cerrar sesión y agregar listeners
-    const logoutButtons = document.querySelectorAll('[onclick*="cerrarSesion"], #btnSalir, .btn-logout');
-    logoutButtons.forEach(button => {
-        button.addEventListener('click', function(e) {
-            e.preventDefault();
-            cerrarSesion(e);
-        });
-    });
-});
-
 // Función para verificar si el usuario está autenticado
 window.verificarAutenticacion = function() {
     const token = localStorage.getItem('coomotor_token');
