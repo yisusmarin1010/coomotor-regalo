@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Administrativo - Sistema Regalos Navideños COOMOTOR</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="../css/responsive-global.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-green: #059669;
+            --primary-red: #dc2626;
+            --bg-light: #f9fafb;
+            --text-dark: #1f2937;
+            --text-light: #6b7280;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-light);
+            color: var(--text-dark);
+        }
+
+        .navbar {
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .navbar-brand {
+            font-weight: 600;
+            color: var(--primary-green) !important;
+        }
+
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.5rem 1rem;
+        }
+
+        .admin-header {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .admin-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.25rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+
+        .stat-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .stat-label {
+            color: var(--text-light);
+            font-size: 0.875rem;
+        }
+
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .quick-action {
+            background: white;
+            border-radius: 10px;
+            padding: 1.25rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .quick-action:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+        }
+
+        .quick-action i {
+            font-size: 2rem;
+            color: var(--primary-green);
+            margin-bottom: 0.75rem;
+        }
+
+        .quick-action h5 {
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .quick-action p {
+            color: var(--text-light);
+            font-size: 0.8rem;
+            margin: 0;
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 1rem;
+            }
+            
+            .admin-header {
+                padding: 1rem;
+            }
+            
+            .admin-title {
+                font-size: 1.25rem;
+            }
+            
+            .stats-grid, .quick-actions {
+                grid-template-columns: 1fr;
+            }
+            
+            .stat-number {
+                font-size: 1.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="../index.html">
+                <i class="bi bi-shield-check-fill me-2"></i>
+                COOMOTOR Admin - Regalos Navideños
+            </a>
+            <div class="ms-auto d-flex align-items-center gap-2">
+                <span class="text-muted" id="userInfo">
+                    <i class="bi bi-person-circle me-1"></i>
+                    Cargando...
+                </span>
+                <button class="btn btn-outline-danger btn-sm" onclick="cerrarSesion()" id="btnSalir">
+                    <i class="bi bi-box-arrow-right me-1"></i>
+                    Salir
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container main-container">
+        <!-- Admin Header -->
+        <div class="admin-header">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 class="admin-title">Panel Administrativo</h1>
+                    <p class="mb-0 text-muted">Gestión del Sistema de Regalos Navideños COOMOTOR 2024</p>
+                </div>
+                <div class="col-md-4 text-end">
+                    <span class="text-muted">🎄 Temporada Navideña</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">👥</div>
+                <div class="stat-number" id="totalEmpleados">0</div>
+                <div class="stat-label">Empleados Registrados</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">👶</div>
+                <div class="stat-number" id="totalHijos">0</div>
+                <div class="stat-label">Hijos Registrados</div>
+            </div>
+            <div class="stat-card warning">
+                <div class="stat-icon">⏳</div>
+                <div class="stat-number" id="postulacionesPendientes">0</div>
+                <div class="stat-label">Postulaciones Pendientes</div>
+            </div>
+            <div class="stat-card success">
+                <div class="stat-icon">✅</div>
+                <div class="stat-number" id="postulacionesAprobadas">0</div>
+                <div class="stat-label">Postulaciones Aprobadas</div>
+            </div>
+            <div class="stat-card info">
+                <div class="stat-icon">📞</div>
+                <div class="stat-number" id="totalContactos">0</div>
+                <div class="stat-label">Mensajes de Contacto</div>
+            </div>
+            <div class="stat-card warning">
+                <div class="stat-icon">📋</div>
+                <div class="stat-number" id="contactosPendientes">0</div>
+                <div class="stat-label">Contactos Pendientes</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🎁</div>
+                <div class="stat-number" id="regalosComprados">0</div>
+                <div class="stat-label">Regalos Comprados</div>
+            </div>
+            <div class="stat-card success">
+                <div class="stat-icon">📦</div>
+                <div class="stat-number" id="regalosEntregados">0</div>
+                <div class="stat-label">Regalos Entregados</div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+            <div class="quick-action" onclick="mostrarSeccion('postulaciones')">
+                <i class="bi bi-list-check"></i>
+                <h5>Revisar Postulaciones</h5>
+                <p>Aprobar o rechazar postulaciones</p>
+            </div>
+            <div class="quick-action" onclick="mostrarSeccion('empleados')">
+                <i class="bi bi-people"></i>
+                <h5>Gestionar Empleados</h5>
+                <p>Ver empleados registrados</p>
+            </div>
+            <div class="quick-action" onclick="mostrarSeccion('regalos')">
+                <i class="bi bi-gift"></i>
+                <h5>Gestionar Regalos</h5>
+                <p>Asignar y gestionar regalos</p>
+            </div>
+            <div class="quick-action" onclick="mostrarSeccion('contactos')">
+                <i class="bi bi-chat-dots"></i>
+                <h5>Mensajes de Contacto</h5>
+                <p>Quejas, sugerencias y consultas</p>
+            </div>
+            <div class="quick-action" onclick="mostrarSeccion('reportes')">
+                <i class="bi bi-graph-up"></i>
+                <h5>Reportes</h5>
+                <p>Estadísticas y reportes</p>
+            </div>
+            <div class="quick-action" onclick="mostrarSeccion('usuarios')">
+                <i class="bi bi-person-gear"></i>
+                <h5>Gestionar Usuarios</h5>
+                <p>Editar, activar o eliminar usuarios</p>
+            </div>
+        </div>
+
+        <!-- Sección de Gestión de Usuarios -->
+        <div class="action-card" id="seccionUsuarios" style="display: none;">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h3 class="action-title mb-0">
+                    <i class="bi bi-person-gear me-2"></i>
+                    Gestión de Usuarios
+                </h3>
+                <div class="d-flex gap-2">
+                    <input type="text" class="form-control form-control-sm" style="width: 250px;"
+                           id="buscarUsuario" placeholder="🔍 Buscar por nombre o correo...">
+                    <select class="form-select form-select-sm" style="width: 150px;" id="filtroEstado" onchange="cargarUsuarios()">
+                        <option value="">Todos los estados</option>
+                        <option value="activo" selected>Activos</option>
+                        <option value="inactivo">Inactivos</option>
+                        <option value="suspendido">Suspendidos</option>
+                    </select>
+                    <button class="btn btn-primary btn-sm" onclick="cargarUsuarios()">
+                        <i class="bi bi-arrow-clockwise me-1"></i>
+                        Actualizar
+                    </button>
+                </div>
+            </div>
+            
+            <div class="alert alert-info">
+                <i class="bi bi-info-circle me-2"></i>
+                <strong>Gestión de Usuarios:</strong> Aquí puedes ver, editar, activar/desactivar y eliminar usuarios del sistema.
+            </div>
+            
+            <div id="usuariosContainer">
+                <div class="text-center py-4">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Cargando...</span>
+                    </div>
+                    <p class="mt-2">Cargando usuarios...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Secciones dinámicas -->
+        <div id="seccionesContainer">
+            <!-- Las secciones se cargarán dinámicamente -->
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div id="modalsContainer"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/auth-global.js"></script>
+    <script src="../js/dashboard-admin.js"></script>
+</body>
+</html>
