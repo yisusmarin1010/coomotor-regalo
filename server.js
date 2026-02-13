@@ -2105,6 +2105,11 @@ app.get('/api/hijos', authenticateToken, async (req, res) => {
                     AND p.estado_postulacion NOT IN ('rechazada', 'cancelada')
                 WHERE h.usuario_id = @userId 
                   AND h.estado = 'activo'
+                  AND h.id NOT IN (
+                      SELECT hijo_id 
+                      FROM postulaciones_hijos 
+                      WHERE estado_postulacion IN ('rechazada', 'cancelada')
+                  )
                 ORDER BY h.fecha_registro DESC
             `);
         
@@ -2290,7 +2295,8 @@ app.get('/api/admin/estadisticas', authenticateToken, requireAdmin, async (req, 
 app.get('/api/admin/postulaciones', authenticateToken, requireAdmin, async (req, res) => {
     try {
         const { filtro = 'todas' } = req.query;
-        let whereClause = "WHERE p.estado_postulacion != 'rechazada'"; // Excluir rechazadas por defecto
+        // Excluir rechazadas y canceladas por defecto
+        let whereClause = "WHERE p.estado_postulacion NOT IN ('rechazada', 'cancelada')"; 
         
         if (filtro !== 'todas') {
             whereClause = `WHERE p.estado_postulacion = '${filtro}'`;
