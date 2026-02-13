@@ -59,15 +59,15 @@
         .main-container {
             max-width: 1400px;
             margin: 0 auto;
-            padding: 2rem 1rem;
+            padding: 1.5rem 1rem;
         }
 
         /* Header del admin mejorado */
         .admin-header {
             background: linear-gradient(135deg, white 0%, #f9fafb 100%);
-            border-radius: 16px;
-            padding: 2rem;
-            margin-bottom: 2rem;
+            border-radius: 12px;
+            padding: 1.25rem 1.5rem;
+            margin-bottom: 1.5rem;
             box-shadow: var(--card-shadow);
             border-left: 4px solid var(--primary-green);
             position: relative;
@@ -85,17 +85,17 @@
         }
 
         .admin-title {
-            font-size: 2rem;
+            font-size: 1.5rem;
             font-weight: 700;
             color: var(--text-dark);
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.25rem;
             position: relative;
             z-index: 1;
         }
 
         .admin-subtitle {
             color: var(--text-light);
-            font-size: 1rem;
+            font-size: 0.875rem;
             position: relative;
             z-index: 1;
         }
@@ -154,55 +154,47 @@
         }
 
         .stat-icon {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
             display: inline-block;
-            animation: bounce 2s ease-in-out infinite;
-        }
-
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
         }
 
         .stat-number {
-            font-size: 2.5rem;
-            font-weight: 800;
-            color: var(--text-dark);
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-green);
             display: block;
-            margin-bottom: 0.5rem;
-            background: linear-gradient(135deg, var(--primary-green), #047857);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            margin-bottom: 0.25rem;
         }
 
         .stat-label {
             color: var(--text-light);
-            font-size: 0.875rem;
+            font-size: 0.75rem;
             font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.3px;
         }
 
         /* Quick actions mejorado */
         .quick-actions {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
         }
 
         .quick-action {
             background: white;
-            border-radius: 16px;
-            padding: 2rem 1.5rem;
+            border-radius: 12px;
+            padding: 1.25rem 1rem;
             box-shadow: var(--card-shadow);
             cursor: pointer;
             text-align: center;
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
+            text-decoration: none;
+            color: inherit;
         }
 
         .quick-action::before {
@@ -227,9 +219,9 @@
         }
 
         .quick-action i {
-            font-size: 2.5rem;
+            font-size: 2rem;
             color: var(--primary-green);
-            margin-bottom: 1rem;
+            margin-bottom: 0.75rem;
             display: block;
             transition: all 0.3s ease;
             position: relative;
@@ -241,9 +233,9 @@
         }
 
         .quick-action h5 {
-            font-weight: 700;
-            font-size: 1.1rem;
-            margin-bottom: 0.5rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
             color: var(--text-dark);
             position: relative;
             z-index: 1;
@@ -251,10 +243,11 @@
 
         .quick-action p {
             color: var(--text-light);
-            font-size: 0.875rem;
+            font-size: 0.7rem;
             margin: 0;
             position: relative;
             z-index: 1;
+            line-height: 1.3;
         }
 
         /* Action card mejorado */
@@ -445,36 +438,36 @@
 
         <!-- Quick Actions -->
         <div class="quick-actions">
-            <div class="quick-action" onclick="mostrarSeccion('postulaciones')">
+            <a href="javascript:void(0)" class="quick-action" onclick="mostrarSeccion('postulaciones')">
                 <i class="bi bi-list-check"></i>
-                <h5>Revisar Postulaciones</h5>
-                <p>Aprobar o rechazar postulaciones</p>
-            </div>
-            <div class="quick-action" onclick="mostrarSeccion('empleados')">
+                <h5>Postulaciones</h5>
+                <p>Aprobar o rechazar</p>
+            </a>
+            <a href="javascript:void(0)" class="quick-action" onclick="mostrarSeccion('empleados')">
                 <i class="bi bi-people"></i>
-                <h5>Gestionar Empleados</h5>
-                <p>Ver empleados registrados</p>
-            </div>
-            <div class="quick-action" onclick="mostrarSeccion('regalos')">
+                <h5>Empleados</h5>
+                <p>Ver registrados</p>
+            </a>
+            <a href="javascript:void(0)" class="quick-action" onclick="mostrarSeccion('regalos')">
                 <i class="bi bi-gift"></i>
-                <h5>Gestionar Regalos</h5>
-                <p>Asignar y gestionar regalos</p>
-            </div>
-            <div class="quick-action" onclick="mostrarSeccion('contactos')">
+                <h5>Regalos</h5>
+                <p>Asignar y gestionar</p>
+            </a>
+            <a href="javascript:void(0)" class="quick-action" onclick="mostrarSeccion('contactos')">
                 <i class="bi bi-chat-dots"></i>
-                <h5>Mensajes de Contacto</h5>
-                <p>Quejas, sugerencias y consultas</p>
-            </div>
-            <div class="quick-action" onclick="mostrarSeccion('reportes')">
+                <h5>Mensajes</h5>
+                <p>Quejas y consultas</p>
+            </a>
+            <a href="javascript:void(0)" class="quick-action" onclick="mostrarSeccion('reportes')">
                 <i class="bi bi-graph-up"></i>
                 <h5>Reportes</h5>
-                <p>Estadísticas y reportes</p>
-            </div>
-            <div class="quick-action" onclick="mostrarSeccion('usuarios')">
+                <p>Estadísticas</p>
+            </a>
+            <a href="javascript:void(0)" class="quick-action" onclick="mostrarSeccion('usuarios')">
                 <i class="bi bi-person-gear"></i>
-                <h5>Gestionar Usuarios</h5>
-                <p>Editar, activar o eliminar usuarios</p>
-            </div>
+                <h5>Usuarios</h5>
+                <p>Gestionar cuentas</p>
+            </a>
         </div>
 
         <!-- Sección de Gestión de Usuarios -->
