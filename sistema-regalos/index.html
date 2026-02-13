@@ -3,18 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎄 COOMOTOR - Regalos Navideños 2024</title>
+    <title>COOMOTOR - Regalos Navideños 2024</title>
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     
     <style>
         :root {
-            --primary-green: #059669;
-            --primary-red: #dc2626;
-            --accent-gold: #fbbf24;
-            --bg-light: #f9fafb;
+            --primary: #16a34a;
+            --primary-dark: #15803d;
+            --accent: #dc2626;
+            --dark: #0f172a;
+            --light: #f8fafc;
+            --gray: #64748b;
         }
 
         * {
@@ -24,228 +28,256 @@
         }
 
         body {
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Inter', sans-serif;
+            color: #1e293b;
+            line-height: 1.6;
             overflow-x: hidden;
         }
 
-        /* Navbar con efecto glassmorphism */
+        /* Navbar con efecto scroll */
         .navbar {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-            padding: 1rem 0;
+            background: white;
+            padding: 1.5rem 0;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
             position: sticky;
             top: 0;
-            z-index: 1000;
+            z-index: 100;
             transition: all 0.3s;
         }
 
+        .navbar.scrolled {
+            padding: 1rem 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
         .navbar-brand {
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--primary);
+        }
+
+        .nav-link {
+            color: var(--gray);
+            font-weight: 500;
+            padding: 0.5rem 1rem !important;
+            transition: color 0.2s;
+            position: relative;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: all 0.3s;
+            transform: translateX(-50%);
+        }
+
+        .nav-link:hover::after {
+            width: 80%;
+        }
+
+        .nav-link:hover {
+            color: var(--primary);
+        }
+
+        .btn-nav {
+            background: var(--primary);
+            color: white;
+            padding: 0.6rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            border: none;
+            transition: all 0.2s;
+        }
+
+        .btn-nav:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        /* Hero moderno con particles */
+        .hero {
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%);
+            padding: 6rem 0 4rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            color: white;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 20% 50%, rgba(22, 163, 74, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(22, 163, 74, 0.1) 0%, transparent 50%);
+            animation: pulse 8s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
             font-weight: 800;
-            font-size: 1.5rem;
-            background: linear-gradient(135deg, var(--primary-green), #047857);
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+        }
+
+        .hero-highlight {
+            background: linear-gradient(to right, #10b981, #3b82f6);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
 
-        /* Hero Section con animaciones */
-        .hero {
-            min-height: 100vh;
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-        }
-
-        /* Nieve animada */
-        .snowflake {
-            position: absolute;
-            top: -10px;
-            color: white;
-            font-size: 1.5rem;
-            opacity: 0.8;
-            animation: fall linear infinite;
-            z-index: 1;
-        }
-
-        @keyframes fall {
-            to {
-                transform: translateY(100vh) rotate(360deg);
-            }
-        }
-
-        /* Luces navideñas */
-        .christmas-lights {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100px;
-            background: repeating-linear-gradient(
-                90deg,
-                #dc2626 0px,
-                #dc2626 20px,
-                transparent 20px,
-                transparent 40px,
-                #059669 40px,
-                #059669 60px,
-                transparent 60px,
-                transparent 80px,
-                #fbbf24 80px,
-                #fbbf24 100px,
-                transparent 100px,
-                transparent 120px
-            );
-            opacity: 0.3;
-            animation: lights 2s linear infinite;
-        }
-
-        @keyframes lights {
-            0%, 100% { opacity: 0.3; }
-            50% { opacity: 0.6; }
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 10;
-            color: white;
-            text-align: center;
-        }
-
-        .hero h1 {
-            font-size: clamp(2.5rem, 6vw, 4.5rem);
-            font-weight: 800;
-            margin-bottom: 1.5rem;
-            text-shadow: 0 4px 20px rgba(0,0,0,0.3);
-            animation: fadeInUp 1s ease-out;
-        }
-
-        .hero-emoji {
-            font-size: clamp(4rem, 10vw, 8rem);
-            display: inline-block;
-            animation: bounce 2s ease-in-out infinite;
-        }
-
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-20px); }
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
         .hero p {
-            font-size: clamp(1.1rem, 2vw, 1.5rem);
-            margin-bottom: 2rem;
-            opacity: 0.95;
-            animation: fadeInUp 1s ease-out 0.2s both;
+            font-size: 1.25rem;
+            max-width: 600px;
+            margin: 0 auto 2.5rem;
+            opacity: 0.9;
         }
 
         .hero-buttons {
-            animation: fadeInUp 1s ease-out 0.4s both;
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 4rem;
         }
 
-        .btn-hero {
-            padding: 1rem 2.5rem;
-            font-size: 1.1rem;
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 10px;
             font-weight: 600;
-            border-radius: 50px;
-            margin: 0.5rem;
-            transition: all 0.3s;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-
-        .btn-hero-primary {
-            background: linear-gradient(135deg, var(--primary-green), #047857);
             border: none;
+            font-size: 1rem;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 4px 15px rgba(22, 163, 74, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(22, 163, 74, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
             color: white;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            font-weight: 600;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            font-size: 1rem;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
-        .btn-hero-primary:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(5, 150, 105, 0.4);
-        }
-
-        .btn-hero-outline {
-            background: transparent;
-            border: 3px solid white;
-            color: white;
-        }
-
-        .btn-hero-outline:hover {
+        .btn-secondary:hover {
             background: white;
-            color: var(--primary-green);
-            transform: translateY(-5px);
+            color: var(--primary);
+            border-color: white;
+            transform: translateY(-2px);
         }
 
-        /* Countdown Timer */
+        /* Countdown moderno */
         .countdown {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
-            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
             padding: 2rem;
-            margin-top: 3rem;
-            display: inline-block;
-            animation: fadeInUp 1s ease-out 0.6s both;
-        }
-
-        .countdown-item {
-            display: inline-block;
-            margin: 0 1rem;
-            text-align: center;
-        }
-
-        .countdown-number {
-            font-size: 3rem;
-            font-weight: 800;
-            display: block;
-            color: var(--accent-gold);
-            text-shadow: 0 2px 10px rgba(251, 191, 36, 0.5);
+            max-width: 500px;
+            margin: 0 auto;
         }
 
         .countdown-label {
-            font-size: 0.9rem;
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+            font-weight: 500;
+            opacity: 0.9;
+        }
+
+        .countdown-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+        }
+
+        .countdown-item {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1rem 0.5rem;
+            border-radius: 10px;
+        }
+
+        .countdown-number {
+            font-size: 2rem;
+            font-weight: 800;
+            display: block;
+            color: #10b981;
+        }
+
+        .countdown-text {
+            font-size: 0.75rem;
             text-transform: uppercase;
-            letter-spacing: 2px;
+            letter-spacing: 0.5px;
+            margin-top: 0.25rem;
             opacity: 0.8;
         }
 
-        /* Features Section */
-        .features {
-            padding: 5rem 0;
+        /* Stats carousel moderno */
+        .stats-carousel {
+            padding: 4rem 0;
             background: white;
+            position: relative;
         }
 
-        .feature-card {
-            background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
-            border-radius: 20px;
-            padding: 2.5rem;
+        .stats-slide {
             text-align: center;
-            transition: all 0.3s;
-            border: 2px solid transparent;
-            height: 100%;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            padding: 2rem;
         }
 
-        .feature-card:hover {
-            transform: translateY(-10px);
-            border-color: var(--primary-green);
-            box-shadow: 0 15px 40px rgba(5, 150, 105, 0.2);
-        }
-
-        .feature-icon {
+        .stat-icon {
             font-size: 4rem;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
             display: inline-block;
             animation: float 3s ease-in-out infinite;
         }
@@ -255,46 +287,243 @@
             50% { transform: translateY(-10px); }
         }
 
-        .feature-card h3 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            color: var(--primary-green);
-        }
-
-        /* Stats Section */
-        .stats {
-            background: linear-gradient(135deg, var(--primary-green), #047857);
-            padding: 4rem 0;
-            color: white;
-        }
-
-        .stat-item {
-            text-align: center;
-            padding: 2rem;
-        }
-
         .stat-number {
-            font-size: 3.5rem;
+            font-size: 3rem;
             font-weight: 800;
+            color: var(--primary);
             display: block;
             margin-bottom: 0.5rem;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
         }
 
         .stat-label {
             font-size: 1.1rem;
-            opacity: 0.95;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            color: var(--gray);
+            font-weight: 500;
         }
 
-        /* CTA Section */
-        .cta {
-            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+        /* Features con tabs interactivos */
+        .features {
             padding: 5rem 0;
-            color: white;
+            background: var(--light);
+        }
+
+        .section-title {
             text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-title h2 {
+            font-size: clamp(2rem, 4vw, 2.5rem);
+            font-weight: 800;
+            color: var(--dark);
+            margin-bottom: 1rem;
+        }
+
+        .section-title p {
+            font-size: 1.125rem;
+            color: var(--gray);
+        }
+
+        .steps-nav {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .step-btn {
+            background: white;
+            border: 2px solid #e2e8f0;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            font-weight: 600;
+            color: var(--gray);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .step-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .step-btn:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .step-content {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        .step-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .step-card {
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .step-icon-large {
+            font-size: 5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .step-card h3 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 1rem;
+        }
+
+        .step-card p {
+            color: var(--gray);
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        /* Testimonials carousel */
+        .testimonials {
+            padding: 5rem 0;
+            background: white;
+        }
+
+        .testimonial-card {
+            background: var(--light);
+            padding: 2.5rem;
+            border-radius: 20px;
+            margin: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .testimonial-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .testimonial-text {
+            font-size: 1rem;
+            color: var(--gray);
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+            font-style: italic;
+        }
+
+        .testimonial-author {
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .testimonial-role {
+            font-size: 0.875rem;
+            color: var(--gray);
+        }
+
+        /* Gallery carousel */
+        .gallery {
+            padding: 5rem 0;
+            background: var(--light);
+        }
+
+        .gallery-slide {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            height: 400px;
+            background: linear-gradient(135deg, #0f172a, #1e3a5f);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .gallery-emoji {
+            font-size: 10rem;
+            opacity: 0.3;
+        }
+
+        .gallery-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .gallery-caption h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Info cards mejoradas */
+        .info-section {
+            padding: 4rem 0;
+            background: white;
+        }
+
+        .info-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .info-card {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            padding: 2.5rem;
+            border-radius: 16px;
+            text-align: center;
+            color: white;
+            transition: transform 0.3s;
+            box-shadow: 0 10px 30px rgba(22, 163, 74, 0.2);
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .info-card-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .info-card-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        /* CTA */
+        .cta {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            padding: 5rem 2rem;
+            text-align: center;
+            color: white;
             position: relative;
             overflow: hidden;
         }
@@ -306,240 +535,489 @@
             opacity: 0.05;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%) rotate(-15deg);
+            transform: translate(-50%, -50%);
+        }
+
+        .cta-content {
+            position: relative;
+            z-index: 1;
         }
 
         .cta h2 {
-            font-size: clamp(2rem, 4vw, 3rem);
+            font-size: clamp(2rem, 4vw, 2.75rem);
             font-weight: 800;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .cta p {
+            font-size: 1.125rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+        }
+
+        .btn-cta {
+            background: white;
+            color: var(--primary);
+            padding: 1rem 2.5rem;
+            border-radius: 10px;
+            font-weight: 700;
+            border: none;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-cta:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
 
         /* Footer */
         footer {
-            background: #0f172a;
+            background: var(--dark);
             color: white;
             padding: 3rem 0 1.5rem;
         }
 
+        .footer-content {
+            text-align: center;
+        }
+
+        .footer-brand {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
         .footer-links a {
-            color: rgba(255,255,255,0.7);
+            color: rgba(255, 255, 255, 0.7);
             text-decoration: none;
-            margin: 0 1rem;
-            transition: color 0.3s;
+            font-weight: 500;
+            transition: color 0.2s;
         }
 
         .footer-links a:hover {
-            color: var(--accent-gold);
+            color: white;
         }
 
-        /* Decoraciones flotantes */
-        .decoration {
-            position: absolute;
-            font-size: 3rem;
-            opacity: 0.1;
-            animation: float 4s ease-in-out infinite;
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 1.5rem;
+            margin-top: 2rem;
+            opacity: 0.6;
+            font-size: 0.875rem;
         }
 
-        .decoration:nth-child(2) { animation-delay: 1s; }
-        .decoration:nth-child(3) { animation-delay: 2s; }
+        /* Swiper customization */
+        .swiper-pagination-bullet {
+            background: var(--primary);
+        }
+
+        .swiper-button-next,
+        .swiper-button-prev {
+            color: var(--primary);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero {
+                padding: 4rem 0 3rem;
+            }
+
+            .countdown-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .btn-primary, .btn-secondary {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .steps-nav {
+                flex-direction: column;
+            }
+
+            .step-btn {
+                width: 100%;
+            }
+        }
     </style>
 </head>
 <body>
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg">
+    <nav class="navbar" id="navbar">
         <div class="container">
-            <a class="navbar-brand" href="#">
-                🎄 COOMOTOR Regalos
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto align-items-center">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#inicio">Inicio</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#como-funciona">Cómo Funciona</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="contacto.html">Contacto</a>
-                    </li>
-                    <li class="nav-item ms-3">
-                        <a href="auth/login.html" class="btn btn-primary">
-                            <i class="bi bi-box-arrow-in-right me-2"></i>Iniciar Sesión
-                        </a>
-                    </li>
-                </ul>
+            <div class="d-flex justify-content-between align-items-center w-100">
+                <a class="navbar-brand" href="#">
+                    🎄 COOMOTOR
+                </a>
+                <div class="d-none d-md-flex gap-4 align-items-center">
+                    <a class="nav-link" href="#inicio">Inicio</a>
+                    <a class="nav-link" href="#como-funciona">Cómo Funciona</a>
+                    <a class="nav-link" href="#testimonios">Testimonios</a>
+                    <a class="nav-link" href="contacto.html">Contacto</a>
+                    <a href="auth/login.html" class="btn-nav">Iniciar Sesión</a>
+                </div>
+                <button class="navbar-toggler d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <i class="bi bi-list fs-3"></i>
+                </button>
+            </div>
+            <div class="collapse d-md-none mt-3" id="navbarNav">
+                <div class="d-flex flex-column gap-2">
+                    <a class="nav-link" href="#inicio">Inicio</a>
+                    <a class="nav-link" href="#como-funciona">Cómo Funciona</a>
+                    <a class="nav-link" href="#testimonios">Testimonios</a>
+                    <a class="nav-link" href="contacto.html">Contacto</a>
+                    <a href="auth/login.html" class="btn-nav text-center">Iniciar Sesión</a>
+                </div>
             </div>
         </div>
     </nav>
 
-    <!-- Hero Section -->
+    <!-- Hero -->
     <section class="hero" id="inicio">
-        <div class="christmas-lights"></div>
-        
-        <!-- Nieve animada -->
-        <div class="snowflake" style="left: 10%; animation-duration: 10s;">❄️</div>
-        <div class="snowflake" style="left: 20%; animation-duration: 12s; animation-delay: 2s;">❄️</div>
-        <div class="snowflake" style="left: 30%; animation-duration: 15s; animation-delay: 4s;">❄️</div>
-        <div class="snowflake" style="left: 40%; animation-duration: 11s; animation-delay: 1s;">❄️</div>
-        <div class="snowflake" style="left: 50%; animation-duration: 13s; animation-delay: 3s;">❄️</div>
-        <div class="snowflake" style="left: 60%; animation-duration: 14s; animation-delay: 5s;">❄️</div>
-        <div class="snowflake" style="left: 70%; animation-duration: 12s; animation-delay: 2s;">❄️</div>
-        <div class="snowflake" style="left: 80%; animation-duration: 10s; animation-delay: 4s;">❄️</div>
-        <div class="snowflake" style="left: 90%; animation-duration: 11s; animation-delay: 1s;">❄️</div>
-
-        <!-- Decoraciones -->
-        <div class="decoration" style="top: 20%; left: 10%;">🎅</div>
-        <div class="decoration" style="top: 60%; right: 10%;">🎁</div>
-        <div class="decoration" style="bottom: 20%; left: 15%;">⭐</div>
-
         <div class="container">
-            <div class="hero-content">
-                <div class="hero-emoji">🎅🎄🎁</div>
-                <h1>¡Navidad Mágica COOMOTOR 2024!</h1>
-                <p>Regalos especiales para los hijos de nuestros conductores</p>
+            <div class="hero-content" data-aos="fade-up">
+                <div class="hero-badge">
+                    🎁 Temporada Navideña 2024
+                </div>
                 
+                <h1>
+                    Regalos para las<br>
+                    <span class="hero-highlight">Familias COOMOTOR</span>
+                </h1>
+                
+                <p>
+                    Registra a tus hijos menores de 12 años y recibe un regalo especial esta Navidad
+                </p>
+
                 <div class="hero-buttons">
-                    <a href="auth/registro.html" class="btn btn-hero btn-hero-primary">
-                        <i class="bi bi-gift-fill me-2"></i>Registrarme Ahora
+                    <a href="auth/registro.html" class="btn-primary">
+                        <i class="bi bi-gift-fill"></i>
+                        Registrarme Gratis
                     </a>
-                    <a href="#como-funciona" class="btn btn-hero btn-hero-outline">
-                        <i class="bi bi-info-circle me-2"></i>Cómo Funciona
+                    <a href="#como-funciona" class="btn-secondary">
+                        Cómo Funciona
+                        <i class="bi bi-arrow-down"></i>
                     </a>
                 </div>
 
-                <div class="countdown">
-                    <div class="countdown-item">
-                        <span class="countdown-number" id="days">00</span>
-                        <span class="countdown-label">Días</span>
-                    </div>
-                    <div class="countdown-item">
-                        <span class="countdown-number" id="hours">00</span>
-                        <span class="countdown-label">Horas</span>
-                    </div>
-                    <div class="countdown-item">
-                        <span class="countdown-number" id="minutes">00</span>
-                        <span class="countdown-label">Minutos</span>
-                    </div>
-                    <div class="countdown-item">
-                        <span class="countdown-number" id="seconds">00</span>
-                        <span class="countdown-label">Segundos</span>
+                <div class="countdown" data-aos="fade-up" data-aos-delay="200">
+                    <div class="countdown-label">⏱️ Faltan para Navidad</div>
+                    <div class="countdown-grid">
+                        <div class="countdown-item">
+                            <span class="countdown-number" id="days">00</span>
+                            <span class="countdown-text">Días</span>
+                        </div>
+                        <div class="countdown-item">
+                            <span class="countdown-number" id="hours">00</span>
+                            <span class="countdown-text">Horas</span>
+                        </div>
+                        <div class="countdown-item">
+                            <span class="countdown-number" id="minutes">00</span>
+                            <span class="countdown-text">Min</span>
+                        </div>
+                        <div class="countdown-item">
+                            <span class="countdown-number" id="seconds">00</span>
+                            <span class="countdown-text">Seg</span>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Features Section -->
+    <!-- Stats Carousel -->
+    <section class="stats-carousel">
+        <div class="container">
+            <div class="swiper statsSwiper">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide">
+                        <div class="stats-slide">
+                            <div class="stat-icon">🎄</div>
+                            <span class="stat-number">2024</span>
+                            <span class="stat-label">Temporada Especial</span>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="stats-slide">
+                            <div class="stat-icon">👨‍👩‍👧‍👦</div>
+                            <span class="stat-number">500+</span>
+                            <span class="stat-label">Familias Beneficiadas</span>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="stats-slide">
+                            <div class="stat-icon">🎁</div>
+                            <span class="stat-number">1000+</span>
+                            <span class="stat-label">Regalos Entregados</span>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="stats-slide">
+                            <div class="stat-icon">😊</div>
+                            <span class="stat-number">100%</span>
+                            <span class="stat-label">Sonrisas Garantizadas</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="swiper-pagination"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features con Tabs -->
     <section class="features" id="como-funciona">
         <div class="container">
-            <div class="text-center mb-5">
-                <h2 style="font-size: 2.5rem; font-weight: 800; color: var(--primary-green);">
-                    ¿Cómo Funciona? 🎯
-                </h2>
-                <p style="font-size: 1.2rem; color: #6b7280;">
-                    Proceso simple en 4 pasos
-                </p>
+            <div class="section-title" data-aos="fade-up">
+                <h2>Proceso Simple y Rápido</h2>
+                <p>Conoce cada paso del proceso</p>
             </div>
 
-            <div class="row g-4">
-                <div class="col-md-6 col-lg-3">
-                    <div class="feature-card">
-                        <div class="feature-icon">📝</div>
-                        <h3>1. Regístrate</h3>
-                        <p>Crea tu cuenta como conductor de COOMOTOR y registra a tus hijos menores de 12 años</p>
-                    </div>
+            <div class="steps-nav" data-aos="fade-up" data-aos-delay="100">
+                <button class="step-btn active" onclick="showStep(1)">
+                    <i class="bi bi-1-circle-fill me-2"></i>Registro
+                </button>
+                <button class="step-btn" onclick="showStep(2)">
+                    <i class="bi bi-2-circle-fill me-2"></i>Postulación
+                </button>
+                <button class="step-btn" onclick="showStep(3)">
+                    <i class="bi bi-3-circle-fill me-2"></i>Documentos
+                </button>
+                <button class="step-btn" onclick="showStep(4)">
+                    <i class="bi bi-4-circle-fill me-2"></i>Entrega
+                </button>
+            </div>
+
+            <div class="step-content active" id="step1" data-aos="fade-up">
+                <div class="step-card">
+                    <div class="step-icon-large">📝</div>
+                    <h3>Paso 1: Registro</h3>
+                    <p>Crea tu cuenta como conductor de COOMOTOR en minutos. Solo necesitas tu información básica y los datos de tus hijos menores de 12 años. El proceso es 100% digital y seguro.</p>
                 </div>
-                <div class="col-md-6 col-lg-3">
-                    <div class="feature-card">
-                        <div class="feature-icon">🎁</div>
-                        <h3>2. Postula</h3>
-                        <p>Postula a tus hijos para que reciban su regalo navideño especial</p>
-                    </div>
+            </div>
+
+            <div class="step-content" id="step2">
+                <div class="step-card">
+                    <div class="step-icon-large">🎁</div>
+                    <h3>Paso 2: Postulación</h3>
+                    <p>Selecciona a tus hijos que deseas postular para recibir el regalo navideño. Puedes registrar a todos los niños menores de 12 años que estén bajo tu cuidado.</p>
                 </div>
-                <div class="col-md-6 col-lg-3">
-                    <div class="feature-card">
-                        <div class="feature-icon">�</div>
-                        <h3>3. Documentos</h3>
-                        <p>Sube los documentos requeridos para completar tu postulación</p>
-                    </div>
+            </div>
+
+            <div class="step-content" id="step3">
+                <div class="step-card">
+                    <div class="step-icon-large">📄</div>
+                    <h3>Paso 3: Documentos</h3>
+                    <p>Sube los documentos necesarios de forma rápida y segura. Aceptamos imágenes y PDFs. Nuestro sistema verifica automáticamente la información para agilizar el proceso.</p>
                 </div>
-                <div class="col-md-6 col-lg-3">
-                    <div class="feature-card">
-                        <div class="feature-icon">🎉</div>
-                        <h3>4. ¡Recibe!</h3>
-                        <p>Una vez aprobado, recoge el regalo en las fechas indicadas</p>
-                    </div>
+            </div>
+
+            <div class="step-content" id="step4">
+                <div class="step-card">
+                    <div class="step-icon-large">✅</div>
+                    <h3>Paso 4: Entrega</h3>
+                    <p>Una vez aprobada tu postulación, recibirás una notificación con la fecha y lugar de entrega. Podrás recoger el regalo en el punto más cercano a tu ubicación.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Stats Section -->
-    <section class="stats">
+    <!-- Gallery Carousel -->
+    <section class="gallery">
         <div class="container">
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="stat-item">
-                        <span class="stat-number">🎄</span>
-                        <span class="stat-label">Temporada 2024</span>
+            <div class="section-title" data-aos="fade-up">
+                <h2>Galería de Momentos Especiales</h2>
+                <p>Conoce lo que ofrecemos en esta temporada</p>
+            </div>
+
+            <div class="swiper gallerySwiper" data-aos="fade-up" data-aos-delay="100">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide">
+                        <div class="gallery-slide">
+                            <div class="gallery-emoji">🎮</div>
+                            <div class="gallery-caption">
+                                <h3>Juguetes Educativos</h3>
+                                <p>Para todas las edades</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="gallery-slide">
+                            <div class="gallery-emoji">📚</div>
+                            <div class="gallery-caption">
+                                <h3>Libros y Material Educativo</h3>
+                                <p>Fomenta la lectura</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="gallery-slide">
+                            <div class="gallery-emoji">🎨</div>
+                            <div class="gallery-caption">
+                                <h3>Arte y Creatividad</h3>
+                                <p>Desarrolla su imaginación</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="gallery-slide">
+                            <div class="gallery-emoji">⚽</div>
+                            <div class="gallery-caption">
+                                <h3>Deportes</h3>
+                                <p>Vida activa y saludable</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <div class="stat-item">
-                        <span class="stat-number">👨‍👩‍👧‍👦</span>
-                        <span class="stat-label">Para Familias COOMOTOR</span>
+                <div class="swiper-pagination"></div>
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Carousel -->
+    <section class="testimonials" id="testimonios">
+        <div class="container">
+            <div class="section-title" data-aos="fade-up">
+                <h2>Lo que Dicen Nuestros Conductores</h2>
+                <p>Testimonios de familias felices</p>
+            </div>
+
+            <div class="swiper testimonialsSwiper" data-aos="fade-up" data-aos-delay="100">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide">
+                        <div class="testimonial-card">
+                            <div class="testimonial-avatar">JM</div>
+                            <div class="testimonial-text">
+                                "Excelente iniciativa de COOMOTOR. El proceso fue muy sencillo y mis hijos quedaron encantados con sus regalos. ¡Gracias por pensar en nuestras familias!"
+                            </div>
+                            <div class="testimonial-author">Juan Martínez</div>
+                            <div class="testimonial-role">Conductor COOMOTOR - 5 años</div>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="testimonial-card">
+                            <div class="testimonial-avatar">MR</div>
+                            <div class="testimonial-text">
+                                "Mi hija recibió un hermoso regalo educativo. La plataforma es muy fácil de usar y el soporte fue excelente. Definitivamente una gran ayuda en esta temporada."
+                            </div>
+                            <div class="testimonial-author">María Rodríguez</div>
+                            <div class="testimonial-role">Conductora COOMOTOR - 3 años</div>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="testimonial-card">
+                            <div class="testimonial-avatar">CG</div>
+                            <div class="testimonial-text">
+                                "Un proceso totalmente digital y transparente. Pude hacer todo desde mi celular en pocos minutos. Los niños están felices y nosotros también."
+                            </div>
+                            <div class="testimonial-author">Carlos Gómez</div>
+                            <div class="testimonial-role">Conductor COOMOTOR - 7 años</div>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="testimonial-card">
+                            <div class="testimonial-avatar">LP</div>
+                            <div class="testimonial-text">
+                                "Gracias COOMOTOR por esta hermosa iniciativa. El regalo fue de excelente calidad y llegó justo a tiempo para Navidad. ¡Mis hijos están felices!"
+                            </div>
+                            <div class="testimonial-author">Laura Pérez</div>
+                            <div class="testimonial-role">Conductora COOMOTOR - 2 años</div>
+                        </div>
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <div class="stat-item">
-                        <span class="stat-number">🎁</span>
-                        <span class="stat-label">Regalos Especiales</span>
-                    </div>
+                <div class="swiper-pagination"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Info Cards -->
+    <section class="info-section">
+        <div class="container">
+            <div class="info-cards">
+                <div class="info-card" data-aos="fade-up">
+                    <div class="info-card-icon">👶</div>
+                    <div class="info-card-title">Niños hasta 12 años</div>
+                </div>
+                <div class="info-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="info-card-icon">🚗</div>
+                    <div class="info-card-title">Solo Conductores COOMOTOR</div>
+                </div>
+                <div class="info-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="info-card-icon">🎄</div>
+                    <div class="info-card-title">Una vez al año</div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- CTA Section -->
+    <!-- CTA -->
     <section class="cta">
-        <div class="container" style="position: relative; z-index: 1;">
-            <h2>¿Listo para la Magia Navideña? ✨</h2>
-            <p style="font-size: 1.2rem; margin-bottom: 2rem;">
-                Regístrate ahora y asegura el regalo perfecto para tus hijos
-            </p>
-            <a href="auth/registro.html" class="btn btn-hero btn-hero-outline" style="border-color: white;">
-                <i class="bi bi-gift-fill me-2"></i>Comenzar Ahora
-            </a>
+        <div class="container">
+            <div class="cta-content" data-aos="zoom-in">
+                <h2>¿Listo para comenzar?</h2>
+                <p>Registra a tu familia hoy y asegura sus regalos navideños</p>
+                <a href="auth/registro.html" class="btn-cta">
+                    <i class="bi bi-arrow-right-circle-fill"></i>
+                    Registrarme Ahora
+                </a>
+            </div>
         </div>
     </section>
 
     <!-- Footer -->
     <footer>
         <div class="container">
-            <div class="text-center mb-4">
-                <h4 style="font-weight: 700; margin-bottom: 1rem;">🎄 COOMOTOR Regalos Navideños</h4>
+            <div class="footer-content">
+                <span class="footer-brand">🎄 COOMOTOR</span>
+                
                 <div class="footer-links">
                     <a href="#inicio">Inicio</a>
                     <a href="#como-funciona">Cómo Funciona</a>
+                    <a href="#testimonios">Testimonios</a>
                     <a href="contacto.html">Contacto</a>
                     <a href="auth/login.html">Iniciar Sesión</a>
                 </div>
-            </div>
-            <hr style="border-color: rgba(255,255,255,0.1); margin: 2rem 0;">
-            <div class="text-center" style="opacity: 0.7;">
-                <p>&copy; 2024 COOMOTOR. Todos los derechos reservados.</p>
-                <p style="font-size: 0.9rem;">Hecho con ❤️ para nuestras familias</p>
+
+                <div class="footer-bottom">
+                    <p>&copy; 2024 COOMOTOR. Todos los derechos reservados.</p>
+                </div>
             </div>
         </div>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
-        // Countdown Timer
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            once: true,
+            offset: 100
+        });
+
+        // Countdown
         function updateCountdown() {
             const christmas = new Date('2024-12-25T00:00:00');
             const now = new Date();
@@ -567,19 +1045,114 @@
                 e.preventDefault();
                 const target = document.querySelector(this.getAttribute('href'));
                 if (target) {
-                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    target.scrollIntoView({ behavior: 'smooth' });
                 }
             });
         });
 
         // Navbar scroll effect
         window.addEventListener('scroll', function() {
-            const navbar = document.querySelector('.navbar');
+            const navbar = document.getElementById('navbar');
             if (window.scrollY > 50) {
-                navbar.style.boxShadow = '0 4px 30px rgba(0, 0, 0, 0.2)';
+                navbar.classList.add('scrolled');
             } else {
-                navbar.style.boxShadow = '0 4px 30px rgba(0, 0, 0, 0.1)';
+                navbar.classList.remove('scrolled');
             }
+        });
+
+        // Steps Navigation
+        function showStep(stepNumber) {
+            // Hide all steps
+            document.querySelectorAll('.step-content').forEach(step => {
+                step.classList.remove('active');
+            });
+            
+            // Remove active class from all buttons
+            document.querySelectorAll('.step-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected step
+            document.getElementById('step' + stepNumber).classList.add('active');
+            
+            // Add active class to clicked button
+            event.target.closest('.step-btn').classList.add('active');
+        }
+
+        // Stats Carousel
+        const statsSwiper = new Swiper('.statsSwiper', {
+            slidesPerView: 1,
+            spaceBetween: 30,
+            loop: true,
+            autoplay: {
+                delay: 3000,
+                disableOnInteraction: false,
+            },
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+            },
+            breakpoints: {
+                640: {
+                    slidesPerView: 2,
+                },
+                768: {
+                    slidesPerView: 3,
+                },
+                1024: {
+                    slidesPerView: 4,
+                },
+            },
+        });
+
+        // Gallery Carousel
+        const gallerySwiper = new Swiper('.gallerySwiper', {
+            slidesPerView: 1,
+            spaceBetween: 30,
+            loop: true,
+            autoplay: {
+                delay: 4000,
+                disableOnInteraction: false,
+            },
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+            },
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+            breakpoints: {
+                768: {
+                    slidesPerView: 2,
+                },
+                1024: {
+                    slidesPerView: 3,
+                },
+            },
+        });
+
+        // Testimonials Carousel
+        const testimonialsSwiper = new Swiper('.testimonialsSwiper', {
+            slidesPerView: 1,
+            spaceBetween: 30,
+            loop: true,
+            autoplay: {
+                delay: 5000,
+                disableOnInteraction: false,
+            },
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+            },
+            breakpoints: {
+                768: {
+                    slidesPerView: 2,
+                },
+                1024: {
+                    slidesPerView: 3,
+                },
+            },
         });
     </script>
 </body>
