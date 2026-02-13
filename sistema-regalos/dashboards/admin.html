@@ -12,9 +12,14 @@
         :root {
             --primary-green: #059669;
             --primary-red: #dc2626;
-            --bg-light: #f9fafb;
+            --accent-gold: #fbbf24;
+            --accent-blue: #3b82f6;
+            --bg-gradient-start: #f9fafb;
+            --bg-gradient-end: #f3f4f6;
             --text-dark: #1f2937;
             --text-light: #6b7280;
+            --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --card-shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
         }
 
         * {
@@ -25,121 +30,289 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background: var(--bg-light);
+            background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
             color: var(--text-dark);
+            min-height: 100vh;
         }
 
+        /* Navbar mejorado */
         .navbar {
             background: white;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            padding: 1rem 0;
         }
 
         .navbar-brand {
-            font-weight: 600;
+            font-weight: 700;
             color: var(--primary-green) !important;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
+        .navbar-brand i {
+            font-size: 1.5rem;
+        }
+
+        /* Container principal */
         .main-container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
-            padding: 1.5rem 1rem;
+            padding: 2rem 1rem;
         }
 
+        /* Header del admin mejorado */
         .admin-header {
-            background: white;
-            border-radius: 10px;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            background: linear-gradient(135deg, white 0%, #f9fafb 100%);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--card-shadow);
+            border-left: 4px solid var(--primary-green);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .admin-header::before {
+            content: '🎄';
+            position: absolute;
+            font-size: 8rem;
+            opacity: 0.05;
+            right: -1rem;
+            top: -1rem;
+            transform: rotate(15deg);
         }
 
         .admin-title {
-            font-size: 1.5rem;
-            font-weight: 600;
+            font-size: 2rem;
+            font-weight: 700;
             color: var(--text-dark);
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 1;
         }
 
+        .admin-subtitle {
+            color: var(--text-light);
+            font-size: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Stats grid mejorado */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin-bottom: 1.5rem;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
         }
 
         .stat-card {
             background: white;
-            border-radius: 10px;
-            padding: 1.25rem;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border-radius: 16px;
+            padding: 1.75rem;
+            box-shadow: var(--card-shadow);
             text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            border-top: 4px solid var(--primary-green);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-green), var(--accent-gold));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--card-shadow-hover);
+        }
+
+        .stat-card.warning {
+            border-top-color: #f59e0b;
+        }
+
+        .stat-card.success {
+            border-top-color: #10b981;
+        }
+
+        .stat-card.info {
+            border-top-color: var(--accent-blue);
         }
 
         .stat-icon {
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            display: inline-block;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
 
         .stat-number {
-            font-size: 2rem;
-            font-weight: 700;
+            font-size: 2.5rem;
+            font-weight: 800;
             color: var(--text-dark);
+            display: block;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--primary-green), #047857);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .stat-label {
             color: var(--text-light);
             font-size: 0.875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
+        /* Quick actions mejorado */
         .quick-actions {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
         }
 
         .quick-action {
             background: white;
-            border-radius: 10px;
-            padding: 1.25rem;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border-radius: 16px;
+            padding: 2rem 1.5rem;
+            box-shadow: var(--card-shadow);
             cursor: pointer;
             text-align: center;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quick-action::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, var(--primary-green), #047857);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .quick-action:hover::before {
+            opacity: 0.05;
         }
 
         .quick-action:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: var(--card-shadow-hover);
         }
 
         .quick-action i {
-            font-size: 2rem;
+            font-size: 2.5rem;
             color: var(--primary-green);
-            margin-bottom: 0.75rem;
+            margin-bottom: 1rem;
+            display: block;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .quick-action:hover i {
+            transform: scale(1.1) rotate(5deg);
         }
 
         .quick-action h5 {
-            font-weight: 600;
-            font-size: 1rem;
-            margin-bottom: 0.25rem;
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+            position: relative;
+            z-index: 1;
         }
 
         .quick-action p {
             color: var(--text-light);
-            font-size: 0.8rem;
+            font-size: 0.875rem;
             margin: 0;
+            position: relative;
+            z-index: 1;
         }
 
+        /* Action card mejorado */
+        .action-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s ease;
+        }
+
+        .action-card:hover {
+            box-shadow: var(--card-shadow-hover);
+        }
+
+        .action-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .action-title i {
+            color: var(--primary-green);
+        }
+
+        /* Sección de usuarios */
+        #seccionUsuarios {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
         @media (max-width: 768px) {
             .main-container {
                 padding: 1rem;
             }
             
             .admin-header {
-                padding: 1rem;
+                padding: 1.5rem;
             }
             
             .admin-title {
-                font-size: 1.25rem;
+                font-size: 1.5rem;
             }
             
             .stats-grid, .quick-actions {
@@ -147,8 +320,34 @@
             }
             
             .stat-number {
-                font-size: 1.75rem;
+                font-size: 2rem;
             }
+
+            .stat-icon {
+                font-size: 2rem;
+            }
+        }
+
+        /* Decoraciones navideñas sutiles */
+        @keyframes snowfall {
+            0% {
+                transform: translateY(-10px) translateX(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) translateX(50px);
+                opacity: 0;
+            }
+        }
+
+        .snowflake {
+            position: fixed;
+            top: -10px;
+            color: white;
+            opacity: 0.6;
+            animation: snowfall linear infinite;
+            pointer-events: none;
+            z-index: 1;
         }
     </style>
 </head>
@@ -179,11 +378,23 @@
         <div class="admin-header">
             <div class="row align-items-center">
                 <div class="col-md-8">
-                    <h1 class="admin-title">Panel Administrativo</h1>
-                    <p class="mb-0 text-muted">Gestión del Sistema de Regalos Navideños COOMOTOR 2024</p>
+                    <h1 class="admin-title">
+                        <i class="bi bi-speedometer2"></i>
+                        Panel Administrativo
+                    </h1>
+                    <p class="admin-subtitle mb-0">Gestión del Sistema de Regalos Navideños COOMOTOR 2024</p>
                 </div>
                 <div class="col-md-4 text-end">
-                    <span class="text-muted">🎄 Temporada Navideña</span>
+                    <div class="d-flex flex-column align-items-end gap-2">
+                        <span class="badge bg-success px-3 py-2">
+                            <i class="bi bi-calendar-event me-1"></i>
+                            Temporada Activa
+                        </span>
+                        <span class="text-muted" style="font-size: 0.875rem;">
+                            <i class="bi bi-clock me-1"></i>
+                            <span id="currentDateTime"></span>
+                        </span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -316,5 +527,27 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../js/auth-global.js"></script>
     <script src="../js/dashboard-admin.js"></script>
+    <script>
+        // Actualizar fecha y hora
+        function actualizarFechaHora() {
+            const ahora = new Date();
+            const opciones = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            };
+            document.getElementById('currentDateTime').textContent = 
+                ahora.toLocaleDateString('es-CO', opciones);
+        }
+        
+        // Inicializar
+        document.addEventListener('DOMContentLoaded', function() {
+            actualizarFechaHora();
+            setInterval(actualizarFechaHora, 60000); // Actualizar cada minuto
+        });
+    </script>
 </body>
 </html>
