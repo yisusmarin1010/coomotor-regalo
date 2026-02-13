@@ -159,7 +159,7 @@ function mostrarInicio() {
             <p>Bienvenido al sistema administrativo de regalos navideños COOMOTOR 2024</p>
             
             <div class="row mt-4">
-                <div class="col-md-6">
+                <div class="col-12">
                     <div class="info-card">
                         <h5><i class="bi bi-calendar-event me-2"></i>Fechas Importantes</h5>
                         <ul class="list-unstyled">
@@ -170,23 +170,9 @@ function mostrarInicio() {
                         </ul>
                     </div>
                 </div>
-                <div class="col-md-6">
-                    <div class="info-card">
-                        <h5><i class="bi bi-list-check me-2"></i>Tareas Pendientes</h5>
-                        <div id="tareasPendientes">
-                            <div class="d-flex justify-content-center">
-                                <div class="spinner-border text-primary" role="status">
-                                    <span class="visually-hidden">Cargando...</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     `;
-    
-    cargarTareasPendientes();
 }
 
 // Mostrar sección de postulaciones
@@ -1207,39 +1193,6 @@ function mostrarAlerta(tipo, mensaje) {
     }, 5000);
 }
 
-// Cargar tareas pendientes
-async function cargarTareasPendientes() {
-    try {
-        const response = await fetch('/api/admin/tareas-pendientes', {
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('coomotor_token')}`,
-                'Content-Type': 'application/json'
-            }
-        });
-        
-        if (response.ok) {
-            const result = await response.json();
-            if (result.success) {
-                const container = document.getElementById('tareasPendientes');
-                const tareas = result.data;
-                
-                if (tareas.length === 0) {
-                    container.innerHTML = '<p class="text-muted">No hay tareas pendientes</p>';
-                } else {
-                    let html = '<ul class="list-unstyled">';
-                    tareas.forEach(tarea => {
-                        html += `<li><i class="bi bi-circle me-2"></i>${tarea.descripcion}</li>`;
-                    });
-                    html += '</ul>';
-                    container.innerHTML = html;
-                }
-            }
-        }
-    } catch (error) {
-        console.error('Error al cargar tareas:', error);
-        document.getElementById('tareasPendientes').innerHTML = '<p class="text-danger">Error al cargar tareas</p>';
-    }
-}
 
 
 // ============================================
