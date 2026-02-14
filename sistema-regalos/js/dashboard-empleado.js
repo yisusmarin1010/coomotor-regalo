@@ -1,9 +1,9 @@
 // ============================================
 // DASHBOARD EMPLEADO AVANZADO - SISTEMA REGALOS NAVIDEÑOS
-// VERSION 2.5 - Hijo preseleccionado automáticamente
+// VERSION 2.6 - Validación estricta de fechas
 // ============================================
 
-console.log('📦 Dashboard Empleado v2.5 - Cargado');
+console.log('📦 Dashboard Empleado v2.6 - Cargado');
 
 let usuarioActual = null;
 let hijosRegistrados = [];
@@ -16,10 +16,11 @@ let hijoSolicitado = null; // Hijo para el cual se solicitaron documentos {id, n
 
 // Inicializar dashboard con funcionalidades avanzadas
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('🔵 Inicializando dashboard empleado v2.5...');
+    console.log('🔵 Inicializando dashboard empleado v2.6...');
     console.log('✅ Filtrado de rechazadas: ACTIVO (SQL JOIN)');
     console.log('✅ Control de documentos solicitados: ACTIVO');
     console.log('✅ Hijo preseleccionado automáticamente: ACTIVO');
+    console.log('✅ Validación estricta de fechas: ACTIVO');
     verificarAutenticacion();
     // cargarEstadisticas(); // Temporalmente deshabilitado
     cargarHijos();
@@ -443,8 +444,14 @@ function mostrarModalRegistroHijo() {
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Fecha de Nacimiento *</label>
-                                    <input type="date" class="form-control" id="hijosFechaNacimiento" required onchange="validarEdad()">
-                                    <div class="form-text" id="edadTexto"></div>
+                                    <input type="date" 
+                                           class="form-control" 
+                                           id="hijosFechaNacimiento" 
+                                           required 
+                                           min="1900-01-01" 
+                                           max="${new Date().toISOString().split('T')[0]}"
+                                           onchange="validarEdad()">
+                                    <div class="form-text" id="edadTexto">El niño debe ser menor de 12 años</div>
                                 </div>
                             </div>
                             
@@ -643,13 +650,42 @@ function validarEdad() {
     const edadTexto = document.getElementById('edadTexto');
     
     if (fechaNacimiento) {
+        const fechaNac = new Date(fechaNacimiento);
+        const hoy = new Date();
+        
+        // Validar que la fecha no sea futura
+        if (fechaNac > hoy) {
+            edadTexto.innerHTML = `<span class="text-danger">❌ La fecha de nacimiento no puede ser futura</span>`;
+            return false;
+        }
+        
+        // Validar que el año sea razonable (entre 1900 y año actual)
+        const anioNacimiento = fechaNac.getFullYear();
+        const anioActual = hoy.getFullYear();
+        
+        if (anioNacimiento < 1900 || anioNacimiento > anioActual) {
+            edadTexto.innerHTML = `<span class="text-danger">❌ Año inválido. Debe estar entre 1900 y ${anioActual}</span>`;
+            return false;
+        }
+        
         const edad = calcularEdad(fechaNacimiento);
+        
+        // Validar que la edad sea positiva y menor a 150 años (por si acaso)
+        if (edad < 0 || edad > 150) {
+            edadTexto.innerHTML = `<span class="text-danger">❌ Edad inválida</span>`;
+            return false;
+        }
+        
         if (edad > 12) {
             edadTexto.innerHTML = `<span class="text-danger">⚠️ ${edad} años - Solo se permiten menores de 12 años</span>`;
+            return false;
         } else {
             edadTexto.innerHTML = `<span class="text-success">✅ ${edad} años - Edad válida</span>`;
+            return true;
         }
     }
+    
+    return false;
 }
 
 // Registrar hijo con validaciones avanzadas
@@ -660,8 +696,44 @@ async function registrarHijo() {
     const numeroDocumento = document.getElementById('hijosNumeroDocumento').value.trim();
     const fechaNacimiento = document.getElementById('hijosFechaNacimiento').value;
     
+    // Validar que todos los campos estén llenos
+    if (!nombres || !apellidos || !tipoDocumento || !numeroDocumento || !fechaNacimiento) {
+        mostrarNotificacion('error', 'Por favor completa todos los campos');
+        return;
+    }
+    
+    // Validar fecha de nacimiento
+    if (!validarEdad()) {
+        mostrarNotificacion('error', 'La fecha de nacimiento no es válida');
+        return;
+    }
+    
     // Validaciones finales
+    const fechaNac = new Date(fechaNacimiento);
+    const hoy = new Date();
+    const anioNacimiento = fechaNac.getFullYear();
+    const anioActual = hoy.getFullYear();
+    
+    // Validar año
+    if (anioNacimiento < 1900 || anioNacimiento > anioActual) {
+        mostrarNotificacion('error', `El año debe estar entre 1900 y ${anioActual}`);
+        return;
+    }
+    
+    // Validar que no sea fecha futura
+    if (fechaNac > hoy) {
+        mostrarNotificacion('error', 'La fecha de nacimiento no puede ser futura');
+        return;
+    }
+    
     const edad = calcularEdad(fechaNacimiento);
+    
+    // Validar edad
+    if (edad < 0 || edad > 150) {
+        mostrarNotificacion('error', 'La edad calculada no es válida');
+        return;
+    }
+    
     if (edad > 12) {
         mostrarNotificacion('error', 'Solo se pueden registrar hijos menores de 12 años');
         return;
