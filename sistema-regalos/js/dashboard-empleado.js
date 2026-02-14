@@ -1,9 +1,9 @@
 // ============================================
 // DASHBOARD EMPLEADO AVANZADO - SISTEMA REGALOS NAVIDEÑOS
-// VERSION 2.4 - Control de documentos solicitados
+// VERSION 2.5 - Hijo preseleccionado automáticamente
 // ============================================
 
-console.log('📦 Dashboard Empleado v2.4 - Cargado');
+console.log('📦 Dashboard Empleado v2.5 - Cargado');
 
 let usuarioActual = null;
 let hijosRegistrados = [];
@@ -12,12 +12,14 @@ let notificaciones = [];
 let estadisticasEnTiempoReal = {};
 let documentosSolicitados = []; // Documentos que el admin solicitó
 let mensajeAdmin = ''; // Mensaje del admin
+let hijoSolicitado = null; // Hijo para el cual se solicitaron documentos {id, nombre}
 
 // Inicializar dashboard con funcionalidades avanzadas
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('🔵 Inicializando dashboard empleado v2.4...');
+    console.log('🔵 Inicializando dashboard empleado v2.5...');
     console.log('✅ Filtrado de rechazadas: ACTIVO (SQL JOIN)');
     console.log('✅ Control de documentos solicitados: ACTIVO');
+    console.log('✅ Hijo preseleccionado automáticamente: ACTIVO');
     verificarAutenticacion();
     // cargarEstadisticas(); // Temporalmente deshabilitado
     cargarHijos();
@@ -1855,13 +1857,18 @@ async function verificarDocumentosSolicitados() {
                 const alertaDocumentos = document.getElementById('alertaDocumentos');
                 
                 if (postulacionConDocumentos) {
-                    // Guardar documentos solicitados y mensaje del admin
+                    // Guardar documentos solicitados, mensaje del admin y datos del hijo
                     try {
                         documentosSolicitados = JSON.parse(postulacionConDocumentos.documentos_solicitados || '[]');
                         mensajeAdmin = postulacionConDocumentos.mensaje_admin || 'Por favor sube los siguientes documentos';
+                        hijoSolicitado = {
+                            id: postulacionConDocumentos.hijo_id,
+                            nombre: `${postulacionConDocumentos.hijo_nombres} ${postulacionConDocumentos.hijo_apellidos}`
+                        };
                     } catch (e) {
                         documentosSolicitados = [];
                         mensajeAdmin = 'Por favor sube los documentos solicitados';
+                        hijoSolicitado = null;
                     }
                     
                     // Mapear nombres de documentos
@@ -1887,7 +1894,7 @@ async function verificarDocumentosSolicitados() {
                         alertaDocumentos.innerHTML = `
                             <div class="alert alert-warning alert-dismissible fade show" role="alert">
                                 <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                                <strong>¡Documentos Solicitados!</strong><br>
+                                <strong>¡Documentos Solicitados para ${hijoSolicitado.nombre}!</strong><br>
                                 <p class="mb-2 mt-2">${mensajeAdmin}</p>
                                 <strong>Documentos requeridos:</strong>
                                 <ul class="mb-0 mt-2">
@@ -1899,10 +1906,12 @@ async function verificarDocumentosSolicitados() {
                     }
                     
                     console.log('✅ Documentos solicitados:', documentosSolicitados);
+                    console.log('✅ Hijo solicitado:', hijoSolicitado);
                 } else {
                     // Limpiar variables
                     documentosSolicitados = [];
                     mensajeAdmin = '';
+                    hijoSolicitado = null;
                     
                     // Ocultar botón
                     if (btnSubirDocumento) {

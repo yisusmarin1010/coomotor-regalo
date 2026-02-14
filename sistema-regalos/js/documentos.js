@@ -16,6 +16,12 @@ function mostrarModalSubirDocumento() {
         return;
     }
     
+    // Verificar si hay hijo solicitado
+    if (!hijoSolicitado) {
+        mostrarAlerta('warning', 'No se pudo identificar el hijo para el cual se solicitaron documentos');
+        return;
+    }
+    
     // Mapear nombres de documentos
     const nombresDocumentos = {
         'registro_civil': 'Registro Civil',
@@ -59,11 +65,10 @@ function mostrarModalSubirDocumento() {
                             </div>
 
                             <div class="mb-3">
-                                <label class="form-label">Relacionado con (Opcional)</label>
-                                <select class="form-select" id="hijoRelacionado">
-                                    <option value="">No relacionado con ningún hijo</option>
-                                </select>
-                                <div class="form-text">Selecciona si el documento es de un hijo específico</div>
+                                <label class="form-label">Documento para</label>
+                                <input type="text" class="form-control" value="${hijoSolicitado.nombre}" disabled>
+                                <input type="hidden" id="hijoRelacionado" value="${hijoSolicitado.id}">
+                                <div class="form-text">Los documentos se subirán automáticamente para este hijo</div>
                             </div>
 
                             <div class="mb-3">
@@ -99,9 +104,6 @@ function mostrarModalSubirDocumento() {
     document.getElementById('modalsContainer').innerHTML = modal;
     const modalElement = new bootstrap.Modal(document.getElementById('modalSubirDocumento'));
     modalElement.show();
-
-    // Cargar hijos en el select
-    cargarHijosEnSelect();
 }
 
 // Cargar hijos en el select
