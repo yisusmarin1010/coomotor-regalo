@@ -466,8 +466,8 @@ function mostrarModalRegistroHijo() {
                                             <option value="">Seleccionar...</option>
                                             <option value="registro_civil">Registro Civil</option>
                                             <option value="tarjeta_identidad">Tarjeta de Identidad</option>
-                                            <option value="cedula">Cédula de Ciudadanía</option>
                                         </select>
+                                        <div class="form-text">Solo para menores de 12 años</div>
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">Número de Documento *</label>
