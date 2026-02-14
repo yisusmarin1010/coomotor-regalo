@@ -1,20 +1,23 @@
 // ============================================
 // DASHBOARD EMPLEADO AVANZADO - SISTEMA REGALOS NAVIDEÑOS
-// VERSION 2.3 - Logs de diagnóstico mejorados
+// VERSION 2.4 - Control de documentos solicitados
 // ============================================
 
-console.log('📦 Dashboard Empleado v2.3 - Cargado');
+console.log('📦 Dashboard Empleado v2.4 - Cargado');
 
 let usuarioActual = null;
 let hijosRegistrados = [];
 let postulaciones = [];
 let notificaciones = [];
 let estadisticasEnTiempoReal = {};
+let documentosSolicitados = []; // Documentos que el admin solicitó
+let mensajeAdmin = ''; // Mensaje del admin
 
 // Inicializar dashboard con funcionalidades avanzadas
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('🔵 Inicializando dashboard empleado v2.3...');
+    console.log('🔵 Inicializando dashboard empleado v2.4...');
     console.log('✅ Filtrado de rechazadas: ACTIVO (SQL JOIN)');
+    console.log('✅ Control de documentos solicitados: ACTIVO');
     verificarAutenticacion();
     // cargarEstadisticas(); // Temporalmente deshabilitado
     cargarHijos();
@@ -1843,38 +1846,70 @@ async function verificarDocumentosSolicitados() {
             if (result.success) {
                 const postulaciones = result.data || [];
                 
-                // Buscar si hay alguna postulación con documentos solicitados
-                const tieneDocumentosSolicitados = postulaciones.some(p => 
+                // Buscar postulación con documentos solicitados
+                const postulacionConDocumentos = postulaciones.find(p => 
                     p.estado_postulacion === 'documentos_solicitados'
                 );
                 
                 const btnSubirDocumento = document.getElementById('btnSubirDocumento');
                 const alertaDocumentos = document.getElementById('alertaDocumentos');
                 
-                if (tieneDocumentosSolicitados) {
-                    // Mostrar botón y alerta de documentos solicitados
+                if (postulacionConDocumentos) {
+                    // Guardar documentos solicitados y mensaje del admin
+                    try {
+                        documentosSolicitados = JSON.parse(postulacionConDocumentos.documentos_solicitados || '[]');
+                        mensajeAdmin = postulacionConDocumentos.mensaje_admin || 'Por favor sube los siguientes documentos';
+                    } catch (e) {
+                        documentosSolicitados = [];
+                        mensajeAdmin = 'Por favor sube los documentos solicitados';
+                    }
+                    
+                    // Mapear nombres de documentos
+                    const nombresDocumentos = {
+                        'registro_civil': 'Registro Civil',
+                        'tarjeta_identidad': 'Tarjeta de Identidad',
+                        'cedula': 'Cédula de Ciudadanía',
+                        'foto_hijo': 'Foto del Hijo/a',
+                        'comprobante_residencia': 'Comprobante de Residencia'
+                    };
+                    
+                    const listaDocumentos = documentosSolicitados
+                        .map(doc => `<li><strong>${nombresDocumentos[doc] || doc}</strong></li>`)
+                        .join('');
+                    
+                    // Mostrar botón
                     if (btnSubirDocumento) {
                         btnSubirDocumento.style.display = 'inline-block';
                     }
                     
+                    // Mostrar alerta con documentos específicos
                     if (alertaDocumentos) {
                         alertaDocumentos.innerHTML = `
                             <div class="alert alert-warning alert-dismissible fade show" role="alert">
                                 <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                                <strong>¡Acción Requerida!</strong> El administrador ha solicitado documentos para una de tus postulaciones. 
-                                Por favor, súbelos lo antes posible.
+                                <strong>¡Documentos Solicitados!</strong><br>
+                                <p class="mb-2 mt-2">${mensajeAdmin}</p>
+                                <strong>Documentos requeridos:</strong>
+                                <ul class="mb-0 mt-2">
+                                    ${listaDocumentos}
+                                </ul>
                                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                             </div>
                         `;
                     }
                     
-                    console.log('✅ Documentos solicitados - Botón habilitado');
+                    console.log('✅ Documentos solicitados:', documentosSolicitados);
                 } else {
-                    // Ocultar botón y mostrar mensaje informativo
+                    // Limpiar variables
+                    documentosSolicitados = [];
+                    mensajeAdmin = '';
+                    
+                    // Ocultar botón
                     if (btnSubirDocumento) {
                         btnSubirDocumento.style.display = 'none';
                     }
                     
+                    // Mostrar mensaje informativo
                     if (alertaDocumentos) {
                         alertaDocumentos.innerHTML = `
                             <div class="alert alert-info">

@@ -10,6 +10,26 @@ let documentosUsuario = [];
 
 // Mostrar modal para subir documento
 function mostrarModalSubirDocumento() {
+    // Verificar si hay documentos solicitados
+    if (!documentosSolicitados || documentosSolicitados.length === 0) {
+        mostrarAlerta('warning', 'No hay documentos solicitados por el administrador');
+        return;
+    }
+    
+    // Mapear nombres de documentos
+    const nombresDocumentos = {
+        'registro_civil': 'Registro Civil',
+        'tarjeta_identidad': 'Tarjeta de Identidad',
+        'cedula': 'Cédula de Ciudadanía',
+        'foto_hijo': 'Foto del Hijo/a',
+        'comprobante_residencia': 'Comprobante de Residencia'
+    };
+    
+    // Generar opciones solo para documentos solicitados
+    const opcionesDocumentos = documentosSolicitados
+        .map(doc => `<option value="${doc}">${nombresDocumentos[doc] || doc}</option>`)
+        .join('');
+    
     const modal = `
         <div class="modal fade" id="modalSubirDocumento" tabindex="-1">
             <div class="modal-dialog">
@@ -17,23 +37,25 @@ function mostrarModalSubirDocumento() {
                     <div class="modal-header" style="background: linear-gradient(135deg, var(--primary), #047857); color: white;">
                         <h5 class="modal-title">
                             <i class="bi bi-cloud-upload-fill me-2"></i>
-                            Subir Documento
+                            Subir Documento Solicitado
                         </h5>
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body">
+                        <div class="alert alert-info mb-3" style="font-size: 0.875rem;">
+                            <i class="bi bi-info-circle me-2"></i>
+                            <strong>Mensaje del administrador:</strong><br>
+                            ${mensajeAdmin}
+                        </div>
+                        
                         <form id="formSubirDocumento" enctype="multipart/form-data">
                             <div class="mb-3">
                                 <label class="form-label">Tipo de Documento *</label>
                                 <select class="form-select" id="tipoDocumento" required>
-                                    <option value="">Seleccionar...</option>
-                                    <option value="registro_civil">Registro Civil</option>
-                                    <option value="tarjeta_identidad">Tarjeta de Identidad</option>
-                                    <option value="cedula">Cédula de Ciudadanía</option>
-                                    <option value="foto_hijo">Foto del Hijo/a</option>
-                                    <option value="comprobante_residencia">Comprobante de Residencia</option>
-                                    <option value="otro">Otro</option>
+                                    <option value="">Seleccionar documento solicitado...</option>
+                                    ${opcionesDocumentos}
                                 </select>
+                                <div class="form-text">Solo puedes subir los documentos solicitados por el administrador</div>
                             </div>
 
                             <div class="mb-3">
@@ -57,8 +79,8 @@ function mostrarModalSubirDocumento() {
                                           placeholder="Agrega una descripción si es necesario"></textarea>
                             </div>
 
-                            <div class="alert alert-info" style="font-size: 0.875rem;">
-                                <i class="bi bi-info-circle me-2"></i>
+                            <div class="alert alert-warning" style="font-size: 0.875rem;">
+                                <i class="bi bi-exclamation-triangle me-2"></i>
                                 <strong>Importante:</strong> Solo se aceptan archivos PDF, PNG y JPG de máximo 5MB.
                             </div>
                         </form>
