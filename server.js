@@ -2416,8 +2416,10 @@ app.put('/api/admin/postulaciones/:id/solicitar-documentos', authenticateToken, 
             console.log('✅ Email enviado correctamente');
         } catch (emailError) {
             console.error('⚠️ Error al enviar email (no crítico):', emailError.message);
+            // No lanzar error, continuar con la respuesta
         }
         
+        console.log('🎉 Proceso completado exitosamente');
         res.json({ 
             success: true, 
             message: 'Solicitud de documentos enviada exitosamente' 
