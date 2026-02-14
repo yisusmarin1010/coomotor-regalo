@@ -2334,7 +2334,10 @@ app.put('/api/admin/postulaciones/:id/solicitar-documentos', authenticateToken, 
         const { id } = req.params;
         const { documentos_solicitados, mensaje } = req.body;
         
+        console.log('📝 Solicitud de documentos recibida:', { id, documentos_solicitados, mensaje });
+        
         if (!documentos_solicitados || documentos_solicitados.length === 0) {
+            console.log('❌ No se especificaron documentos');
             return res.status(400).json({ 
                 success: false, 
                 error: 'Debes especificar al menos un documento a solicitar' 
@@ -2342,6 +2345,7 @@ app.put('/api/admin/postulaciones/:id/solicitar-documentos', authenticateToken, 
         }
         
         // Obtener información de la postulación
+        console.log('🔍 Buscando postulación con ID:', id);
         const postulacionResult = await poolConnection.request()
             .input('id', sql.Int, id)
             .query(`
@@ -2361,12 +2365,15 @@ app.put('/api/admin/postulaciones/:id/solicitar-documentos', authenticateToken, 
             `);
         
         if (postulacionResult.recordset.length === 0) {
+            console.log('❌ Postulación no encontrada');
             return res.status(404).json({ success: false, error: 'Postulación no encontrada' });
         }
         
         const postulacion = postulacionResult.recordset[0];
+        console.log('✅ Postulación encontrada:', postulacion);
         
         // Actualizar postulación con documentos solicitados
+        console.log('💾 Actualizando postulación...');
         await poolConnection.request()
             .input('id', sql.Int, id)
             .input('documentos', sql.VarChar(1000), JSON.stringify(documentos_solicitados))
@@ -2376,13 +2383,15 @@ app.put('/api/admin/postulaciones/:id/solicitar-documentos', authenticateToken, 
                 SET 
                     estado_postulacion = 'documentos_solicitados',
                     documentos_solicitados = @documentos,
-                    observaciones_admin = @mensaje,
-                    fecha_solicitud_documentos = GETDATE()
+                    observaciones_admin = @mensaje
                 WHERE id = @id
             `);
         
+        console.log('✅ Postulación actualizada correctamente');
+        
         // Enviar notificación al conductor
         try {
+            console.log('📧 Enviando email de notificación...');
             await notificationService.notificarSolicitudDocumentos({
                 email: postulacion.usuario_correo,
                 nombreEmpleado: `${postulacion.usuario_nombres} ${postulacion.usuario_apellidos}`,
@@ -2391,8 +2400,9 @@ app.put('/api/admin/postulaciones/:id/solicitar-documentos', authenticateToken, 
                 mensaje: mensaje || 'Por favor sube los siguientes documentos para continuar con tu postulación',
                 postulacionId: id
             });
+            console.log('✅ Email enviado correctamente');
         } catch (emailError) {
-            console.error('Error al enviar email de solicitud:', emailError);
+            console.error('⚠️ Error al enviar email (no crítico):', emailError.message);
         }
         
         res.json({ 
@@ -2401,8 +2411,13 @@ app.put('/api/admin/postulaciones/:id/solicitar-documentos', authenticateToken, 
         });
         
     } catch (error) {
-        console.error('Error al solicitar documentos:', error);
-        res.status(500).json({ success: false, error: 'Error interno del servidor' });
+        console.error('❌ Error al solicitar documentos:', error);
+        console.error('Stack trace:', error.stack);
+        res.status(500).json({ 
+            success: false, 
+            error: 'Error interno del servidor',
+            details: error.message 
+        });
     }
 });
 
