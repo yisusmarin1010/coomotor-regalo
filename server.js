@@ -2374,20 +2374,33 @@ app.put('/api/admin/postulaciones/:id/solicitar-documentos', authenticateToken, 
         
         // Actualizar postulación con documentos solicitados
         console.log('💾 Actualizando postulación...');
-        await poolConnection.request()
-            .input('id', sql.Int, id)
-            .input('documentos', sql.VarChar(1000), JSON.stringify(documentos_solicitados))
-            .input('mensaje', sql.Text, mensaje || 'Por favor sube los siguientes documentos para continuar con tu postulación')
-            .query(`
-                UPDATE postulaciones_hijos
-                SET 
-                    estado_postulacion = 'documentos_solicitados',
-                    documentos_solicitados = @documentos,
-                    observaciones_admin = @mensaje
-                WHERE id = @id
-            `);
+        console.log('📊 Datos a actualizar:', {
+            id,
+            documentos: JSON.stringify(documentos_solicitados),
+            mensaje: mensaje || 'Por favor sube los siguientes documentos para continuar con tu postulación'
+        });
         
-        console.log('✅ Postulación actualizada correctamente');
+        try {
+            const updateResult = await poolConnection.request()
+                .input('id', sql.Int, id)
+                .input('documentos', sql.VarChar(1000), JSON.stringify(documentos_solicitados))
+                .input('mensaje', sql.VarChar(1000), mensaje || 'Por favor sube los siguientes documentos para continuar con tu postulación')
+                .query(`
+                    UPDATE postulaciones_hijos
+                    SET 
+                        estado_postulacion = 'documentos_solicitados',
+                        documentos_solicitados = @documentos,
+                        mensaje_admin = @mensaje,
+                        fecha_solicitud_documentos = GETDATE()
+                    WHERE id = @id
+                `);
+            
+            console.log('✅ Postulación actualizada correctamente. Rows affected:', updateResult.rowsAffected);
+        } catch (updateError) {
+            console.error('❌ Error en UPDATE:', updateError.message);
+            console.error('Stack:', updateError.stack);
+            throw updateError;
+        }
         
         // Enviar notificación al conductor
         try {
