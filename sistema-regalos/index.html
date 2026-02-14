@@ -8,17 +8,22 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     
     <style>
         :root {
             --primary: #16a34a;
             --primary-dark: #15803d;
+            --primary-light: #22c55e;
             --accent: #dc2626;
+            --accent-gold: #fbbf24;
             --dark: #0f172a;
             --light: #f8fafc;
             --gray: #64748b;
+            --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-2: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --gradient-christmas: linear-gradient(135deg, #16a34a 0%, #15803d 50%, #dc2626 100%);
         }
 
         * {
@@ -34,33 +39,53 @@
             overflow-x: hidden;
         }
 
-        /* Navbar con efecto scroll */
+        /* Particles Background */
+        #particles-js {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 0;
+        }
+
+        /* Navbar Mejorada */
         .navbar {
-            background: white;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
             padding: 1.5rem 0;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
             position: sticky;
             top: 0;
-            z-index: 100;
-            transition: all 0.3s;
+            z-index: 1000;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .navbar.scrolled {
             padding: 1rem 0;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            background: rgba(255, 255, 255, 0.98);
         }
 
         .navbar-brand {
-            font-weight: 700;
-            font-size: 1.25rem;
-            color: var(--primary);
+            font-weight: 800;
+            font-size: 1.5rem;
+            background: var(--gradient-christmas);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            transition: transform 0.3s;
+        }
+
+        .navbar-brand:hover {
+            transform: scale(1.05);
         }
 
         .nav-link {
             color: var(--gray);
-            font-weight: 500;
+            font-weight: 600;
             padding: 0.5rem 1rem !important;
-            transition: color 0.2s;
+            transition: all 0.3s;
             position: relative;
         }
 
@@ -70,10 +95,11 @@
             bottom: 0;
             left: 50%;
             width: 0;
-            height: 2px;
-            background: var(--primary);
-            transition: all 0.3s;
+            height: 3px;
+            background: var(--gradient-christmas);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             transform: translateX(-50%);
+            border-radius: 2px;
         }
 
         .nav-link:hover::after {
@@ -85,28 +111,32 @@
         }
 
         .btn-nav {
-            background: var(--primary);
+            background: var(--gradient-christmas);
             color: white;
-            padding: 0.6rem 1.5rem;
-            border-radius: 8px;
-            font-weight: 600;
+            padding: 0.7rem 1.8rem;
+            border-radius: 12px;
+            font-weight: 700;
             border: none;
-            transition: all 0.2s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(22, 163, 74, 0.3);
         }
 
         .btn-nav:hover {
-            background: var(--primary-dark);
-            transform: translateY(-2px);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 25px rgba(22, 163, 74, 0.4);
         }
 
-        /* Hero moderno con particles */
+        /* Hero Ultra Moderno */
         .hero {
-            background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%);
-            padding: 6rem 0 4rem;
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0f172a 100%);
+            padding: 8rem 0 5rem;
             text-align: center;
             position: relative;
             overflow: hidden;
             color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
         }
 
         .hero::before {
@@ -116,169 +146,54 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: radial-gradient(circle at 20% 50%, rgba(22, 163, 74, 0.1) 0%, transparent 50%),
-                        radial-gradient(circle at 80% 80%, rgba(22, 163, 74, 0.1) 0%, transparent 50%);
-            animation: pulse 8s ease-in-out infinite;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(22, 163, 74, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(220, 38, 38, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(251, 191, 36, 0.1) 0%, transparent 50%);
+            animation: gradientShift 15s ease-in-out infinite;
         }
 
-        @keyframes pulse {
+        @keyframes gradientShift {
             0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
+            50% { opacity: 0.7; }
+        }
+
+        /* Snowflakes Animation */
+        .snowflake {
+            position: absolute;
+            top: -10px;
+            color: white;
+            font-size: 1.5rem;
+            opacity: 0.8;
+            animation: fall linear infinite;
+            z-index: 1;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+            }
         }
 
         .hero-content {
             position: relative;
-            z-index: 1;
+            z-index: 2;
         }
 
         .hero-badge {
-            display: inline-block;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: white;
-            padding: 0.5rem 1.5rem;
-            border-radius: 50px;
-            font-size: 0.875rem;
-            font-weight: 600;
-            margin-bottom: 2rem;
-        }
-
-        .hero h1 {
-            font-size: clamp(2.5rem, 5vw, 4rem);
-            font-weight: 800;
-            margin-bottom: 1.5rem;
-            line-height: 1.1;
-        }
-
-        .hero-highlight {
-            background: linear-gradient(to right, #10b981, #3b82f6);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .hero p {
-            font-size: 1.25rem;
-            max-width: 600px;
-            margin: 0 auto 2.5rem;
-            opacity: 0.9;
-        }
-
-        .hero-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-bottom: 4rem;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            color: white;
-            padding: 1rem 2rem;
-            border-radius: 10px;
-            font-weight: 600;
-            border: none;
-            font-size: 1rem;
-            transition: all 0.3s;
-            text-decoration: none;
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            box-shadow: 0 4px 15px rgba(22, 163, 74, 0.3);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 25px rgba(22, 163, 74, 0.4);
-        }
-
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            color: white;
-            padding: 1rem 2rem;
-            border-radius: 10px;
-            font-weight: 600;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
             border: 2px solid rgba(255, 255, 255, 0.3);
-            font-size: 1rem;
-            transition: all 0.3s;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .btn-secondary:hover {
-            background: white;
-            color: var(--primary);
-            border-color: white;
-            transform: translateY(-2px);
-        }
-
-        /* Countdown moderno */
-        .countdown {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 16px;
-            padding: 2rem;
-            max-width: 500px;
-            margin: 0 auto;
-        }
-
-        .countdown-label {
-            font-size: 0.875rem;
-            margin-bottom: 1rem;
-            font-weight: 500;
-            opacity: 0.9;
-        }
-
-        .countdown-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 1rem;
-        }
-
-        .countdown-item {
-            text-align: center;
-            background: rgba(255, 255, 255, 0.05);
-            padding: 1rem 0.5rem;
-            border-radius: 10px;
-        }
-
-        .countdown-number {
-            font-size: 2rem;
-            font-weight: 800;
-            display: block;
-            color: #10b981;
-        }
-
-        .countdown-text {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-top: 0.25rem;
-            opacity: 0.8;
-        }
-
-        /* Stats carousel moderno */
-        .stats-carousel {
-            padding: 4rem 0;
-            background: white;
-            position: relative;
-        }
-
-        .stats-slide {
-            text-align: center;
-            padding: 2rem;
-        }
-
-        .stat-icon {
-            font-size: 4rem;
-            margin-bottom: 1rem;
-            display: inline-block;
+            color: white;
+            padding: 0.7rem 2rem;
+            border-radius: 50px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
             animation: float 3s ease-in-out infinite;
         }
 
@@ -287,181 +202,422 @@
             50% { transform: translateY(-10px); }
         }
 
-        .stat-number {
-            font-size: 3rem;
-            font-weight: 800;
+        .hero h1 {
+            font-size: clamp(2.8rem, 6vw, 5rem);
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+        }
+
+        .hero-highlight {
+            background: linear-gradient(135deg, #10b981, #3b82f6, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            background-size: 200% 200%;
+            animation: gradientFlow 4s ease infinite;
+        }
+
+        @keyframes gradientFlow {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .hero p {
+            font-size: 1.35rem;
+            max-width: 650px;
+            margin: 0 auto 3rem;
+            opacity: 0.95;
+            font-weight: 400;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1.2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 4rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 1.2rem 2.5rem;
+            border-radius: 14px;
+            font-weight: 700;
+            border: none;
+            font-size: 1.1rem;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.7rem;
+            box-shadow: 0 8px 30px rgba(22, 163, 74, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 12px 40px rgba(22, 163, 74, 0.5);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            color: white;
+            padding: 1.2rem 2.5rem;
+            border-radius: 14px;
+            font-weight: 700;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            font-size: 1.1rem;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.7rem;
+        }
+
+        .btn-secondary:hover {
+            background: white;
             color: var(--primary);
+            border-color: white;
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(255, 255, 255, 0.3);
+        }
+
+        /* Countdown Ultra Moderno */
+        .countdown {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(30px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 24px;
+            padding: 2.5rem;
+            max-width: 600px;
+            margin: 0 auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .countdown-label {
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+            opacity: 0.95;
+            letter-spacing: 0.5px;
+        }
+
+        .countdown-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+        }
+
+        .countdown-item {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1.5rem 1rem;
+            border-radius: 16px;
+            transition: all 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .countdown-item:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .countdown-number {
+            font-size: 2.5rem;
+            font-weight: 900;
+            display: block;
+            background: linear-gradient(135deg, #10b981, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .countdown-text {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 0.5rem;
+            opacity: 0.9;
+            font-weight: 600;
+        }
+
+        /* Stats Carousel Mejorado */
+        .stats-carousel {
+            padding: 5rem 0;
+            background: linear-gradient(180deg, white 0%, var(--light) 100%);
+            position: relative;
+        }
+
+        .stats-slide {
+            text-align: center;
+            padding: 2.5rem;
+            transition: transform 0.3s;
+        }
+
+        .stats-slide:hover {
+            transform: scale(1.05);
+        }
+
+        .stat-icon {
+            font-size: 5rem;
+            margin-bottom: 1.5rem;
+            display: inline-block;
+            filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.1));
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        .stat-number {
+            font-size: 3.5rem;
+            font-weight: 900;
+            background: var(--gradient-christmas);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             display: block;
             margin-bottom: 0.5rem;
         }
 
         .stat-label {
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             color: var(--gray);
-            font-weight: 500;
+            font-weight: 600;
         }
 
-        /* Features con tabs interactivos */
+        /* Features con Diseño Moderno */
         .features {
-            padding: 5rem 0;
-            background: var(--light);
+            padding: 6rem 0;
+            background: white;
+            position: relative;
         }
 
         .section-title {
             text-align: center;
-            margin-bottom: 4rem;
+            margin-bottom: 5rem;
         }
 
         .section-title h2 {
-            font-size: clamp(2rem, 4vw, 2.5rem);
-            font-weight: 800;
+            font-size: clamp(2.2rem, 5vw, 3rem);
+            font-weight: 900;
             color: var(--dark);
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.02em;
         }
 
         .section-title p {
-            font-size: 1.125rem;
+            font-size: 1.25rem;
             color: var(--gray);
+            font-weight: 500;
         }
 
         .steps-nav {
             display: flex;
             justify-content: center;
-            gap: 1rem;
-            margin-bottom: 3rem;
+            gap: 1.5rem;
+            margin-bottom: 4rem;
             flex-wrap: wrap;
         }
 
         .step-btn {
             background: white;
-            border: 2px solid #e2e8f0;
-            padding: 1rem 2rem;
-            border-radius: 10px;
-            font-weight: 600;
+            border: 3px solid #e2e8f0;
+            padding: 1.2rem 2.5rem;
+            border-radius: 16px;
+            font-weight: 700;
             color: var(--gray);
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 1.05rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
         }
 
         .step-btn.active {
-            background: var(--primary);
+            background: var(--gradient-christmas);
             color: white;
-            border-color: var(--primary);
+            border-color: transparent;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(22, 163, 74, 0.3);
         }
 
         .step-btn:hover {
             border-color: var(--primary);
-            transform: translateY(-2px);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
         }
 
         .step-content {
             display: none;
-            animation: fadeIn 0.5s;
+            animation: slideUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .step-content.active {
             display: block;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        @keyframes slideUp {
+            from { 
+                opacity: 0; 
+                transform: translateY(30px);
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0);
+            }
         }
 
         .step-card {
-            background: white;
-            padding: 3rem;
-            border-radius: 20px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            background: linear-gradient(135deg, #f8fafc 0%, white 100%);
+            padding: 4rem;
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
             text-align: center;
-            max-width: 600px;
+            max-width: 700px;
             margin: 0 auto;
+            border: 2px solid rgba(22, 163, 74, 0.1);
         }
 
         .step-icon-large {
-            font-size: 5rem;
-            margin-bottom: 1.5rem;
+            font-size: 6rem;
+            margin-bottom: 2rem;
+            filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.15));
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
         }
 
         .step-card h3 {
-            font-size: 2rem;
-            font-weight: 700;
+            font-size: 2.3rem;
+            font-weight: 800;
             color: var(--dark);
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.01em;
         }
 
         .step-card p {
             color: var(--gray);
-            font-size: 1.1rem;
-            line-height: 1.8;
+            font-size: 1.2rem;
+            line-height: 1.9;
+            font-weight: 400;
         }
 
-        /* Testimonials carousel */
+        /* Testimonials Mejorados */
         .testimonials {
-            padding: 5rem 0;
-            background: white;
+            padding: 6rem 0;
+            background: linear-gradient(135deg, var(--light) 0%, white 100%);
         }
 
         .testimonial-card {
-            background: var(--light);
-            padding: 2.5rem;
-            border-radius: 20px;
+            background: white;
+            padding: 3rem;
+            border-radius: 24px;
             margin: 1rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid transparent;
+        }
+
+        .testimonial-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
+            border-color: var(--primary);
         }
 
         .testimonial-avatar {
-            width: 60px;
-            height: 60px;
+            width: 70px;
+            height: 70px;
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            background: var(--gradient-christmas);
             color: white;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
-            font-weight: 700;
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 8px 25px rgba(22, 163, 74, 0.3);
+        }
+
+        .testimonial-rating {
+            color: #fbbf24;
+            font-size: 1.3rem;
             margin-bottom: 1rem;
         }
 
         .testimonial-text {
-            font-size: 1rem;
+            font-size: 1.1rem;
             color: var(--gray);
-            line-height: 1.8;
-            margin-bottom: 1.5rem;
+            line-height: 1.9;
+            margin-bottom: 2rem;
             font-style: italic;
+            font-weight: 400;
         }
 
         .testimonial-author {
-            font-weight: 600;
+            font-weight: 700;
             color: var(--dark);
+            font-size: 1.1rem;
         }
 
         .testimonial-role {
-            font-size: 0.875rem;
+            font-size: 0.95rem;
             color: var(--gray);
+            font-weight: 500;
         }
 
-        /* Gallery carousel */
+        /* Gallery Mejorada */
         .gallery {
-            padding: 5rem 0;
-            background: var(--light);
+            padding: 6rem 0;
+            background: white;
         }
 
         .gallery-slide {
             position: relative;
-            border-radius: 20px;
+            border-radius: 24px;
             overflow: hidden;
-            height: 400px;
-            background: linear-gradient(135deg, #0f172a, #1e3a5f);
+            height: 450px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: transform 0.3s;
+        }
+
+        .gallery-slide:hover {
+            transform: scale(1.02);
         }
 
         .gallery-emoji {
-            font-size: 10rem;
-            opacity: 0.3;
+            font-size: 12rem;
+            opacity: 0.2;
+            filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.3));
         }
 
         .gallery-caption {
@@ -469,59 +625,81 @@
             bottom: 0;
             left: 0;
             right: 0;
-            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
             color: white;
-            padding: 2rem;
+            padding: 3rem;
             text-align: center;
         }
 
         .gallery-caption h3 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 0.7rem;
         }
 
-        /* Info cards mejoradas */
+        .gallery-caption p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        /* Info Cards Ultra Modernas */
         .info-section {
-            padding: 4rem 0;
-            background: white;
+            padding: 5rem 0;
+            background: linear-gradient(135deg, var(--light) 0%, white 100%);
         }
 
         .info-cards {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2.5rem;
         }
 
         .info-card {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            padding: 2.5rem;
-            border-radius: 16px;
+            background: white;
+            padding: 3rem;
+            border-radius: 24px;
             text-align: center;
-            color: white;
-            transition: transform 0.3s;
-            box-shadow: 0 10px 30px rgba(22, 163, 74, 0.2);
+            color: var(--dark);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            border: 3px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .info-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: var(--gradient-christmas);
         }
 
         .info-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            border-color: var(--primary);
         }
 
         .info-card-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
             display: block;
+            filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.1));
         }
 
         .info-card-title {
-            font-weight: 600;
-            font-size: 1.1rem;
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: var(--dark);
         }
 
-        /* CTA */
+        /* CTA Mejorado */
         .cta {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            padding: 5rem 2rem;
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0f172a 100%);
+            padding: 6rem 2rem;
             text-align: center;
             color: white;
             position: relative;
@@ -531,11 +709,17 @@
         .cta::before {
             content: '🎁';
             position: absolute;
-            font-size: 20rem;
-            opacity: 0.05;
+            font-size: 25rem;
+            opacity: 0.03;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%) rotate(-15deg);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: translate(-50%, -50%) rotate(-15deg); }
+            to { transform: translate(-50%, -50%) rotate(345deg); }
         }
 
         .cta-content {
@@ -544,43 +728,45 @@
         }
 
         .cta h2 {
-            font-size: clamp(2rem, 4vw, 2.75rem);
-            font-weight: 800;
-            margin-bottom: 1rem;
+            font-size: clamp(2.3rem, 5vw, 3.5rem);
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.02em;
         }
 
         .cta p {
-            font-size: 1.125rem;
-            margin-bottom: 2rem;
+            font-size: 1.3rem;
+            margin-bottom: 3rem;
             opacity: 0.95;
+            font-weight: 400;
         }
 
         .btn-cta {
             background: white;
             color: var(--primary);
-            padding: 1rem 2.5rem;
-            border-radius: 10px;
-            font-weight: 700;
+            padding: 1.3rem 3rem;
+            border-radius: 16px;
+            font-weight: 800;
             border: none;
-            font-size: 1.1rem;
-            transition: all 0.3s;
+            font-size: 1.2rem;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             text-decoration: none;
             display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            gap: 0.8rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
         }
 
         .btn-cta:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.4);
         }
 
-        /* Footer */
+        /* Footer Mejorado */
         footer {
-            background: var(--dark);
+            background: #0a0f1e;
             color: white;
-            padding: 3rem 0 1.5rem;
+            padding: 4rem 0 2rem;
         }
 
         .footer-content {
@@ -588,57 +774,146 @@
         }
 
         .footer-brand {
-            font-size: 1.25rem;
-            font-weight: 700;
-            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 2rem;
             display: block;
+            background: var(--gradient-christmas);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .footer-links {
             display: flex;
-            gap: 2rem;
+            gap: 2.5rem;
             justify-content: center;
             flex-wrap: wrap;
-            margin-bottom: 2rem;
+            margin-bottom: 2.5rem;
         }
 
         .footer-links a {
             color: rgba(255, 255, 255, 0.7);
             text-decoration: none;
-            font-weight: 500;
-            transition: color 0.2s;
+            font-weight: 600;
+            transition: all 0.3s;
+            font-size: 1.05rem;
         }
 
         .footer-links a:hover {
             color: white;
+            transform: translateY(-2px);
         }
 
         .footer-bottom {
             border-top: 1px solid rgba(255, 255, 255, 0.1);
-            padding-top: 1.5rem;
-            margin-top: 2rem;
-            opacity: 0.6;
-            font-size: 0.875rem;
+            padding-top: 2rem;
+            margin-top: 2.5rem;
+            opacity: 0.7;
+            font-size: 0.95rem;
         }
 
-        /* Swiper customization */
+        /* Swiper Customization */
         .swiper-pagination-bullet {
             background: var(--primary);
+            width: 12px;
+            height: 12px;
+        }
+
+        .swiper-pagination-bullet-active {
+            background: var(--primary);
+            width: 30px;
+            border-radius: 6px;
         }
 
         .swiper-button-next,
         .swiper-button-prev {
             color: var(--primary);
+            background: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .swiper-button-next:after,
+        .swiper-button-prev:after {
+            font-size: 20px;
+        }
+
+        /* Scroll to Top Button */
+        #scrollTop {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 55px;
+            height: 55px;
+            background: var(--gradient-christmas);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s;
+            box-shadow: 0 8px 25px rgba(22, 163, 74, 0.3);
+            z-index: 999;
+        }
+
+        #scrollTop.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        #scrollTop:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 35px rgba(22, 163, 74, 0.4);
+        }
+
+        /* Loading Animation */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s, visibility 0.5s;
+        }
+
+        .loading-overlay.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader {
+            width: 60px;
+            height: 60px;
+            border: 5px solid rgba(255, 255, 255, 0.1);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
 
         /* Responsive */
         @media (max-width: 768px) {
             .hero {
-                padding: 4rem 0 3rem;
+                padding: 6rem 0 4rem;
+                min-height: auto;
             }
 
             .countdown-grid {
                 grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
             }
 
             .hero-buttons {
@@ -658,10 +933,32 @@
             .step-btn {
                 width: 100%;
             }
+
+            .step-card {
+                padding: 2.5rem 1.5rem;
+            }
+
+            .gallery-slide {
+                height: 350px;
+            }
+
+            .info-cards {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loader"></div>
+    </div>
+
+    <!-- Scroll to Top Button -->
+    <button id="scrollTop" onclick="scrollToTop()">
+        <i class="bi bi-arrow-up"></i>
+    </button>
+
     <!-- Navbar -->
     <nav class="navbar" id="navbar">
         <div class="container">
@@ -694,34 +991,35 @@
 
     <!-- Hero -->
     <section class="hero" id="inicio">
+        <div id="particles-js"></div>
         <div class="container">
             <div class="hero-content" data-aos="fade-up">
                 <div class="hero-badge">
-                    🎁 Temporada Navideña 2024
+                    ✨ Temporada Navideña 2024
                 </div>
                 
                 <h1>
-                    Regalos para las<br>
+                    Regalos Especiales para<br>
                     <span class="hero-highlight">Familias COOMOTOR</span>
                 </h1>
                 
                 <p>
-                    Registra a tus hijos menores de 12 años y recibe un regalo especial esta Navidad
+                    Sistema digital inteligente para registro de niños menores de 12 años. Proceso rápido, seguro y 100% gratuito.
                 </p>
 
                 <div class="hero-buttons">
                     <a href="auth/registro.html" class="btn-primary">
                         <i class="bi bi-gift-fill"></i>
-                        Registrarme Gratis
+                        Registrarme Ahora
                     </a>
                     <a href="#como-funciona" class="btn-secondary">
-                        Cómo Funciona
+                        Ver Proceso
                         <i class="bi bi-arrow-down"></i>
                     </a>
                 </div>
 
                 <div class="countdown" data-aos="fade-up" data-aos-delay="200">
-                    <div class="countdown-label">⏱️ Faltan para Navidad</div>
+                    <div class="countdown-label">⏰ Cuenta Regresiva para Navidad</div>
                     <div class="countdown-grid">
                         <div class="countdown-item">
                             <span class="countdown-number" id="days">00</span>
@@ -775,7 +1073,21 @@
                         <div class="stats-slide">
                             <div class="stat-icon">😊</div>
                             <span class="stat-number">100%</span>
-                            <span class="stat-label">Sonrisas Garantizadas</span>
+                            <span class="stat-label">Satisfacción Garantizada</span>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="stats-slide">
+                            <div class="stat-icon">⚡</div>
+                            <span class="stat-number">5 Min</span>
+                            <span class="stat-label">Registro Express</span>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="stats-slide">
+                            <div class="stat-icon">🔒</div>
+                            <span class="stat-number">100%</span>
+                            <span class="stat-label">Seguro y Confiable</span>
                         </div>
                     </div>
                 </div>
@@ -784,12 +1096,12 @@
         </div>
     </section>
 
-    <!-- Features con Tabs -->
+    <!-- Features -->
     <section class="features" id="como-funciona">
         <div class="container">
             <div class="section-title" data-aos="fade-up">
-                <h2>Proceso Simple y Rápido</h2>
-                <p>Conoce cada paso del proceso</p>
+                <h2>Proceso Simple en 4 Pasos</h2>
+                <p>Tu regalo navideño en minutos</p>
             </div>
 
             <div class="steps-nav" data-aos="fade-up" data-aos-delay="100">
@@ -809,81 +1121,99 @@
 
             <div class="step-content active" id="step1" data-aos="fade-up">
                 <div class="step-card">
-                    <div class="step-icon-large">📝</div>
-                    <h3>Paso 1: Registro</h3>
-                    <p>Crea tu cuenta como conductor de COOMOTOR en minutos. Solo necesitas tu información básica y los datos de tus hijos menores de 12 años. El proceso es 100% digital y seguro.</p>
+                    <div class="step-icon-large">📱</div>
+                    <h3>Paso 1: Registro Digital</h3>
+                    <p>Crea tu cuenta como conductor de COOMOTOR en minutos. Sistema 100% digital, intuitivo y seguro. Solo necesitas tu información básica y datos de contacto para comenzar.</p>
                 </div>
             </div>
 
             <div class="step-content" id="step2">
                 <div class="step-card">
-                    <div class="step-icon-large">🎁</div>
-                    <h3>Paso 2: Postulación</h3>
-                    <p>Selecciona a tus hijos que deseas postular para recibir el regalo navideño. Puedes registrar a todos los niños menores de 12 años que estén bajo tu cuidado.</p>
+                    <div class="step-icon-large">👶</div>
+                    <h3>Paso 2: Registro de Niños</h3>
+                    <p>Registra a tus hijos menores de 12 años de forma rápida y sencilla. Puedes agregar múltiples niños en una sola sesión. El sistema valida automáticamente la edad y documentos.</p>
                 </div>
             </div>
 
             <div class="step-content" id="step3">
                 <div class="step-card">
-                    <div class="step-icon-large">📄</div>
-                    <h3>Paso 3: Documentos</h3>
-                    <p>Sube los documentos necesarios de forma rápida y segura. Aceptamos imágenes y PDFs. Nuestro sistema verifica automáticamente la información para agilizar el proceso.</p>
+                    <div class="step-icon-large">📸</div>
+                    <h3>Paso 3: Carga de Documentos</h3>
+                    <p>Sube los documentos requeridos directamente desde tu dispositivo. Aceptamos fotos y PDFs. Nuestro sistema de IA verifica la información en tiempo real para mayor rapidez.</p>
                 </div>
             </div>
 
             <div class="step-content" id="step4">
                 <div class="step-card">
-                    <div class="step-icon-large">✅</div>
-                    <h3>Paso 4: Entrega</h3>
-                    <p>Una vez aprobada tu postulación, recibirás una notificación con la fecha y lugar de entrega. Podrás recoger el regalo en el punto más cercano a tu ubicación.</p>
+                    <div class="step-icon-large">🎉</div>
+                    <h3>Paso 4: Confirmación y Entrega</h3>
+                    <p>Recibe notificaciones en tiempo real sobre el estado de tu solicitud. Una vez aprobada, te enviaremos la fecha, hora y ubicación para recoger el regalo de tus hijos.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Gallery Carousel -->
+    <!-- Gallery -->
     <section class="gallery">
         <div class="container">
             <div class="section-title" data-aos="fade-up">
-                <h2>Galería de Momentos Especiales</h2>
-                <p>Conoce lo que ofrecemos en esta temporada</p>
+                <h2>Categorías de Regalos 2024</h2>
+                <p>Variedad de opciones para todas las edades</p>
             </div>
 
             <div class="swiper gallerySwiper" data-aos="fade-up" data-aos-delay="100">
                 <div class="swiper-wrapper">
                     <div class="swiper-slide">
-                        <div class="gallery-slide">
+                        <div class="gallery-slide" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
                             <div class="gallery-emoji">🎮</div>
                             <div class="gallery-caption">
-                                <h3>Juguetes Educativos</h3>
-                                <p>Para todas las edades</p>
+                                <h3>Tecnología y Juegos</h3>
+                                <p>Gadgets educativos y entretenimiento</p>
                             </div>
                         </div>
                     </div>
                     <div class="swiper-slide">
-                        <div class="gallery-slide">
+                        <div class="gallery-slide" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
                             <div class="gallery-emoji">📚</div>
                             <div class="gallery-caption">
-                                <h3>Libros y Material Educativo</h3>
-                                <p>Fomenta la lectura</p>
+                                <h3>Educación y Lectura</h3>
+                                <p>Libros y material didáctico</p>
                             </div>
                         </div>
                     </div>
                     <div class="swiper-slide">
-                        <div class="gallery-slide">
+                        <div class="gallery-slide" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
                             <div class="gallery-emoji">🎨</div>
                             <div class="gallery-caption">
                                 <h3>Arte y Creatividad</h3>
-                                <p>Desarrolla su imaginación</p>
+                                <p>Sets de pintura y manualidades</p>
                             </div>
                         </div>
                     </div>
                     <div class="swiper-slide">
-                        <div class="gallery-slide">
+                        <div class="gallery-slide" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
                             <div class="gallery-emoji">⚽</div>
                             <div class="gallery-caption">
-                                <h3>Deportes</h3>
-                                <p>Vida activa y saludable</p>
+                                <h3>Deportes y Fitness</h3>
+                                <p>Equipamiento deportivo</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="gallery-slide" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+                            <div class="gallery-emoji">🧸</div>
+                            <div class="gallery-caption">
+                                <h3>Juguetes Clásicos</h3>
+                                <p>Diversión tradicional garantizada</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="gallery-slide" style="background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);">
+                            <div class="gallery-emoji">🎵</div>
+                            <div class="gallery-caption">
+                                <h3>Música y Sonido</h3>
+                                <p>Instrumentos y audio</p>
                             </div>
                         </div>
                     </div>
@@ -895,12 +1225,12 @@
         </div>
     </section>
 
-    <!-- Testimonials Carousel -->
+    <!-- Testimonials -->
     <section class="testimonials" id="testimonios">
         <div class="container">
             <div class="section-title" data-aos="fade-up">
-                <h2>Lo que Dicen Nuestros Conductores</h2>
-                <p>Testimonios de familias felices</p>
+                <h2>Testimonios de Conductores</h2>
+                <p>Experiencias reales de nuestra comunidad</p>
             </div>
 
             <div class="swiper testimonialsSwiper" data-aos="fade-up" data-aos-delay="100">
@@ -908,8 +1238,9 @@
                     <div class="swiper-slide">
                         <div class="testimonial-card">
                             <div class="testimonial-avatar">JM</div>
+                            <div class="testimonial-rating">⭐⭐⭐⭐⭐</div>
                             <div class="testimonial-text">
-                                "Excelente iniciativa de COOMOTOR. El proceso fue muy sencillo y mis hijos quedaron encantados con sus regalos. ¡Gracias por pensar en nuestras familias!"
+                                "Increíble iniciativa de COOMOTOR. El proceso digital fue súper rápido, en menos de 5 minutos ya tenía todo listo. Mis tres hijos recibieron regalos de excelente calidad. ¡Totalmente recomendado!"
                             </div>
                             <div class="testimonial-author">Juan Martínez</div>
                             <div class="testimonial-role">Conductor COOMOTOR - 5 años</div>
@@ -918,8 +1249,9 @@
                     <div class="swiper-slide">
                         <div class="testimonial-card">
                             <div class="testimonial-avatar">MR</div>
+                            <div class="testimonial-rating">⭐⭐⭐⭐⭐</div>
                             <div class="testimonial-text">
-                                "Mi hija recibió un hermoso regalo educativo. La plataforma es muy fácil de usar y el soporte fue excelente. Definitivamente una gran ayuda en esta temporada."
+                                "La plataforma es muy intuitiva y fácil de usar. Pude cargar todos los documentos desde mi celular sin problemas. Mi hija recibió un hermoso set educativo que le encantó. Gracias COOMOTOR por pensar en las familias."
                             </div>
                             <div class="testimonial-author">María Rodríguez</div>
                             <div class="testimonial-role">Conductora COOMOTOR - 3 años</div>
@@ -928,8 +1260,9 @@
                     <div class="swiper-slide">
                         <div class="testimonial-card">
                             <div class="testimonial-avatar">CG</div>
+                            <div class="testimonial-rating">⭐⭐⭐⭐⭐</div>
                             <div class="testimonial-text">
-                                "Un proceso totalmente digital y transparente. Pude hacer todo desde mi celular en pocos minutos. Los niños están felices y nosotros también."
+                                "Proceso 100% transparente y digital. Recibí notificaciones en cada etapa del proceso. Los niños están felices con sus regalos y nosotros también. Excelente servicio al cliente."
                             </div>
                             <div class="testimonial-author">Carlos Gómez</div>
                             <div class="testimonial-role">Conductor COOMOTOR - 7 años</div>
@@ -938,11 +1271,23 @@
                     <div class="swiper-slide">
                         <div class="testimonial-card">
                             <div class="testimonial-avatar">LP</div>
+                            <div class="testimonial-rating">⭐⭐⭐⭐⭐</div>
                             <div class="testimonial-text">
-                                "Gracias COOMOTOR por esta hermosa iniciativa. El regalo fue de excelente calidad y llegó justo a tiempo para Navidad. ¡Mis hijos están felices!"
+                                "Me sorprendió la calidad de los regalos y lo rápido del proceso. El sistema de seguimiento en tiempo real es genial. Mis hijos recibieron exactamente lo que esperaban. ¡Una Navidad inolvidable!"
                             </div>
                             <div class="testimonial-author">Laura Pérez</div>
                             <div class="testimonial-role">Conductora COOMOTOR - 2 años</div>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="testimonial-card">
+                            <div class="testimonial-avatar">AS</div>
+                            <div class="testimonial-rating">⭐⭐⭐⭐⭐</div>
+                            <div class="testimonial-text">
+                                "Excelente atención y soporte técnico. Cuando tuve una duda, me respondieron en minutos por WhatsApp. El proceso de entrega fue muy organizado y puntual. Felicitaciones al equipo COOMOTOR."
+                            </div>
+                            <div class="testimonial-author">Andrés Silva</div>
+                            <div class="testimonial-role">Conductor COOMOTOR - 4 años</div>
                         </div>
                     </div>
                 </div>
@@ -975,11 +1320,11 @@
     <section class="cta">
         <div class="container">
             <div class="cta-content" data-aos="zoom-in">
-                <h2>¿Listo para comenzar?</h2>
-                <p>Registra a tu familia hoy y asegura sus regalos navideños</p>
+                <h2>¿Listo para Comenzar?</h2>
+                <p>Únete a cientos de familias felices esta Navidad 2024</p>
                 <a href="auth/registro.html" class="btn-cta">
-                    <i class="bi bi-arrow-right-circle-fill"></i>
-                    Registrarme Ahora
+                    <i class="bi bi-rocket-takeoff-fill"></i>
+                    Comenzar Registro
                 </a>
             </div>
         </div>
@@ -1000,7 +1345,7 @@
                 </div>
 
                 <div class="footer-bottom">
-                    <p>&copy; 2024 COOMOTOR. Todos los derechos reservados.</p>
+                    <p>&copy; 2024 COOMOTOR. Todos los derechos reservados. | Hecho con ❤️ para las familias</p>
                 </div>
             </div>
         </div>
@@ -1009,13 +1354,74 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    
     <script>
+        // Loading Page
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                document.getElementById('loadingOverlay').classList.add('hidden');
+            }, 800);
+        });
+
         // Initialize AOS
         AOS.init({
-            duration: 800,
+            duration: 1000,
             once: true,
-            offset: 100
+            offset: 100,
+            easing: 'ease-out-cubic'
         });
+
+        // Particles.js Configuration
+        particlesJS('particles-js', {
+            particles: {
+                number: { value: 80, density: { enable: true, value_area: 800 } },
+                color: { value: '#ffffff' },
+                shape: { type: 'circle' },
+                opacity: { value: 0.5, random: true },
+                size: { value: 3, random: true },
+                line_linked: {
+                    enable: true,
+                    distance: 150,
+                    color: '#ffffff',
+                    opacity: 0.4,
+                    width: 1
+                },
+                move: {
+                    enable: true,
+                    speed: 2,
+                    direction: 'none',
+                    random: true,
+                    straight: false,
+                    out_mode: 'out',
+                    bounce: false
+                }
+            },
+            interactivity: {
+                detect_on: 'canvas',
+                events: {
+                    onhover: { enable: true, mode: 'repulse' },
+                    onclick: { enable: true, mode: 'push' },
+                    resize: true
+                }
+            },
+            retina_detect: true
+        });
+
+        // Snowflakes
+        function createSnowflake() {
+            const snowflake = document.createElement('div');
+            snowflake.classList.add('snowflake');
+            snowflake.innerHTML = ['❄', '❅', '❆'][Math.floor(Math.random() * 3)];
+            snowflake.style.left = Math.random() * 100 + 'vw';
+            snowflake.style.animationDuration = Math.random() * 3 + 5 + 's';
+            snowflake.style.opacity = Math.random() * 0.5 + 0.3;
+            document.querySelector('.hero').appendChild(snowflake);
+            
+            setTimeout(() => snowflake.remove(), 10000);
+        }
+
+        setInterval(createSnowflake, 300);
 
         // Countdown
         function updateCountdown() {
@@ -1039,43 +1445,57 @@
         updateCountdown();
         setInterval(updateCountdown, 1000);
 
-        // Smooth scroll
+        // Smooth Scroll
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
                 const target = document.querySelector(this.getAttribute('href'));
                 if (target) {
-                    target.scrollIntoView({ behavior: 'smooth' });
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }
             });
         });
 
-        // Navbar scroll effect
+        // Navbar Scroll Effect
+        let lastScroll = 0;
         window.addEventListener('scroll', function() {
             const navbar = document.getElementById('navbar');
-            if (window.scrollY > 50) {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            
+            if (scrollTop > 50) {
                 navbar.classList.add('scrolled');
             } else {
                 navbar.classList.remove('scrolled');
             }
+            
+            lastScroll = scrollTop;
         });
+
+        // Scroll to Top Button
+        window.addEventListener('scroll', function() {
+            const scrollTop = document.getElementById('scrollTop');
+            if (window.pageYOffset > 300) {
+                scrollTop.classList.add('visible');
+            } else {
+                scrollTop.classList.remove('visible');
+            }
+        });
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
 
         // Steps Navigation
         function showStep(stepNumber) {
-            // Hide all steps
             document.querySelectorAll('.step-content').forEach(step => {
                 step.classList.remove('active');
             });
             
-            // Remove active class from all buttons
             document.querySelectorAll('.step-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
             
-            // Show selected step
             document.getElementById('step' + stepNumber).classList.add('active');
-            
-            // Add active class to clicked button
             event.target.closest('.step-btn').classList.add('active');
         }
 
@@ -1085,7 +1505,7 @@
             spaceBetween: 30,
             loop: true,
             autoplay: {
-                delay: 3000,
+                delay: 2500,
                 disableOnInteraction: false,
             },
             pagination: {
@@ -1093,15 +1513,9 @@
                 clickable: true,
             },
             breakpoints: {
-                640: {
-                    slidesPerView: 2,
-                },
-                768: {
-                    slidesPerView: 3,
-                },
-                1024: {
-                    slidesPerView: 4,
-                },
+                640: { slidesPerView: 2 },
+                768: { slidesPerView: 3 },
+                1024: { slidesPerView: 4 },
             },
         });
 
@@ -1111,7 +1525,7 @@
             spaceBetween: 30,
             loop: true,
             autoplay: {
-                delay: 4000,
+                delay: 3500,
                 disableOnInteraction: false,
             },
             pagination: {
@@ -1123,12 +1537,8 @@
                 prevEl: '.swiper-button-prev',
             },
             breakpoints: {
-                768: {
-                    slidesPerView: 2,
-                },
-                1024: {
-                    slidesPerView: 3,
-                },
+                768: { slidesPerView: 2 },
+                1024: { slidesPerView: 3 },
             },
         });
 
@@ -1138,7 +1548,7 @@
             spaceBetween: 30,
             loop: true,
             autoplay: {
-                delay: 5000,
+                delay: 4000,
                 disableOnInteraction: false,
             },
             pagination: {
@@ -1146,14 +1556,60 @@
                 clickable: true,
             },
             breakpoints: {
-                768: {
-                    slidesPerView: 2,
-                },
-                1024: {
-                    slidesPerView: 3,
-                },
+                768: { slidesPerView: 2 },
+                1024: { slidesPerView: 3 },
             },
         });
+
+        // Easter Egg - Konami Code
+        let konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+        let konamiIndex = 0;
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === konamiCode[konamiIndex]) {
+                konamiIndex++;
+                if (konamiIndex === konamiCode.length) {
+                    activateEasterEgg();
+                    konamiIndex = 0;
+                }
+            } else {
+                konamiIndex = 0;
+            }
+        });
+
+        function activateEasterEgg() {
+            // Crear confeti
+            for (let i = 0; i < 100; i++) {
+                createConfetti();
+            }
+        }
+
+        function createConfetti() {
+            const confetti = document.createElement('div');
+            confetti.style.position = 'fixed';
+            confetti.style.width = '10px';
+            confetti.style.height = '10px';
+            confetti.style.backgroundColor = ['#16a34a', '#dc2626', '#fbbf24', '#3b82f6'][Math.floor(Math.random() * 4)];
+            confetti.style.left = Math.random() * 100 + 'vw';
+            confetti.style.top = '-10px';
+            confetti.style.opacity = '1';
+            confetti.style.zIndex = '9999';
+            document.body.appendChild(confetti);
+            
+            let pos = -10;
+            let opacity = 1;
+            const fall = setInterval(() => {
+                if (pos >= window.innerHeight || opacity <= 0) {
+                    clearInterval(fall);
+                    confetti.remove();
+                } else {
+                    pos += 5;
+                    opacity -= 0.01;
+                    confetti.style.top = pos + 'px';
+                    confetti.style.opacity = opacity;
+                }
+            }, 20);
+        }
     </script>
 </body>
 </html>
