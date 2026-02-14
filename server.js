@@ -1646,6 +1646,38 @@ app.post('/api/documentos/subir', authenticateToken, upload.single('documento'),
             `);
 
         const documentoId = result.recordset[0].id;
+        
+        // Si el documento está relacionado con un hijo, verificar si hay postulación con documentos solicitados
+        if (hijo_id) {
+            console.log('📝 Verificando postulación para hijo_id:', hijo_id);
+            
+            const postulacionResult = await pool.request()
+                .input('hijo_id', sql.Int, hijo_id)
+                .input('usuario_id', sql.Int, usuario_id)
+                .query(`
+                    SELECT id, estado_postulacion 
+                    FROM postulaciones_hijos 
+                    WHERE hijo_id = @hijo_id 
+                    AND usuario_id = @usuario_id
+                    AND estado_postulacion = 'documentos_solicitados'
+                `);
+            
+            if (postulacionResult.recordset.length > 0) {
+                const postulacionId = postulacionResult.recordset[0].id;
+                console.log('✅ Postulación encontrada, actualizando estado a documentos_recibidos');
+                
+                // Actualizar estado de la postulación
+                await pool.request()
+                    .input('postulacion_id', sql.Int, postulacionId)
+                    .query(`
+                        UPDATE postulaciones_hijos
+                        SET estado_postulacion = 'documentos_recibidos'
+                        WHERE id = @postulacion_id
+                    `);
+                
+                console.log('✅ Estado actualizado correctamente');
+            }
+        }
 
         res.json({
             success: true,
