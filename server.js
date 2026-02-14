@@ -2377,7 +2377,7 @@ app.put('/api/admin/postulaciones/:id/solicitar-documentos', authenticateToken, 
         await poolConnection.request()
             .input('id', sql.Int, id)
             .input('documentos', sql.VarChar(1000), JSON.stringify(documentos_solicitados))
-            .input('mensaje', sql.NText, mensaje || 'Por favor sube los siguientes documentos para continuar con tu postulación')
+            .input('mensaje', sql.Text, mensaje || 'Por favor sube los siguientes documentos para continuar con tu postulación')
             .query(`
                 UPDATE postulaciones_hijos
                 SET 
