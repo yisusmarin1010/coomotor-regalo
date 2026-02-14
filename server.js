@@ -1843,11 +1843,26 @@ app.get('/api/documentos/descargar/:id', authenticateToken, async (req, res) => 
             });
         }
 
+        console.log('📥 Intentando descargar documento:', {
+            id: documento.id,
+            nombre: documento.nombre_archivo,
+            ruta_guardada: documento.ruta_archivo,
+            ruta_absoluta: path.resolve(documento.ruta_archivo),
+            existe: fs.existsSync(documento.ruta_archivo)
+        });
+
         // Verificar que el archivo existe
         if (!fs.existsSync(documento.ruta_archivo)) {
+            console.error('❌ Archivo no encontrado:', documento.ruta_archivo);
+            console.error('📂 Archivos en uploads:', fs.readdirSync(uploadsDir));
+            
             return res.status(404).json({
                 success: false,
-                error: 'Archivo no encontrado en el servidor'
+                error: 'Archivo no encontrado en el servidor',
+                debug: {
+                    ruta: documento.ruta_archivo,
+                    existe: false
+                }
             });
         }
 
