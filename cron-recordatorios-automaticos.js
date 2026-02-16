@@ -23,10 +23,11 @@ class RecordatoriosAutomaticos {
             console.log('\n📄 [CRON] Ejecutando recordatorio de documentos pendientes...');
             await this.enviarRecordatorioDocumentos();
         }, {
-            scheduled: true,
+            scheduled: false,
             timezone: "America/Bogota"
         });
 
+        job.start();
         this.jobs.push({ name: 'recordatorio_documentos', job });
         console.log('✅ Recordatorio de documentos programado: cada 3 días a las 9:00 AM');
     }
@@ -89,10 +90,11 @@ class RecordatoriosAutomaticos {
             console.log('\n⏰ [CRON] Ejecutando alerta de plazo próximo a vencer...');
             await this.enviarAlertaPlazo();
         }, {
-            scheduled: true,
+            scheduled: false,
             timezone: "America/Bogota"
         });
 
+        job.start();
         this.jobs.push({ name: 'alerta_plazo', job });
         console.log('✅ Alerta de plazo programada: diariamente a las 8:00 AM');
     }
@@ -176,10 +178,11 @@ class RecordatoriosAutomaticos {
             console.log('\n🎁 [CRON] Ejecutando confirmación de entrega de regalos...');
             await this.enviarConfirmacionEntrega();
         }, {
-            scheduled: true,
+            scheduled: false,
             timezone: "America/Bogota"
         });
 
+        job.start();
         this.jobs.push({ name: 'confirmacion_entrega', job });
         console.log('✅ Confirmación de entrega programada: diariamente a las 10:00 AM en diciembre');
     }
@@ -244,10 +247,11 @@ class RecordatoriosAutomaticos {
             console.log('\n📋 [CRON] Ejecutando envío de encuesta de satisfacción...');
             await this.enviarEncuestaSatisfaccion();
         }, {
-            scheduled: true,
+            scheduled: false,
             timezone: "America/Bogota"
         });
 
+        job.start();
         this.jobs.push({ name: 'encuesta_satisfaccion', job });
         console.log('✅ Encuesta de satisfacción programada: diariamente a las 6:00 PM en dic-ene');
     }
