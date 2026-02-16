@@ -694,9 +694,6 @@ app.post('/api/auth/recuperar-password/solicitar', async (req, res) => {
         });
     }
 });
-        });
-    }
-});
 
 // Verificar código de recuperación
 app.post('/api/auth/recuperar-password/verificar', async (req, res) => {
