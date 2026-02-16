@@ -1003,9 +1003,12 @@ async function cargarContactos(filtros = {}) {
         if (response.ok) {
             const result = await response.json();
             if (result.success) {
+                // Filtrar mensajes resueltos - no mostrarlos en la lista
+                const contactosFiltrados = result.data.filter(contacto => contacto.estado !== 'resuelto');
+                
                 // Guardar en variable global para acceso posterior
-                window.contactosData = result.data;
-                mostrarListaContactos(result.data);
+                window.contactosData = contactosFiltrados;
+                mostrarListaContactos(contactosFiltrados);
             } else {
                 throw new Error(result.message);
             }
