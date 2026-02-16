@@ -2088,3 +2088,56 @@ function mostrarDocumentos(documentos) {
 
 
 
+
+
+// ============================================
+// SISTEMA DE CELEBRACIÓN AL APROBAR
+// ============================================
+
+// Variable para rastrear postulaciones ya celebradas
+let postulacionesCelebradas = JSON.parse(localStorage.getItem('postulaciones_celebradas') || '[]');
+
+// Verificar postulaciones aprobadas y celebrar
+function verificarYCelebrarAprobaciones() {
+    if (!hijosRegistrados || hijosRegistrados.length === 0) return;
+    
+    hijosRegistrados.forEach(hijo => {
+        // Si tiene postulación aprobada y no la hemos celebrado
+        if (hijo.estado_postulacion === 'aprobada' && 
+            hijo.postulacion_id && 
+            !postulacionesCelebradas.includes(hijo.postulacion_id)) {
+            
+            console.log(`🎉 ¡Postulación aprobada detectada para ${hijo.nombres}!`);
+            
+            // Marcar como celebrada
+            postulacionesCelebradas.push(hijo.postulacion_id);
+            localStorage.setItem('postulaciones_celebradas', JSON.stringify(postulacionesCelebradas));
+            
+            // Lanzar celebración después de un pequeño delay
+            setTimeout(() => {
+                if (typeof celebrationEffects !== 'undefined') {
+                    celebrationEffects.celebrate(`${hijo.nombres} ${hijo.apellidos}`, hijo.postulacion_id);
+                } else {
+                    console.warn('⚠️ celebration-effects.js no está cargado');
+                }
+            }, 500);
+        }
+    });
+}
+
+// Modificar la función cargarHijos original para incluir verificación de celebración
+const cargarHijosOriginal = cargarHijos;
+cargarHijos = async function() {
+    await cargarHijosOriginal();
+    // Verificar celebraciones después de cargar
+    setTimeout(() => {
+        verificarYCelebrarAprobaciones();
+    }, 1000);
+};
+
+// También verificar cada 30 segundos por si se aprueba mientras el usuario está en la página
+setInterval(() => {
+    if (document.visibilityState === 'visible') {
+        cargarHijos();
+    }
+}, 30000);
