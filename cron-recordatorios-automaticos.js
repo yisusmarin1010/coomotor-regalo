@@ -11,6 +11,7 @@ class RecordatoriosAutomaticos {
     constructor(poolConnection) {
         this.pool = poolConnection;
         this.jobs = [];
+        this.jobsStarted = false;
         console.log('🤖 Sistema de Recordatorios Automáticos inicializado');
     }
 
@@ -324,6 +325,7 @@ class RecordatoriosAutomaticos {
         this.iniciarConfirmacionEntrega();
         this.iniciarEncuestaSatisfaccion();
         
+        this.jobsStarted = true;
         console.log('\n✅ Todos los recordatorios están activos\n');
         this.mostrarEstado();
     }
@@ -337,6 +339,7 @@ class RecordatoriosAutomaticos {
             job.stop();
             console.log(`   ⏸️  ${name} detenido`);
         });
+        this.jobsStarted = false;
         console.log('✅ Todos los recordatorios detenidos\n');
     }
 
@@ -346,11 +349,15 @@ class RecordatoriosAutomaticos {
     mostrarEstado() {
         console.log('📊 Estado de Recordatorios Automáticos:');
         console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-        this.jobs.forEach(({ name, job }) => {
-            const status = job.getStatus();
-            const estado = status === 'stopped' || status === 'destroyed' ? '🔴 Inactivo' : '🟢 Activo';
-            console.log(`   ${estado} - ${name} (${status})`);
-        });
+        
+        if (!this.jobsStarted) {
+            console.log('   🔴 Sistema detenido');
+        } else {
+            this.jobs.forEach(({ name }) => {
+                console.log(`   🟢 Activo - ${name}`);
+            });
+        }
+        
         console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
     }
 }
