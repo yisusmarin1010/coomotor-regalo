@@ -34,31 +34,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // mostrarBienvenida(); // Temporalmente deshabilitado
     
     console.log('✅ Dashboard inicializado');
-    
-    // Cargar mensajes de contacto después de un momento
-    setTimeout(() => {
-        if (typeof cargarMisContactos === 'function') {
-            cargarMisContactos();
-        }
-    }, 2000);
-    
-    // Cargar documentos solicitados
-    setTimeout(() => {
-        if (typeof cargarDocumentosSolicitados === 'function') {
-            cargarDocumentosSolicitados();
-        }
-    }, 1000);
-    
-    // Inicializar Socket.IO en segundo plano después de 2 segundos
-    setTimeout(() => {
-        if (typeof inicializarChat === 'function') {
-            inicializarChat();
-            
-            // Actualizar badge de mensajes no leídos cada 30 segundos
-            setInterval(actualizarBadgeMensajesNoLeidos, 30000);
-            actualizarBadgeMensajesNoLeidos();
-        }
-    }, 2000);
 });
 
 // Mostrar bienvenida personalizada
@@ -1905,6 +1880,16 @@ function mostrarAlertaDocumentosSolicitados(postulaciones) {
     alertContainer.innerHTML = html;
 }
 
+// Cargar mensajes al iniciar el dashboard
+document.addEventListener('DOMContentLoaded', function() {
+    // Esperar un poco para que se cargue el usuario
+    setTimeout(() => {
+        if (usuarioActual) {
+            cargarMisMensajes();
+        }
+    }, 1000);
+});
+
 
 // ============================================
 // VERIFICACIÓN DE DOCUMENTOS SOLICITADOS
@@ -2102,52 +2087,4 @@ function mostrarDocumentos(documentos) {
 }
 
 
-// ============================================
-// FUNCIONES DE CHAT
-// ============================================
 
-// Toggle del modal de chat
-function toggleChatModal() {
-    const modal = document.getElementById('modalChat');
-    const bsModal = new bootstrap.Modal(modal);
-    bsModal.show();
-    
-    // Inicializar chat si no está inicializado
-    if (!window.socket || !window.socket.connected) {
-        inicializarChat();
-    } else {
-        cargarConversaciones();
-    }
-    
-    // Solicitar permiso para notificaciones
-    solicitarPermisoNotificaciones();
-}
-
-// Actualizar badge de mensajes no leídos
-async function actualizarBadgeMensajesNoLeidos() {
-    try {
-        const response = await fetch('/api/chat/no-leidos', {
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('coomotor_token')}`,
-                'Content-Type': 'application/json'
-            }
-        });
-        
-        if (response.ok) {
-            const result = await response.json();
-            if (result.success) {
-                const badge = document.getElementById('badgeMensajesNoLeidos');
-                if (badge) {
-                    if (result.data.total > 0) {
-                        badge.textContent = result.data.total;
-                        badge.style.display = 'block';
-                    } else {
-                        badge.style.display = 'none';
-                    }
-                }
-            }
-        }
-    } catch (error) {
-        console.error('Error al actualizar badge de mensajes:', error);
-    }
-}

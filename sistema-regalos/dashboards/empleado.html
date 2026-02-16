@@ -8,7 +8,6 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <link href="../css/chat-styles.css?v=10.0" rel="stylesheet">
     <style>
         :root {
             --primary: #16a34a;
@@ -662,42 +661,6 @@
         ::-webkit-scrollbar-thumb:hover {
             background: var(--primary-dark);
         }
-
-        /* Botón flotante de chat */
-        .btn-chat-flotante {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #c41e3a 0%, #8b1429 100%);
-            color: white;
-            border: none;
-            box-shadow: 0 4px 20px rgba(196, 30, 58, 0.4);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            z-index: 1000;
-            animation: pulse-chat 2s infinite;
-        }
-
-        .btn-chat-flotante:hover {
-            transform: scale(1.1);
-            box-shadow: 0 6px 30px rgba(196, 30, 58, 0.6);
-        }
-
-        @keyframes pulse-chat {
-            0%, 100% {
-                box-shadow: 0 4px 20px rgba(196, 30, 58, 0.4);
-            }
-            50% {
-                box-shadow: 0 4px 30px rgba(196, 30, 58, 0.7);
-            }
-        }
     </style>
 </head>
 <body>
@@ -907,135 +870,13 @@
         </div>
     </div>
 
-    <!-- Botón flotante para chat -->
-    <button class="btn-chat-flotante" onclick="toggleChatModal()" title="Chat con Administrador">
-        <i class="bi bi-chat-heart-fill"></i>
-        <span class="badge bg-danger rounded-pill position-absolute top-0 end-0" id="badgeMensajesNoLeidos" style="display: none;">0</span>
-    </button>
-
-    <!-- Modal de chat -->
-    <div class="modal fade" id="modalChat" tabindex="-1" data-bs-backdrop="static">
-        <div class="modal-dialog modal-xl modal-dialog-centered">
-            <div class="modal-content" style="height: 80vh;">
-                <div class="modal-header">
-                    <h5 class="modal-title">
-                        <i class="bi bi-chat-heart-fill me-2"></i>Chat con Administrador
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body p-0">
-                    <div class="chat-container" style="height: 100%;">
-                        <!-- Sidebar de conversaciones -->
-                        <div class="chat-sidebar">
-                            <div class="chat-sidebar-header">
-                                <h5><i class="bi bi-chat-dots me-2"></i>Conversaciones</h5>
-                                <button class="btn btn-sm btn-light" onclick="mostrarModalNuevaConversacion()" title="Nueva conversación">
-                                    <i class="bi bi-plus-circle"></i>
-                                </button>
-                            </div>
-                            <div class="conversaciones-lista" id="listaConversaciones">
-                                <div class="text-center p-4 text-muted">
-                                    <div class="spinner-border spinner-border-sm" role="status"></div>
-                                    <p class="mt-2 mb-0">Cargando conversaciones...</p>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Panel principal del chat -->
-                        <div class="chat-main">
-                            <!-- Estado vacío -->
-                            <div class="chat-vacio" id="chatVacio">
-                                <i class="bi bi-chat-dots"></i>
-                                <p>Selecciona una conversación o inicia una nueva</p>
-                                <button class="btn btn-primary mt-3" onclick="mostrarModalNuevaConversacion()">
-                                    <i class="bi bi-plus-circle me-2"></i>Contactar Administrador
-                                </button>
-                            </div>
-                            
-                            <!-- Chat activo -->
-                            <div id="chatActivo" class="d-none" style="display: flex; flex-direction: column; height: 100%;">
-                                <div class="chat-header" id="chatHeader">
-                                    <!-- Se llenará dinámicamente -->
-                                </div>
-                                
-                                <div class="chat-messages" id="mensajesContainer">
-                                    <!-- Mensajes se cargarán aquí -->
-                                </div>
-                                
-                                <div class="chat-input">
-                                    <div class="archivo-preview d-none" id="archivoPreview">
-                                        <i class="bi bi-paperclip"></i>
-                                        <span id="nombreArchivoPreview"></span>
-                                        <button type="button" onclick="cancelarArchivo()">
-                                            <i class="bi bi-x"></i>
-                                        </button>
-                                    </div>
-                                    <div class="chat-input-container">
-                                        <textarea 
-                                            id="mensajeInput" 
-                                            placeholder="Escribe un mensaje..." 
-                                            rows="1"
-                                            onkeydown="if(event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); enviarMensaje(); }"
-                                            oninput="onInputEscribiendo()"></textarea>
-                                        <div class="chat-input-buttons">
-                                            <label for="archivoInput" class="btn-chat btn-chat-adjuntar" title="Adjuntar archivo">
-                                                <i class="bi bi-paperclip"></i>
-                                            </label>
-                                            <input type="file" id="archivoInput" style="display: none;" onchange="onArchivoSeleccionado(this)" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx">
-                                            <button class="btn-chat btn-chat-enviar" onclick="enviarMensaje()" title="Enviar mensaje">
-                                                <i class="bi bi-send-fill"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div id="modalsContainer"></div>
 
-    <!-- Modal para nueva conversación -->
-    <div class="modal fade" id="modalNuevaConversacion" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">
-                        <i class="bi bi-chat-plus me-2"></i>Contactar Administrador
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <!-- Se llenará dinámicamente -->
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal para ver imagen grande -->
-    <div class="modal fade" id="modalImagenGrande" tabindex="-1">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body text-center p-0">
-                    <img src="" alt="Imagen" style="width: 100%; height: auto;">
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script src="../js/auth-global.js?v=10.0"></script>
-    <script src="../js/documentos.js?v=10.0"></script>
-    <script src="../js/chat.js?v=10.0"></script>
-    <script src="../js/dashboard-empleado.js?v=10.0"></script>
+    <script src="../js/auth-global.js?v=3.0"></script>
+    <script src="../js/documentos.js?v=3.0"></script>
+    <script src="../js/dashboard-empleado.js?v=3.0"></script>
     <script>
         // Initialize AOS
         AOS.init({

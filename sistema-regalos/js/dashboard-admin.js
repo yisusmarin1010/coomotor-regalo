@@ -10,35 +10,6 @@ document.addEventListener('DOMContentLoaded', function() {
     verificarAutenticacion();
     cargarEstadisticas();
     mostrarSeccion('inicio');
-    
-    // Inicializar Socket.IO en segundo plano después de 2 segundos
-    setTimeout(() => {
-        if (typeof inicializarChat === 'function') {
-            inicializarChat();
-            
-            // Actualizar badge de mensajes no leídos cada 30 segundos
-            setInterval(actualizarBadgeMensajesNoLeidos, 30000);
-            actualizarBadgeMensajesNoLeidos();
-        }
-    }, 2000);
-    
-    // Búsqueda en tiempo real de usuarios
-    const buscarInput = document.getElementById('buscarUsuario');
-    if (buscarInput) {
-        buscarInput.addEventListener('input', function() {
-            const termino = this.value.toLowerCase();
-            const filas = document.querySelectorAll('#usuariosContainer tbody tr');
-            
-            filas.forEach(fila => {
-                const texto = fila.textContent.toLowerCase();
-                if (texto.includes(termino)) {
-                    fila.style.display = '';
-                } else {
-                    fila.style.display = 'none';
-                }
-            });
-        });
-    }
 });
 
 // Verificar autenticación
@@ -160,9 +131,6 @@ function mostrarSeccion(seccion) {
                 seccionUsuarios.style.display = 'block';
                 cargarUsuarios();
             }
-            break;
-        case 'chat':
-            mostrarChat();
             break;
         default:
             mostrarInicio();
@@ -2100,132 +2068,5 @@ async function eliminarAprobacion(postulacionId, nombreHijo) {
     } catch (error) {
         console.error('Error:', error);
         mostrarAlerta('danger', 'Error de conexión');
-    }
-}
-
-
-// ============================================
-// SECCIÓN DE CHAT EN TIEMPO REAL
-// ============================================
-
-function mostrarChat() {
-    const container = document.getElementById('seccionesContainer');
-    container.innerHTML = `
-        <div class="action-card">
-            <h3 class="action-title mb-4">
-                <i class="bi bi-chat-heart-fill me-2"></i>
-                Chat en Tiempo Real
-            </h3>
-            
-            <div class="chat-container">
-                <!-- Sidebar de conversaciones -->
-                <div class="chat-sidebar">
-                    <div class="chat-sidebar-header">
-                        <h5><i class="bi bi-chat-dots me-2"></i>Conversaciones</h5>
-                        <button class="btn btn-sm btn-light" onclick="mostrarModalNuevaConversacion()" title="Nueva conversación">
-                            <i class="bi bi-plus-circle"></i>
-                        </button>
-                    </div>
-                    <div class="chat-search">
-                        <input type="text" placeholder="Buscar conversación..." id="buscarConversacion">
-                    </div>
-                    <div class="conversaciones-lista" id="listaConversaciones">
-                        <div class="text-center p-4 text-muted">
-                            <div class="spinner-border spinner-border-sm" role="status"></div>
-                            <p class="mt-2 mb-0">Cargando conversaciones...</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Panel principal del chat -->
-                <div class="chat-main">
-                    <!-- Estado vacío -->
-                    <div class="chat-vacio" id="chatVacio">
-                        <i class="bi bi-chat-dots"></i>
-                        <p>Selecciona una conversación para comenzar</p>
-                        <button class="btn btn-primary mt-3" onclick="mostrarModalNuevaConversacion()">
-                            <i class="bi bi-plus-circle me-2"></i>Iniciar Chat
-                        </button>
-                    </div>
-                    
-                    <!-- Chat activo -->
-                    <div id="chatActivo" class="d-none" style="display: flex; flex-direction: column; height: 100%;">
-                        <div class="chat-header" id="chatHeader">
-                            <!-- Se llenará dinámicamente -->
-                        </div>
-                        
-                        <div class="chat-messages" id="mensajesContainer">
-                            <!-- Mensajes se cargarán aquí -->
-                        </div>
-                        
-                        <div class="chat-input">
-                            <div class="archivo-preview d-none" id="archivoPreview">
-                                <i class="bi bi-paperclip"></i>
-                                <span id="nombreArchivoPreview"></span>
-                                <button type="button" onclick="cancelarArchivo()">
-                                    <i class="bi bi-x"></i>
-                                </button>
-                            </div>
-                            <div class="chat-input-container">
-                                <textarea 
-                                    id="mensajeInput" 
-                                    placeholder="Escribe un mensaje..." 
-                                    rows="1"
-                                    onkeydown="if(event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); enviarMensaje(); }"
-                                    oninput="onInputEscribiendo()"></textarea>
-                                <div class="chat-input-buttons">
-                                    <label for="archivoInput" class="btn-chat btn-chat-adjuntar" title="Adjuntar archivo">
-                                        <i class="bi bi-paperclip"></i>
-                                    </label>
-                                    <input type="file" id="archivoInput" style="display: none;" onchange="onArchivoSeleccionado(this)" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx">
-                                    <button class="btn-chat btn-chat-enviar" onclick="enviarMensaje()" title="Enviar mensaje">
-                                        <i class="bi bi-send-fill"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    `;
-    
-    // Inicializar chat si no está inicializado
-    if (!window.socket || !window.socket.connected) {
-        inicializarChat();
-    } else {
-        cargarConversaciones();
-    }
-    
-    // Solicitar permiso para notificaciones
-    solicitarPermisoNotificaciones();
-}
-
-// Actualizar badge de mensajes no leídos
-async function actualizarBadgeMensajesNoLeidos() {
-    try {
-        const response = await fetch('/api/chat/no-leidos', {
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('coomotor_token')}`,
-                'Content-Type': 'application/json'
-            }
-        });
-        
-        if (response.ok) {
-            const result = await response.json();
-            if (result.success) {
-                const badge = document.getElementById('badgeMensajesNoLeidos');
-                if (badge) {
-                    if (result.data.total > 0) {
-                        badge.textContent = result.data.total;
-                        badge.style.display = 'block';
-                    } else {
-                        badge.style.display = 'none';
-                    }
-                }
-            }
-        }
-    } catch (error) {
-        console.error('Error al actualizar badge de mensajes:', error);
     }
 }
