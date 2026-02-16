@@ -89,16 +89,19 @@ async function enviarCodigo() {
         
         if (result.success) {
             userEmail = email;
-            mostrarAlerta('✅ Código enviado a tu correo electrónico', 'success');
+            // Mostrar emoji feliz con confetti
+            mostrarEmojiFeedback('success', '🎉', '¡Perfecto!', 'Código enviado exitosamente. ¡Revisa tu correo!');
+            crearConfetti();
             setTimeout(() => {
                 irAPaso(2);
-            }, 1500);
+            }, 2500);
         } else {
-            mostrarAlerta(result.error || 'Error al enviar el código', 'danger');
+            // Mostrar emoji enojado/triste
+            mostrarEmojiFeedback('error', '😠', '¡Oops!', 'Este correo no está vinculado a ninguna cuenta. Verifica e intenta nuevamente.');
         }
     } catch (error) {
         console.error('Error:', error);
-        mostrarAlerta('Error de conexión. Intenta nuevamente.', 'danger');
+        mostrarEmojiFeedback('error', '😰', '¡Error!', 'No pudimos conectar con el servidor. Intenta más tarde.');
     }
 }
 
@@ -286,5 +289,56 @@ function mostrarAlerta(mensaje, tipo) {
         setTimeout(() => {
             alertContainer.innerHTML = '';
         }, 5000);
+    }
+}
+
+// ============================================
+// FUNCIONES DE EMOJI FEEDBACK DINÁMICO
+// ============================================
+
+function mostrarEmojiFeedback(tipo, emoji, titulo, mensaje) {
+    // Crear elemento de feedback
+    const feedbackDiv = document.createElement('div');
+    feedbackDiv.className = `emoji-feedback ${tipo}`;
+    feedbackDiv.innerHTML = `
+        <span class="emoji-icon">${emoji}</span>
+        <div class="emoji-message">
+            <h3>${titulo}</h3>
+            <p>${mensaje}</p>
+        </div>
+    `;
+    
+    document.body.appendChild(feedbackDiv);
+    
+    // Activar animación
+    setTimeout(() => {
+        feedbackDiv.classList.add('show');
+    }, 10);
+    
+    // Remover después de la animación
+    setTimeout(() => {
+        feedbackDiv.remove();
+    }, 2500);
+}
+
+function crearConfetti() {
+    const colores = ['#059669', '#fbbf24', '#dc2626', '#3b82f6', '#8b5cf6'];
+    const cantidad = 50;
+    
+    for (let i = 0; i < cantidad; i++) {
+        setTimeout(() => {
+            const confetti = document.createElement('div');
+            confetti.className = 'confetti';
+            confetti.style.left = Math.random() * 100 + 'vw';
+            confetti.style.background = colores[Math.floor(Math.random() * colores.length)];
+            confetti.style.animationDelay = Math.random() * 0.5 + 's';
+            confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+            
+            document.body.appendChild(confetti);
+            
+            setTimeout(() => {
+                confetti.remove();
+            }, 3000);
+        }, i * 30);
     }
 }
