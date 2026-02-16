@@ -3,31 +3,31 @@
 // Footer compacto y simple para login, registro y recuperar contraseña
 // ============================================
 
-// HTML del Footer Minimalista
+// HTML del Footer Minimalista - PEGADO AL FONDO
 const footerAuthHTML = `
-    <!-- Footer Minimalista para Auth -->
-    <footer style="background: #0a0f1e; color: white; padding: 2rem 0; margin-top: 3rem;">
+    <!-- Footer Minimalista para Auth - Pegado al fondo -->
+    <footer style="background: #0a0f1e; color: white; padding: 1.5rem 0; margin-top: auto; width: 100%;">
         <div class="container">
             <div class="row align-items-center">
                 <!-- Copyright -->
-                <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
-                    <p style="color: rgba(255, 255, 255, 0.7); font-size: 0.85rem; margin: 0;">
+                <div class="col-md-6 text-center text-md-start mb-2 mb-md-0">
+                    <p style="color: rgba(255, 255, 255, 0.7); font-size: 0.8rem; margin: 0;">
                         &copy; <span id="currentYearAuth">2026</span> <strong>COOMOTOR</strong>. Todos los derechos reservados.
                     </p>
                 </div>
                 
                 <!-- Enlaces Legales -->
                 <div class="col-md-6 text-center text-md-end">
-                    <div class="d-flex justify-content-center justify-content-md-end gap-3 flex-wrap">
-                        <a href="#" onclick="mostrarPoliticasPrivacidad(); return false;" style="color: rgba(255, 255, 255, 0.6); text-decoration: none; font-size: 0.85rem; transition: color 0.3s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255, 255, 255, 0.6)'">
+                    <div class="d-flex justify-content-center justify-content-md-end gap-2 flex-wrap" style="font-size: 0.8rem;">
+                        <a href="#" onclick="mostrarPoliticasPrivacidad(); return false;" style="color: rgba(255, 255, 255, 0.6); text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255, 255, 255, 0.6)'">
                             Privacidad
                         </a>
                         <span style="color: rgba(255, 255, 255, 0.3);">|</span>
-                        <a href="#" onclick="mostrarTerminosCondiciones(); return false;" style="color: rgba(255, 255, 255, 0.6); text-decoration: none; font-size: 0.85rem; transition: color 0.3s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255, 255, 255, 0.6)'">
+                        <a href="#" onclick="mostrarTerminosCondiciones(); return false;" style="color: rgba(255, 255, 255, 0.6); text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255, 255, 255, 0.6)'">
                             Términos
                         </a>
                         <span style="color: rgba(255, 255, 255, 0.3);">|</span>
-                        <a href="#" onclick="mostrarProteccionDatos(); return false;" style="color: rgba(255, 255, 255, 0.6); text-decoration: none; font-size: 0.85rem; transition: color 0.3s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255, 255, 255, 0.6)'">
+                        <a href="#" onclick="mostrarProteccionDatos(); return false;" style="color: rgba(255, 255, 255, 0.6); text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255, 255, 255, 0.6)'">
                             Protección de Datos
                         </a>
                     </div>
@@ -252,6 +252,12 @@ function mostrarHabeasData() {
 
 // Función para insertar el footer minimalista
 function insertarFooterAuth() {
+    // Asegurar que el body tenga flexbox para pegar el footer al fondo
+    document.body.style.display = 'flex';
+    document.body.style.flexDirection = 'column';
+    document.body.style.minHeight = '100vh';
+    document.body.style.margin = '0';
+    
     // Buscar si ya existe un footer
     const footerExistente = document.querySelector('footer');
     
