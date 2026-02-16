@@ -429,7 +429,8 @@ app.post('/api/usuarios/register', async (req, res) => {
             { expiresIn: '7d' }
         );
         
-        console.log(`✅ Nuevo usuario registrado: ${nuevoUsuario.nombres} ${nuevoUsuario.apellidos} (${nuevoUsuario.correo})`);
+        console.log(`✅ Nuevo usuario registrado: ${nuevoUsuario.nombres} ${nuevoUsuario.apellidos}`);
+        console.log(`📧 Email: ${nuevoUsuario.correo}`);
         
         res.status(201).json({
             success: true,

@@ -20,7 +20,7 @@ class NotificationService {
             }
             sgMail.setApiKey(apiKey);
             this.initialized = true;
-            console.log('📧 Servicio de notificaciones inicializado');
+            console.log('✅ Servicio de notificaciones por email inicializado correctamente');
         } catch (error) {
             console.error('❌ Error:', error);
         }
