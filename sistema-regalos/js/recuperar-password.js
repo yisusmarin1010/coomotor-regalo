@@ -79,29 +79,55 @@ async function enviarCodigo() {
     }
     
     try {
-        mostrarAlerta('Enviando código...', 'info');
+        // Obtener el método de envío seleccionado
+        const metodoEnvio = document.querySelector('input[name="metodoEnvio"]:checked').value;
+        
+        let mensajeEnvio = '';
+        if (metodoEnvio === 'email') {
+            mensajeEnvio = 'Enviando código a tu correo...';
+        } else if (metodoEnvio === 'sms') {
+            mensajeEnvio = 'Enviando código a tu celular...';
+        } else {
+            mensajeEnvio = 'Enviando código por email y SMS...';
+        }
+        
+        mostrarAlerta(mensajeEnvio, 'info');
         
         const response = await fetch('/api/auth/recuperar-password/solicitar', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ email })
+            body: JSON.stringify({ 
+                email,
+                metodoEnvio // Enviar el método seleccionado
+            })
         });
         
         const result = await response.json();
         
         if (result.success) {
             userEmail = email;
+            
+            // Mensaje personalizado según el método
+            let mensajeExito = '';
+            if (metodoEnvio === 'email') {
+                mensajeExito = '¡Código enviado a tu correo!';
+            } else if (metodoEnvio === 'sms') {
+                mensajeExito = '¡Código enviado a tu celular!';
+            } else {
+                mensajeExito = '¡Código enviado por email y SMS!';
+            }
+            
             // Mostrar emoji feliz con confetti
-            mostrarEmojiFeedback('success', '🎉', '¡Perfecto!', 'Código enviado exitosamente. ¡Revisa tu correo!');
+            mostrarEmojiFeedback('success', '🎉', '¡Perfecto!', mensajeExito);
             crearConfetti();
             setTimeout(() => {
                 irAPaso(2);
             }, 2500);
         } else {
             // Mostrar emoji enojado/triste
-            mostrarEmojiFeedback('error', '😠', '¡Oops!', 'Este correo no está vinculado a ninguna cuenta. Verifica e intenta nuevamente.');
+            mostrarEmojiFeedback('error', '😠', '¡Oops!', result.error || 'Este correo no está vinculado a ninguna cuenta. Verifica e intenta nuevamente.');
         }
     } catch (error) {
         console.error('Error:', error);

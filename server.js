@@ -585,7 +585,7 @@ function generarCodigoRecuperacion() {
 // Solicitar recuperación de contraseña
 app.post('/api/auth/recuperar-password/solicitar', async (req, res) => {
     try {
-        const { email } = req.body;
+        const { email, metodoEnvio = 'ambos' } = req.body; // Por defecto ambos
         
         if (!email) {
             return res.status(400).json({
@@ -608,6 +608,14 @@ app.post('/api/auth/recuperar-password/solicitar', async (req, res) => {
         
         const usuario = result.recordset[0];
         
+        // Validar que tenga celular si eligió SMS
+        if ((metodoEnvio === 'sms' || metodoEnvio === 'ambos') && !usuario.celular) {
+            return res.status(400).json({
+                success: false,
+                error: 'Tu cuenta no tiene un número de celular registrado. Por favor usa el método de correo electrónico.'
+            });
+        }
+        
         // Generar código de 6 dígitos
         const codigo = generarCodigoRecuperacion();
         
@@ -618,46 +626,68 @@ app.post('/api/auth/recuperar-password/solicitar', async (req, res) => {
             intentos: 0
         });
         
-        // Enviar código por correo usando SendGrid
-        try {
-            const resultado = await notificationService.enviarCodigoRecuperacion({
-                email: usuario.correo,
-                codigo: codigo
-            });
-            
-            if (resultado.success) {
-                console.log(`📧 Código de recuperación enviado a: ${usuario.correo}`);
+        let envioExitoso = false;
+        let mensajeRespuesta = '';
+        
+        // Enviar por EMAIL si se seleccionó email o ambos
+        if (metodoEnvio === 'email' || metodoEnvio === 'ambos') {
+            try {
+                const resultado = await notificationService.enviarCodigoRecuperacion({
+                    email: usuario.correo,
+                    codigo: codigo
+                });
                 
-                // Enviar código también por SMS (no bloqueante)
-                if (usuario.celular) {
-                    const datosSMS = {
-                        celular: usuario.celular,
-                        codigo: codigo
-                    };
-                    
-                    smsService.enviarCodigoRecuperacion(datosSMS)
-                        .then(result => {
-                            if (result.success) {
-                                console.log(`✅ SMS con código enviado a ${usuario.celular}`);
-                            } else {
-                                console.log(`⚠️ No se pudo enviar SMS con código`);
-                            }
-                        })
-                        .catch(err => console.error('Error al enviar SMS:', err));
+                if (resultado.success) {
+                    console.log(`📧 Código de recuperación enviado a: ${usuario.correo}`);
+                    envioExitoso = true;
+                    mensajeRespuesta = 'Código enviado a tu correo electrónico';
                 }
-                
-                res.json({
-                    success: true,
-                    message: 'Código enviado a tu correo electrónico'
-                });
-            } else {
-                res.status(500).json({
-                    success: false,
-                    error: 'Error al enviar el correo. Intenta nuevamente.'
-                });
+            } catch (emailError) {
+                console.error('Error al enviar correo:', emailError);
             }
-        } catch (emailError) {
-            console.error('Error al enviar correo:', emailError);
+        }
+        
+        // Enviar por SMS si se seleccionó sms o ambos
+        if ((metodoEnvio === 'sms' || metodoEnvio === 'ambos') && usuario.celular) {
+            try {
+                const datosSMS = {
+                    celular: usuario.celular,
+                    codigo: codigo
+                };
+                
+                const resultadoSMS = await smsService.enviarCodigoRecuperacion(datosSMS);
+                
+                if (resultadoSMS.success) {
+                    console.log(`✅ SMS con código enviado a ${usuario.celular}`);
+                    envioExitoso = true;
+                    
+                    if (metodoEnvio === 'sms') {
+                        mensajeRespuesta = 'Código enviado a tu celular';
+                    } else if (metodoEnvio === 'ambos') {
+                        mensajeRespuesta = 'Código enviado a tu correo y celular';
+                    }
+                } else {
+                    console.log(`⚠️ No se pudo enviar SMS con código: ${resultadoSMS.error}`);
+                }
+            } catch (smsError) {
+                console.error('Error al enviar SMS:', smsError);
+            }
+        }
+        
+        if (envioExitoso) {
+            res.json({
+                success: true,
+                message: mensajeRespuesta
+            });
+        } else {
+            res.status(500).json({
+                success: false,
+                error: 'Error al enviar el código. Intenta nuevamente.'
+            });
+        }
+        
+    } catch (error) {
+        console.error('Error en solicitud de recuperación:', error);
             res.status(500).json({
                 success: false,
                 error: 'Error al enviar el correo. Intenta nuevamente.'
