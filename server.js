@@ -14,6 +14,7 @@ const validator = require('validator');
 const path = require('path');
 const multer = require('multer');
 const fs = require('fs');
+const { BlobServiceClient } = require('@azure/storage-blob');
 require('dotenv').config();
 
 // Importar servicio de notificaciones
@@ -51,6 +52,31 @@ const dbConfig = {
 
 // Variable global para la conexión
 let poolConnection;
+
+// ============================================
+// CONFIGURACIÓN DE AZURE BLOB STORAGE
+// ============================================
+
+const AZURE_STORAGE_CONNECTION_STRING = process.env.AZURE_STORAGE_CONNECTION_STRING;
+const CONTAINER_NAME = process.env.AZURE_STORAGE_CONTAINER_NAME || 'documentos-conductores';
+
+let blobServiceClient;
+let containerClient;
+
+// Inicializar Azure Blob Storage
+if (AZURE_STORAGE_CONNECTION_STRING) {
+    try {
+        blobServiceClient = BlobServiceClient.fromConnectionString(AZURE_STORAGE_CONNECTION_STRING);
+        containerClient = blobServiceClient.getContainerClient(CONTAINER_NAME);
+        console.log('✅ Azure Blob Storage configurado correctamente');
+    } catch (error) {
+        console.error('❌ Error al configurar Azure Blob Storage:', error.message);
+        console.error('⚠️ Los documentos se guardarán localmente (se perderán al reiniciar)');
+    }
+} else {
+    console.warn('⚠️ AZURE_STORAGE_CONNECTION_STRING no configurado');
+    console.warn('⚠️ Los documentos se guardarán localmente (se perderán al reiniciar)');
+}
 
 // ============================================
 // MIDDLEWARES DE SEGURIDAD
@@ -1557,27 +1583,10 @@ app.post('/api/admin/enviar-alertas-plazo', authenticateToken, requireAdmin, asy
 // CONFIGURACIÓN DE MULTER PARA SUBIDA DE ARCHIVOS
 // ============================================
 
-// Crear directorio uploads si no existe
-const uploadsDir = path.join(__dirname, 'uploads');
-if (!fs.existsSync(uploadsDir)) {
-    fs.mkdirSync(uploadsDir, { recursive: true });
-}
+// Usar memoria temporal en lugar de disco (para Azure Blob Storage)
+const storage = multer.memoryStorage();
 
-// Configuración de almacenamiento
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, uploadsDir);
-    },
-    filename: function (req, file, cb) {
-        // Generar nombre único: timestamp-usuarioId-nombreOriginal
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-        const ext = path.extname(file.originalname);
-        const nameWithoutExt = path.basename(file.originalname, ext);
-        cb(null, `${uniqueSuffix}-${nameWithoutExt}${ext}`);
-    }
-});
-
-// Filtro de archivos (solo PDF y PNG)
+// Filtro de archivos (solo PDF, PNG, JPG)
 const fileFilter = (req, file, cb) => {
     const allowedTypes = ['application/pdf', 'image/png', 'image/jpeg', 'image/jpg'];
     if (allowedTypes.includes(file.mimetype)) {
@@ -1616,12 +1625,42 @@ app.post('/api/documentos/subir', authenticateToken, upload.single('documento'),
         // Validar tipo de documento
         const tiposPermitidos = ['registro_civil', 'tarjeta_identidad', 'cedula', 'foto_hijo', 'comprobante_residencia', 'otro'];
         if (!tiposPermitidos.includes(tipo_documento)) {
-            // Eliminar archivo subido
-            fs.unlinkSync(req.file.path);
             return res.status(400).json({
                 success: false,
                 error: 'Tipo de documento no válido'
             });
+        }
+
+        // Generar nombre único para el archivo
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        const ext = path.extname(req.file.originalname);
+        const blobName = `${usuario_id}/${uniqueSuffix}${ext}`;
+        
+        let rutaArchivo = blobName;
+        
+        // Subir a Azure Blob Storage si está configurado
+        if (containerClient) {
+            try {
+                console.log('📤 Subiendo archivo a Azure Blob Storage:', blobName);
+                const blockBlobClient = containerClient.getBlockBlobClient(blobName);
+                
+                await blockBlobClient.uploadData(req.file.buffer, {
+                    blobHTTPHeaders: {
+                        blobContentType: req.file.mimetype
+                    }
+                });
+                
+                rutaArchivo = blockBlobClient.url;
+                console.log('✅ Archivo subido a Azure:', rutaArchivo);
+            } catch (azureError) {
+                console.error('❌ Error al subir a Azure:', azureError);
+                return res.status(500).json({
+                    success: false,
+                    error: 'Error al guardar el archivo en Azure Storage'
+                });
+            }
+        } else {
+            console.warn('⚠️ Azure Blob Storage no configurado, archivo no se guardará permanentemente');
         }
 
         const pool = await sql.connect(dbConfig);
@@ -1631,8 +1670,8 @@ app.post('/api/documentos/subir', authenticateToken, upload.single('documento'),
             .input('usuario_id', sql.Int, usuario_id)
             .input('hijo_id', sql.Int, hijo_id || null)
             .input('tipo_documento', sql.VarChar(50), tipo_documento)
-            .input('nombre_archivo', sql.VarChar(255), req.file.filename)
-            .input('ruta_archivo', sql.VarChar(500), req.file.path)
+            .input('nombre_archivo', sql.VarChar(255), req.file.originalname)
+            .input('ruta_archivo', sql.VarChar(500), rutaArchivo)
             .input('tamano_archivo', sql.Int, req.file.size)
             .input('tipo_mime', sql.VarChar(100), req.file.mimetype)
             .input('descripcion', sql.VarChar(500), descripcion || null)
@@ -1684,7 +1723,7 @@ app.post('/api/documentos/subir', authenticateToken, upload.single('documento'),
             message: 'Documento subido exitosamente',
             data: {
                 id: documentoId,
-                nombre_archivo: req.file.filename,
+                nombre_archivo: req.file.originalname,
                 tipo_documento: tipo_documento,
                 tamano: req.file.size
             }
@@ -1692,10 +1731,6 @@ app.post('/api/documentos/subir', authenticateToken, upload.single('documento'),
 
     } catch (error) {
         console.error('❌ Error al subir documento:', error);
-        // Eliminar archivo si hubo error
-        if (req.file && fs.existsSync(req.file.path)) {
-            fs.unlinkSync(req.file.path);
-        }
         res.status(500).json({
             success: false,
             error: 'Error al subir el documento'
@@ -1846,30 +1881,51 @@ app.get('/api/documentos/descargar/:id', authenticateToken, async (req, res) => 
         console.log('📥 Intentando descargar documento:', {
             id: documento.id,
             nombre: documento.nombre_archivo,
-            ruta_guardada: documento.ruta_archivo,
-            ruta_absoluta: path.resolve(documento.ruta_archivo),
-            existe: fs.existsSync(documento.ruta_archivo)
+            ruta: documento.ruta_archivo
         });
 
-        // Verificar que el archivo existe
-        if (!fs.existsSync(documento.ruta_archivo)) {
-            console.error('❌ Archivo no encontrado:', documento.ruta_archivo);
-            console.error('📂 Archivos en uploads:', fs.readdirSync(uploadsDir));
+        // Si la ruta es una URL de Azure, redirigir
+        if (documento.ruta_archivo.startsWith('https://')) {
+            console.log('✅ Descargando desde Azure Blob Storage');
             
+            // Generar URL con SAS token temporal (válido por 1 hora)
+            if (containerClient) {
+                try {
+                    const blobName = documento.ruta_archivo.split('/').slice(-2).join('/'); // Extraer usuario_id/archivo
+                    const blockBlobClient = containerClient.getBlockBlobClient(blobName);
+                    
+                    // Descargar el blob
+                    const downloadResponse = await blockBlobClient.download();
+                    
+                    // Configurar headers
+                    res.setHeader('Content-Type', documento.tipo_mime);
+                    res.setHeader('Content-Disposition', `attachment; filename="${documento.nombre_archivo}"`);
+                    
+                    // Stream el archivo al cliente
+                    downloadResponse.readableStreamBody.pipe(res);
+                    return;
+                } catch (azureError) {
+                    console.error('❌ Error al descargar de Azure:', azureError);
+                    return res.status(500).json({
+                        success: false,
+                        error: 'Error al descargar el archivo de Azure Storage'
+                    });
+                }
+            }
+        }
+        
+        // Fallback: intentar descargar desde sistema de archivos local (legacy)
+        if (fs.existsSync(documento.ruta_archivo)) {
+            res.setHeader('Content-Type', documento.tipo_mime);
+            res.setHeader('Content-Disposition', `attachment; filename="${documento.nombre_archivo}"`);
+            res.sendFile(path.resolve(documento.ruta_archivo));
+        } else {
+            console.error('❌ Archivo no encontrado:', documento.ruta_archivo);
             return res.status(404).json({
                 success: false,
-                error: 'Archivo no encontrado en el servidor',
-                debug: {
-                    ruta: documento.ruta_archivo,
-                    existe: false
-                }
+                error: 'Archivo no encontrado en el servidor'
             });
         }
-
-        // Enviar archivo
-        res.setHeader('Content-Type', documento.tipo_mime);
-        res.setHeader('Content-Disposition', `attachment; filename="${documento.nombre_archivo}"`);
-        res.sendFile(path.resolve(documento.ruta_archivo));
 
     } catch (error) {
         console.error('❌ Error al descargar documento:', error);
