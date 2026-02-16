@@ -5,9 +5,9 @@
 let currentStep = 1;
 let userEmail = '';
 let recoveryToken = '';
-let captchaNum1 = 0;
-let captchaNum2 = 0;
-let captchaRespuesta = 0;
+let captchaTarget = '';
+let captchaSeleccionados = [];
+let captchaCorrectos = [];
 
 // Inicializar
 document.addEventListener('DOMContentLoaded', function() {
@@ -119,22 +119,25 @@ async function verificarCodigo() {
     }
     
     // Validar CAPTCHA primero
-    const captchaInput = parseInt(document.getElementById('captchaInput').value);
-    
-    if (!captchaInput) {
-        mostrarEmojiFeedback('error', '🤨', '¡Espera!', 'Debes resolver el CAPTCHA de seguridad primero.');
+    if (captchaSeleccionados.length === 0) {
+        mostrarEmojiFeedback('error', '🤨', '¡Espera!', 'Debes completar el CAPTCHA de seguridad primero.');
         return;
     }
     
-    if (captchaInput !== captchaRespuesta) {
-        mostrarEmojiFeedback('error', '😵', '¡CAPTCHA Incorrecto!', 'La respuesta matemática no es correcta. Intenta nuevamente.');
+    // Verificar que todos los seleccionados sean correctos
+    const todosCorrectos = captchaSeleccionados.every(idx => captchaCorrectos.includes(idx));
+    const todosEncontrados = captchaCorrectos.every(idx => captchaSeleccionados.includes(idx));
+    
+    if (!todosCorrectos || !todosEncontrados) {
+        mostrarEmojiFeedback('error', '😵', '¡CAPTCHA Incorrecto!', 'No seleccionaste correctamente. Intenta nuevamente.');
         regenerarCaptcha();
-        document.getElementById('captchaInput').value = '';
         return;
     }
     
     try {
         mostrarAlerta('Verificando código...', 'info');
+        
+        console.log('📤 Enviando código:', code, 'para email:', userEmail);
         
         const response = await fetch('/api/auth/recuperar-password/verificar', {
             method: 'POST',
@@ -143,11 +146,12 @@ async function verificarCodigo() {
             },
             body: JSON.stringify({ 
                 email: userEmail,
-                codigo: code 
+                codigo: code.toString() // Asegurar que sea string
             })
         });
         
         const result = await response.json();
+        console.log('📥 Respuesta del servidor:', result);
         
         if (result.success) {
             recoveryToken = result.token;
@@ -159,7 +163,7 @@ async function verificarCodigo() {
             }, 2500);
         } else {
             // Emoji triste y decepcionado
-            mostrarEmojiFeedback('error', '😢', '¡Código Inválido!', 'El código que ingresaste no es válido o ya expiró. Verifica e intenta nuevamente.');
+            mostrarEmojiFeedback('error', '😢', '¡Código Inválido!', result.error || 'El código que ingresaste no es válido o ya expiró.');
             limpiarCodigo();
             regenerarCaptcha();
         }
@@ -372,31 +376,80 @@ function crearConfetti() {
 }
 
 // ============================================
-// FUNCIONES DE CAPTCHA
+// FUNCIONES DE CAPTCHA VISUAL
 // ============================================
 
 function generarCaptcha() {
-    captchaNum1 = Math.floor(Math.random() * 10) + 1;
-    captchaNum2 = Math.floor(Math.random() * 10) + 1;
-    captchaRespuesta = captchaNum1 + captchaNum2;
+    const emojis = [
+        { emoji: '🎄', nombre: 'árboles de Navidad' },
+        { emoji: '🎁', nombre: 'regalos' },
+        { emoji: '⭐', nombre: 'estrellas' },
+        { emoji: '🎅', nombre: 'Santa Claus' },
+        { emoji: '❄️', nombre: 'copos de nieve' },
+        { emoji: '🔔', nombre: 'campanas' }
+    ];
     
-    const operaciones = ['+', '-', '×'];
-    const operacion = operaciones[Math.floor(Math.random() * operaciones.length)];
+    // Seleccionar emoji objetivo aleatorio
+    const objetivo = emojis[Math.floor(Math.random() * emojis.length)];
+    captchaTarget = objetivo.emoji;
     
-    if (operacion === '-') {
-        // Asegurar que el resultado sea positivo
-        if (captchaNum1 < captchaNum2) {
-            [captchaNum1, captchaNum2] = [captchaNum2, captchaNum1];
+    // Actualizar instrucción
+    document.getElementById('captchaInstruction').textContent = `Selecciona todos los ${objetivo.nombre} ${objetivo.emoji}`;
+    
+    // Generar grid de 9 emojis
+    const grid = document.getElementById('captchaGrid');
+    grid.innerHTML = '';
+    
+    captchaCorrectos = [];
+    captchaSeleccionados = [];
+    
+    // Decidir cuántos correctos (2-4)
+    const cantidadCorrectos = Math.floor(Math.random() * 3) + 2;
+    const posicionesCorrectas = [];
+    
+    while (posicionesCorrectas.length < cantidadCorrectos) {
+        const pos = Math.floor(Math.random() * 9);
+        if (!posicionesCorrectas.includes(pos)) {
+            posicionesCorrectas.push(pos);
         }
-        captchaRespuesta = captchaNum1 - captchaNum2;
-    } else if (operacion === '×') {
-        captchaNum1 = Math.floor(Math.random() * 5) + 1;
-        captchaNum2 = Math.floor(Math.random() * 5) + 1;
-        captchaRespuesta = captchaNum1 * captchaNum2;
     }
     
-    document.getElementById('captchaQuestion').innerHTML = `¿Cuánto es ${captchaNum1} ${operacion} ${captchaNum2}?`;
-    document.getElementById('captchaInput').value = '';
+    // Crear items
+    for (let i = 0; i < 9; i++) {
+        const item = document.createElement('div');
+        item.className = 'captcha-item';
+        item.dataset.index = i;
+        
+        if (posicionesCorrectas.includes(i)) {
+            item.textContent = captchaTarget;
+            captchaCorrectos.push(i);
+        } else {
+            // Emoji diferente aleatorio
+            let emojiDiferente;
+            do {
+                emojiDiferente = emojis[Math.floor(Math.random() * emojis.length)].emoji;
+            } while (emojiDiferente === captchaTarget);
+            item.textContent = emojiDiferente;
+        }
+        
+        item.addEventListener('click', function() {
+            toggleCaptchaItem(parseInt(this.dataset.index), this);
+        });
+        
+        grid.appendChild(item);
+    }
+}
+
+function toggleCaptchaItem(index, element) {
+    if (captchaSeleccionados.includes(index)) {
+        // Deseleccionar
+        captchaSeleccionados = captchaSeleccionados.filter(i => i !== index);
+        element.classList.remove('selected');
+    } else {
+        // Seleccionar
+        captchaSeleccionados.push(index);
+        element.classList.add('selected');
+    }
 }
 
 function regenerarCaptcha() {
