@@ -288,6 +288,56 @@
             text-decoration: underline;
         }
 
+        .sad-emoji {
+            display: inline-block;
+            animation: sadShake 2s ease-in-out infinite;
+            font-size: 1.1rem;
+            margin-left: 0.25rem;
+        }
+
+        @keyframes sadShake {
+            0%, 100% { 
+                transform: translateY(0) rotate(0deg); 
+            }
+            10% { 
+                transform: translateY(-3px) rotate(-5deg); 
+            }
+            20% { 
+                transform: translateY(0) rotate(0deg); 
+            }
+            30% { 
+                transform: translateY(-3px) rotate(5deg); 
+            }
+            40% { 
+                transform: translateY(0) rotate(0deg); 
+            }
+            50% { 
+                transform: translateY(-2px) rotate(-3deg); 
+            }
+            60% { 
+                transform: translateY(0) rotate(0deg); 
+            }
+        }
+
+        .forgot-password a:hover .sad-emoji {
+            animation: sadCry 0.8s ease-in-out infinite;
+        }
+
+        @keyframes sadCry {
+            0%, 100% { 
+                transform: translateY(0) scale(1); 
+            }
+            25% { 
+                transform: translateY(-5px) scale(1.1) rotate(-10deg); 
+            }
+            50% { 
+                transform: translateY(0) scale(0.95); 
+            }
+            75% { 
+                transform: translateY(-3px) scale(1.05) rotate(10deg); 
+            }
+        }
+
         /* Nieve decorativa */
         .snowflake {
             position: absolute;
@@ -372,7 +422,7 @@
 
                     <div class="mb-3 forgot-password">
                         <a href="recuperar-password.html">
-                            ¿Olvidaste tu contraseña? 😥
+                            ¿Olvidaste tu contraseña? <span class="sad-emoji">😥</span>
                         </a>
                     </div>
 
