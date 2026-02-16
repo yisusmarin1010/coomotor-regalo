@@ -24,6 +24,7 @@
     "mssql": "^10.0.1",
     "multer": "^2.0.2",
     "nodemailer": "^8.0.0",
+    "socket.io": "^4.8.3",
     "validator": "^13.11.0"
   },
   "devDependencies": {

@@ -15,6 +15,8 @@ const path = require('path');
 const multer = require('multer');
 const fs = require('fs');
 const { BlobServiceClient } = require('@azure/storage-blob');
+const http = require('http');
+const socketIO = require('socket.io');
 require('dotenv').config();
 
 // Importar servicio de notificaciones
@@ -23,6 +25,31 @@ const notificationService = require('./email-service-notifications');
 // Crear app Express
 const app = express();
 const PORT = process.env.PORT || 10000; // Render usa variable PORT dinámica
+
+// Crear servidor HTTP para Socket.IO
+const server = http.createServer(app);
+
+// Configurar Socket.IO con CORS
+const io = socketIO(server, {
+    cors: {
+        origin: process.env.NODE_ENV === 'production' 
+            ? [
+                process.env.FRONTEND_URL,
+                'https://coomotor-regalo.onrender.com',
+                'https://coomotor-regalos.onrender.com'
+            ]
+            : [
+                'http://localhost:3000',
+                'http://localhost:3001',
+                'http://127.0.0.1:3000',
+                'http://127.0.0.1:3001',
+                'http://127.0.0.1:5500',
+                'http://localhost:5500'
+            ],
+        methods: ['GET', 'POST'],
+        credentials: true
+    }
+});
 
 // Configurar trust proxy para Render y otros servicios de hosting
 app.set('trust proxy', 1); // Confiar en el primer proxy (Render, Heroku, etc.)
@@ -2087,6 +2114,370 @@ app.delete('/api/documentos/:id', authenticateToken, async (req, res) => {
 });
 
 // ============================================
+// SOCKET.IO - CHAT EN TIEMPO REAL
+// ============================================
+
+// Almacenar usuarios conectados: { userId: socketId }
+const usuariosConectados = new Map();
+
+// Middleware de autenticación para Socket.IO
+io.use((socket, next) => {
+    const token = socket.handshake.auth.token;
+    
+    if (!token) {
+        return next(new Error('Token no proporcionado'));
+    }
+    
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        socket.userId = decoded.userId;
+        socket.userRole = decoded.rol;
+        next();
+    } catch (error) {
+        next(new Error('Token inválido'));
+    }
+});
+
+// Conexión de Socket.IO
+io.on('connection', (socket) => {
+    console.log(`💬 Usuario conectado al chat: ${socket.userId} (${socket.userRole})`);
+    
+    // Registrar usuario conectado
+    usuariosConectados.set(socket.userId, socket.id);
+    
+    // Notificar a otros usuarios que este usuario está en línea
+    socket.broadcast.emit('usuario_conectado', { userId: socket.userId });
+    
+    // Unirse a sala personal
+    socket.join(`user_${socket.userId}`);
+    
+    // Evento: Enviar mensaje
+    socket.on('enviar_mensaje', async (data) => {
+        try {
+            const { destinatario_id, mensaje, archivo } = data;
+            
+            console.log(`📨 Mensaje de ${socket.userId} para ${destinatario_id}`);
+            
+            // Validar que el mensaje o archivo existan
+            if (!mensaje && !archivo) {
+                socket.emit('error_mensaje', { error: 'Mensaje o archivo requerido' });
+                return;
+            }
+            
+            // Validar permisos: admin puede hablar con todos, conductores solo con admin
+            if (socket.userRole !== 'admin' && socket.userRole !== 'conductor' && socket.userRole !== 'empleado') {
+                socket.emit('error_mensaje', { error: 'No tienes permisos para enviar mensajes' });
+                return;
+            }
+            
+            // Si no es admin, solo puede enviar mensajes a admins
+            if (socket.userRole !== 'admin') {
+                const destinatarioResult = await poolConnection.request()
+                    .input('destinatarioId', sql.Int, destinatario_id)
+                    .query('SELECT rol FROM usuarios WHERE id = @destinatarioId');
+                
+                if (destinatarioResult.recordset.length === 0 || destinatarioResult.recordset[0].rol !== 'admin') {
+                    socket.emit('error_mensaje', { error: 'Solo puedes enviar mensajes a administradores' });
+                    return;
+                }
+            }
+            
+            let archivoUrl = null;
+            let archivoNombre = null;
+            let archivoTipo = null;
+            let archivoTamano = null;
+            
+            // Si hay archivo, subirlo a Azure Blob Storage
+            if (archivo && archivo.buffer && archivo.nombre) {
+                try {
+                    const buffer = Buffer.from(archivo.buffer, 'base64');
+                    const timestamp = Date.now();
+                    const nombreArchivo = `${timestamp}-${archivo.nombre}`;
+                    const blobName = `chat/${socket.userId}/${nombreArchivo}`;
+                    
+                    if (containerClient) {
+                        const blockBlobClient = containerClient.getBlockBlobClient(blobName);
+                        await blockBlobClient.uploadData(buffer, {
+                            blobHTTPHeaders: { blobContentType: archivo.tipo }
+                        });
+                        
+                        archivoUrl = blockBlobClient.url;
+                        archivoNombre = archivo.nombre;
+                        archivoTipo = archivo.tipo;
+                        archivoTamano = buffer.length;
+                        
+                        console.log(`📎 Archivo subido a Azure: ${archivoNombre}`);
+                    }
+                } catch (uploadError) {
+                    console.error('❌ Error al subir archivo:', uploadError);
+                    socket.emit('error_mensaje', { error: 'Error al subir el archivo' });
+                    return;
+                }
+            }
+            
+            // Guardar mensaje en la base de datos
+            const result = await poolConnection.request()
+                .input('remitenteId', sql.Int, socket.userId)
+                .input('destinatarioId', sql.Int, destinatario_id)
+                .input('mensaje', sql.NVarChar(2000), mensaje || null)
+                .input('archivoUrl', sql.NVarChar(500), archivoUrl)
+                .input('archivoNombre', sql.NVarChar(255), archivoNombre)
+                .input('archivoTipo', sql.NVarChar(100), archivoTipo)
+                .input('archivoTamano', sql.Int, archivoTamano)
+                .query(`
+                    INSERT INTO mensajes_chat (remitente_id, destinatario_id, mensaje, archivo_url, archivo_nombre, archivo_tipo, archivo_tamano)
+                    OUTPUT INSERTED.*
+                    VALUES (@remitenteId, @destinatarioId, @mensaje, @archivoUrl, @archivoNombre, @archivoTipo, @archivoTamano)
+                `);
+            
+            const mensajeGuardado = result.recordset[0];
+            
+            // Obtener información del remitente
+            const remitenteResult = await poolConnection.request()
+                .input('remitenteId', sql.Int, socket.userId)
+                .query('SELECT nombres, apellidos, rol FROM usuarios WHERE id = @remitenteId');
+            
+            const remitente = remitenteResult.recordset[0];
+            
+            const mensajeCompleto = {
+                ...mensajeGuardado,
+                remitente_nombres: remitente.nombres,
+                remitente_apellidos: remitente.apellidos,
+                remitente_rol: remitente.rol
+            };
+            
+            // Enviar mensaje al remitente (confirmación)
+            socket.emit('mensaje_enviado', mensajeCompleto);
+            
+            // Enviar mensaje al destinatario si está conectado
+            const destinatarioSocketId = usuariosConectados.get(destinatario_id);
+            if (destinatarioSocketId) {
+                io.to(destinatarioSocketId).emit('nuevo_mensaje', mensajeCompleto);
+            }
+            
+            console.log(`✅ Mensaje guardado y enviado (ID: ${mensajeGuardado.id})`);
+            
+        } catch (error) {
+            console.error('❌ Error al enviar mensaje:', error);
+            socket.emit('error_mensaje', { error: 'Error al enviar el mensaje' });
+        }
+    });
+    
+    // Evento: Marcar mensaje como leído
+    socket.on('marcar_leido', async (data) => {
+        try {
+            const { mensaje_id } = data;
+            
+            await poolConnection.request()
+                .input('mensajeId', sql.Int, mensaje_id)
+                .input('userId', sql.Int, socket.userId)
+                .query(`
+                    UPDATE mensajes_chat
+                    SET leido = 1, fecha_lectura = GETDATE()
+                    WHERE id = @mensajeId AND destinatario_id = @userId
+                `);
+            
+            // Notificar al remitente que el mensaje fue leído
+            const mensajeResult = await poolConnection.request()
+                .input('mensajeId', sql.Int, mensaje_id)
+                .query('SELECT remitente_id FROM mensajes_chat WHERE id = @mensajeId');
+            
+            if (mensajeResult.recordset.length > 0) {
+                const remitenteId = mensajeResult.recordset[0].remitente_id;
+                const remitenteSocketId = usuariosConectados.get(remitenteId);
+                
+                if (remitenteSocketId) {
+                    io.to(remitenteSocketId).emit('mensaje_leido', { mensaje_id, lector_id: socket.userId });
+                }
+            }
+            
+        } catch (error) {
+            console.error('❌ Error al marcar mensaje como leído:', error);
+        }
+    });
+    
+    // Evento: Usuario está escribiendo
+    socket.on('escribiendo', (data) => {
+        const { destinatario_id } = data;
+        const destinatarioSocketId = usuariosConectados.get(destinatario_id);
+        
+        if (destinatarioSocketId) {
+            io.to(destinatarioSocketId).emit('usuario_escribiendo', { 
+                usuario_id: socket.userId 
+            });
+        }
+    });
+    
+    // Evento: Usuario dejó de escribir
+    socket.on('dejo_escribir', (data) => {
+        const { destinatario_id } = data;
+        const destinatarioSocketId = usuariosConectados.get(destinatario_id);
+        
+        if (destinatarioSocketId) {
+            io.to(destinatarioSocketId).emit('usuario_dejo_escribir', { 
+                usuario_id: socket.userId 
+            });
+        }
+    });
+    
+    // Desconexión
+    socket.on('disconnect', () => {
+        console.log(`💬 Usuario desconectado del chat: ${socket.userId}`);
+        usuariosConectados.delete(socket.userId);
+        socket.broadcast.emit('usuario_desconectado', { userId: socket.userId });
+    });
+});
+
+// ============================================
+// ENDPOINTS REST PARA CHAT
+// ============================================
+
+// Obtener historial de mensajes entre dos usuarios
+app.get('/api/chat/mensajes/:destinatario_id', authenticateToken, async (req, res) => {
+    try {
+        const { destinatario_id } = req.params;
+        const { limit = 50, offset = 0 } = req.query;
+        
+        const result = await poolConnection.request()
+            .input('userId', sql.Int, req.user.userId)
+            .input('destinatarioId', sql.Int, destinatario_id)
+            .input('limit', sql.Int, parseInt(limit))
+            .input('offset', sql.Int, parseInt(offset))
+            .query(`
+                SELECT 
+                    m.*,
+                    u1.nombres as remitente_nombres,
+                    u1.apellidos as remitente_apellidos,
+                    u1.rol as remitente_rol,
+                    u2.nombres as destinatario_nombres,
+                    u2.apellidos as destinatario_apellidos,
+                    u2.rol as destinatario_rol
+                FROM mensajes_chat m
+                INNER JOIN usuarios u1 ON m.remitente_id = u1.id
+                INNER JOIN usuarios u2 ON m.destinatario_id = u2.id
+                WHERE (m.remitente_id = @userId AND m.destinatario_id = @destinatarioId)
+                   OR (m.remitente_id = @destinatarioId AND m.destinatario_id = @userId)
+                ORDER BY m.fecha_envio DESC
+                OFFSET @offset ROWS
+                FETCH NEXT @limit ROWS ONLY
+            `);
+        
+        res.json({ 
+            success: true, 
+            data: result.recordset.reverse() // Invertir para mostrar más antiguos primero
+        });
+        
+    } catch (error) {
+        console.error('❌ Error al obtener mensajes:', error);
+        res.status(500).json({ success: false, error: 'Error al obtener mensajes' });
+    }
+});
+
+// Obtener lista de conversaciones (usuarios con los que se ha chateado)
+app.get('/api/chat/conversaciones', authenticateToken, async (req, res) => {
+    try {
+        const result = await poolConnection.request()
+            .input('userId', sql.Int, req.user.userId)
+            .query(`
+                WITH UltimosMensajes AS (
+                    SELECT 
+                        CASE 
+                            WHEN remitente_id = @userId THEN destinatario_id
+                            ELSE remitente_id
+                        END as otro_usuario_id,
+                        MAX(fecha_envio) as ultima_fecha
+                    FROM mensajes_chat
+                    WHERE remitente_id = @userId OR destinatario_id = @userId
+                    GROUP BY 
+                        CASE 
+                            WHEN remitente_id = @userId THEN destinatario_id
+                            ELSE remitente_id
+                        END
+                )
+                SELECT 
+                    u.id,
+                    u.nombres,
+                    u.apellidos,
+                    u.rol,
+                    um.ultima_fecha,
+                    (SELECT COUNT(*) 
+                     FROM mensajes_chat 
+                     WHERE remitente_id = u.id 
+                       AND destinatario_id = @userId 
+                       AND leido = 0) as mensajes_no_leidos,
+                    (SELECT TOP 1 mensaje 
+                     FROM mensajes_chat 
+                     WHERE (remitente_id = @userId AND destinatario_id = u.id)
+                        OR (remitente_id = u.id AND destinatario_id = @userId)
+                     ORDER BY fecha_envio DESC) as ultimo_mensaje
+                FROM UltimosMensajes um
+                INNER JOIN usuarios u ON um.otro_usuario_id = u.id
+                ORDER BY um.ultima_fecha DESC
+            `);
+        
+        res.json({ success: true, data: result.recordset });
+        
+    } catch (error) {
+        console.error('❌ Error al obtener conversaciones:', error);
+        res.status(500).json({ success: false, error: 'Error al obtener conversaciones' });
+    }
+});
+
+// Obtener usuarios disponibles para chatear (admin ve todos, conductores solo ven admins)
+app.get('/api/chat/usuarios-disponibles', authenticateToken, async (req, res) => {
+    try {
+        let query = '';
+        
+        if (req.user.rol === 'admin') {
+            // Admin puede ver todos los usuarios activos
+            query = `
+                SELECT id, nombres, apellidos, rol, tipo_conductor
+                FROM usuarios
+                WHERE id != @userId AND estado = 'activo'
+                ORDER BY nombres, apellidos
+            `;
+        } else {
+            // Conductores/empleados solo ven admins
+            query = `
+                SELECT id, nombres, apellidos, rol
+                FROM usuarios
+                WHERE rol = 'admin' AND estado = 'activo'
+                ORDER BY nombres, apellidos
+            `;
+        }
+        
+        const result = await poolConnection.request()
+            .input('userId', sql.Int, req.user.userId)
+            .query(query);
+        
+        res.json({ success: true, data: result.recordset });
+        
+    } catch (error) {
+        console.error('❌ Error al obtener usuarios disponibles:', error);
+        res.status(500).json({ success: false, error: 'Error al obtener usuarios' });
+    }
+});
+
+// Obtener cantidad de mensajes no leídos
+app.get('/api/chat/no-leidos', authenticateToken, async (req, res) => {
+    try {
+        const result = await poolConnection.request()
+            .input('userId', sql.Int, req.user.userId)
+            .query(`
+                SELECT COUNT(*) as total
+                FROM mensajes_chat
+                WHERE destinatario_id = @userId AND leido = 0
+            `);
+        
+        res.json({ success: true, data: { total: result.recordset[0].total } });
+        
+    } catch (error) {
+        console.error('❌ Error al obtener mensajes no leídos:', error);
+        res.status(500).json({ success: false, error: 'Error al obtener mensajes no leídos' });
+    }
+});
+
+// ============================================
 // INICIAR SERVIDOR
 // ============================================
 
@@ -2095,13 +2486,14 @@ async function startServer() {
         // Conectar a la base de datos primero
         await connectToDatabase();
         
-        // Iniciar servidor
-        const server = app.listen(PORT, () => {
+        // Iniciar servidor HTTP (ya creado arriba con Socket.IO)
+        server.listen(PORT, () => {
             console.log(`🚀 Servidor Coomotor API ejecutándose en puerto ${PORT}`);
             console.log(`🌐 Entorno: ${process.env.NODE_ENV || 'production'}`);
             console.log(`📡 Health check: http://localhost:${PORT}/api/health`);
             console.log(`🔵 Base de datos: Azure SQL Database`);
             console.log(`📧 Correo: SendGrid ${notificationService.initialized ? 'Activo ✓' : 'No configurado'}`);
+            console.log(`💬 Socket.IO: Chat en tiempo real activo ✓`);
         });
         
         // Manejo de cierre graceful

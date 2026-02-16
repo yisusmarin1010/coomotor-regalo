@@ -2093,3 +2093,68 @@ function mostrarDocumentos(documentos) {
     html += '</div>';
     container.innerHTML = html;
 }
+
+
+// ============================================
+// FUNCIONES DE CHAT
+// ============================================
+
+// Toggle del modal de chat
+function toggleChatModal() {
+    const modal = document.getElementById('modalChat');
+    const bsModal = new bootstrap.Modal(modal);
+    bsModal.show();
+    
+    // Inicializar chat si no está inicializado
+    if (!window.socket || !window.socket.connected) {
+        inicializarChat();
+    } else {
+        cargarConversaciones();
+    }
+    
+    // Solicitar permiso para notificaciones
+    solicitarPermisoNotificaciones();
+}
+
+// Inicializar chat al cargar el dashboard
+document.addEventListener('DOMContentLoaded', function() {
+    // Inicializar Socket.IO en segundo plano después de 2 segundos
+    setTimeout(() => {
+        if (typeof inicializarChat === 'function') {
+            inicializarChat();
+            
+            // Actualizar badge de mensajes no leídos cada 30 segundos
+            setInterval(actualizarBadgeMensajesNoLeidos, 30000);
+            actualizarBadgeMensajesNoLeidos();
+        }
+    }, 2000);
+});
+
+// Actualizar badge de mensajes no leídos
+async function actualizarBadgeMensajesNoLeidos() {
+    try {
+        const response = await fetch('/api/chat/no-leidos', {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('coomotor_token')}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        if (response.ok) {
+            const result = await response.json();
+            if (result.success) {
+                const badge = document.getElementById('badgeMensajesNoLeidos');
+                if (badge) {
+                    if (result.data.total > 0) {
+                        badge.textContent = result.data.total;
+                        badge.style.display = 'block';
+                    } else {
+                        badge.style.display = 'none';
+                    }
+                }
+            }
+        }
+    } catch (error) {
+        console.error('Error al actualizar badge de mensajes:', error);
+    }
+}
