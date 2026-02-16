@@ -10,6 +10,35 @@ document.addEventListener('DOMContentLoaded', function() {
     verificarAutenticacion();
     cargarEstadisticas();
     mostrarSeccion('inicio');
+    
+    // Inicializar Socket.IO en segundo plano después de 2 segundos
+    setTimeout(() => {
+        if (typeof inicializarChat === 'function') {
+            inicializarChat();
+            
+            // Actualizar badge de mensajes no leídos cada 30 segundos
+            setInterval(actualizarBadgeMensajesNoLeidos, 30000);
+            actualizarBadgeMensajesNoLeidos();
+        }
+    }, 2000);
+    
+    // Búsqueda en tiempo real de usuarios
+    const buscarInput = document.getElementById('buscarUsuario');
+    if (buscarInput) {
+        buscarInput.addEventListener('input', function() {
+            const termino = this.value.toLowerCase();
+            const filas = document.querySelectorAll('#usuariosContainer tbody tr');
+            
+            filas.forEach(fila => {
+                const texto = fila.textContent.toLowerCase();
+                if (texto.includes(termino)) {
+                    fila.style.display = '';
+                } else {
+                    fila.style.display = 'none';
+                }
+            });
+        });
+    }
 });
 
 // Verificar autenticación
@@ -1819,20 +1848,6 @@ async function eliminarUsuario(id) {
     }
 }
 
-// Búsqueda en tiempo real
-document.addEventListener('DOMContentLoaded', function() {
-    const buscarInput = document.getElementById('buscarUsuario');
-    if (buscarInput) {
-        buscarInput.addEventListener('input', function() {
-            clearTimeout(window.busquedaTimeout);
-            window.busquedaTimeout = setTimeout(() => {
-                cargarUsuarios();
-            }, 500);
-        });
-    }
-});
-
-
 // ============================================
 // ELIMINAR APROBACIÓN DE POSTULACIÓN
 // ============================================
@@ -2185,20 +2200,6 @@ function mostrarChat() {
     // Solicitar permiso para notificaciones
     solicitarPermisoNotificaciones();
 }
-
-// Inicializar chat al cargar el dashboard
-document.addEventListener('DOMContentLoaded', function() {
-    // Inicializar Socket.IO en segundo plano
-    setTimeout(() => {
-        if (typeof inicializarChat === 'function') {
-            inicializarChat();
-            
-            // Actualizar badge de mensajes no leídos cada 30 segundos
-            setInterval(actualizarBadgeMensajesNoLeidos, 30000);
-            actualizarBadgeMensajesNoLeidos();
-        }
-    }, 2000);
-});
 
 // Actualizar badge de mensajes no leídos
 async function actualizarBadgeMensajesNoLeidos() {

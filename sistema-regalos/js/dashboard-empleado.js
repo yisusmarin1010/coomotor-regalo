@@ -34,6 +34,31 @@ document.addEventListener('DOMContentLoaded', function() {
     // mostrarBienvenida(); // Temporalmente deshabilitado
     
     console.log('✅ Dashboard inicializado');
+    
+    // Cargar mensajes de contacto después de un momento
+    setTimeout(() => {
+        if (typeof cargarMisContactos === 'function') {
+            cargarMisContactos();
+        }
+    }, 2000);
+    
+    // Cargar documentos solicitados
+    setTimeout(() => {
+        if (typeof cargarDocumentosSolicitados === 'function') {
+            cargarDocumentosSolicitados();
+        }
+    }, 1000);
+    
+    // Inicializar Socket.IO en segundo plano después de 2 segundos
+    setTimeout(() => {
+        if (typeof inicializarChat === 'function') {
+            inicializarChat();
+            
+            // Actualizar badge de mensajes no leídos cada 30 segundos
+            setInterval(actualizarBadgeMensajesNoLeidos, 30000);
+            actualizarBadgeMensajesNoLeidos();
+        }
+    }, 2000);
 });
 
 // Mostrar bienvenida personalizada
@@ -1754,16 +1779,6 @@ function obtenerBadgePrioridad(prioridad) {
     return badges[prioridad] || '<span class="badge bg-secondary">Media</span>';
 }
 
-// Cargar mensajes al iniciar el dashboard
-document.addEventListener('DOMContentLoaded', function() {
-    // Esperar un poco para que se cargue el usuario
-    setTimeout(() => {
-        if (usuarioActual) {
-            cargarMisMensajes();
-        }
-    }, 1000);
-});
-
 
 // ============================================
 // DOCUMENTOS SOLICITADOS POR EL ADMINISTRADOR
@@ -1889,14 +1904,6 @@ function mostrarAlertaDocumentosSolicitados(postulaciones) {
     
     alertContainer.innerHTML = html;
 }
-
-// Llamar a cargarDocumentosSolicitados al iniciar el dashboard
-document.addEventListener('DOMContentLoaded', function() {
-    // Esperar un poco para que se cargue todo
-    setTimeout(() => {
-        cargarDocumentosSolicitados();
-    }, 1000);
-});
 
 
 // ============================================
@@ -2115,20 +2122,6 @@ function toggleChatModal() {
     // Solicitar permiso para notificaciones
     solicitarPermisoNotificaciones();
 }
-
-// Inicializar chat al cargar el dashboard
-document.addEventListener('DOMContentLoaded', function() {
-    // Inicializar Socket.IO en segundo plano después de 2 segundos
-    setTimeout(() => {
-        if (typeof inicializarChat === 'function') {
-            inicializarChat();
-            
-            // Actualizar badge de mensajes no leídos cada 30 segundos
-            setInterval(actualizarBadgeMensajesNoLeidos, 30000);
-            actualizarBadgeMensajesNoLeidos();
-        }
-    }, 2000);
-});
 
 // Actualizar badge de mensajes no leídos
 async function actualizarBadgeMensajesNoLeidos() {
