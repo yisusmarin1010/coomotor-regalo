@@ -687,12 +687,6 @@ app.post('/api/auth/recuperar-password/solicitar', async (req, res) => {
         }
         
     } catch (error) {
-        console.error('Error en solicitud de recuperación:', error);
-            res.status(500).json({
-                success: false,
-                error: 'Error al enviar el correo. Intenta nuevamente.'
-            });
-        }
         
     } catch (error) {
         console.error('Error en solicitud de recuperación:', error);
