@@ -347,8 +347,9 @@ class RecordatoriosAutomaticos {
         console.log('📊 Estado de Recordatorios Automáticos:');
         console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
         this.jobs.forEach(({ name, job }) => {
-            const estado = job.running ? '🟢 Activo' : '🔴 Inactivo';
-            console.log(`   ${estado} - ${name}`);
+            const status = job.getStatus();
+            const estado = status === 'stopped' || status === 'destroyed' ? '🔴 Inactivo' : '🟢 Activo';
+            console.log(`   ${estado} - ${name} (${status})`);
         });
         console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
     }
