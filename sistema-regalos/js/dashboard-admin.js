@@ -283,7 +283,7 @@ async function cargarEstadisticasInicio() {
 async function mostrarPostulaciones() {
     const container = document.getElementById('seccionesContainer');
     container.innerHTML = `
-        <div class="action-card">
+        <div class="action-card fade-in">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h3 class="action-title mb-0">
                     <i class="bi bi-list-check me-2"></i>
@@ -299,15 +299,12 @@ async function mostrarPostulaciones() {
                 <i class="bi bi-info-circle me-2"></i>
                 <strong>Nota:</strong> Las postulaciones rechazadas se ocultan automáticamente del panel.
             </div>
-            <div id="postulacionesContainer">
-                <div class="d-flex justify-content-center p-4">
-                    <div class="spinner-border text-primary" role="status">
-                        <span class="visually-hidden">Cargando postulaciones...</span>
-                    </div>
-                </div>
-            </div>
+            <div id="postulacionesContainer"></div>
         </div>
     `;
+    
+    // Mostrar skeleton loader
+    SkeletonLoader.showLoading('postulacionesContainer', 'table', 5);
     
     cargarPostulaciones();
 }
@@ -346,13 +343,14 @@ function mostrarTablaPostulaciones(postulaciones) {
     const container = document.getElementById('postulacionesContainer');
     
     if (postulaciones.length === 0) {
-        container.innerHTML = `
-            <div class="empty-state">
+        const emptyHTML = `
+            <div class="empty-state fade-in">
                 <i class="bi bi-inbox"></i>
                 <h4>No hay postulaciones</h4>
                 <p>No se encontraron postulaciones con los filtros aplicados</p>
             </div>
         `;
+        SkeletonLoader.hideLoading('postulacionesContainer', emptyHTML);
         return;
     }
     
@@ -375,14 +373,18 @@ function mostrarTablaPostulaciones(postulaciones) {
     postulaciones.forEach(postulacion => {
         const edad = calcularEdad(postulacion.fecha_nacimiento_hijo);
         const estadoBadge = obtenerBadgeEstado(postulacion.estado_postulacion);
+        const iconData = ConductorIcons.getIcon(postulacion.tipo_conductor, postulacion.subtipo_conductor);
         
         html += `
-            <tr>
+            <tr class="fade-in">
                 <td>
-                    <div>
-                        <strong>${postulacion.empleado_nombres} ${postulacion.empleado_apellidos}</strong>
-                        <br>
-                        <small class="text-muted">${postulacion.tipo_conductor}</small>
+                    <div class="d-flex align-items-center">
+                        ${iconData.html}
+                        <div>
+                            <strong>${postulacion.empleado_nombres} ${postulacion.empleado_apellidos}</strong>
+                            <br>
+                            <small class="text-muted">${iconData.label}</small>
+                        </div>
                     </div>
                 </td>
                 <td>
@@ -446,7 +448,7 @@ function mostrarTablaPostulaciones(postulaciones) {
         </div>
     `;
     
-    container.innerHTML = html;
+    SkeletonLoader.hideLoading('postulacionesContainer', html);
 }
 
 // Aprobar postulación
@@ -617,20 +619,17 @@ async function rechazarPostulacionDesdeModal(postulacionId) {
 async function mostrarEmpleados() {
     const container = document.getElementById('seccionesContainer');
     container.innerHTML = `
-        <div class="action-card">
+        <div class="action-card fade-in">
             <h3 class="action-title">
                 <i class="bi bi-people-fill me-2"></i>
                 Gestión de Empleados
             </h3>
-            <div id="empleadosContainer">
-                <div class="d-flex justify-content-center p-4">
-                    <div class="spinner-border text-primary" role="status">
-                        <span class="visually-hidden">Cargando empleados...</span>
-                    </div>
-                </div>
-            </div>
+            <div id="empleadosContainer"></div>
         </div>
     `;
+    
+    // Mostrar skeleton loader
+    SkeletonLoader.showLoading('empleadosContainer', 'table', 5);
     
     cargarEmpleados();
 }

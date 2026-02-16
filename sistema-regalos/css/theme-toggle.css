@@ -1,0 +1,445 @@
+/* ============================================
+   SISTEMA DE MODO OSCURO Y ANIMACIONES
+   ============================================ */
+
+/* Variables para tema claro (por defecto) */
+:root {
+    --primary: #2563eb;
+    --primary-dark: #1e40af;
+    --primary-light: #3b82f6;
+    --danger: #dc2626;
+    --warning: #f59e0b;
+    --info: #3b82f6;
+    --success: #10b981;
+    --bg: #f1f5f9;
+    --bg-secondary: #ffffff;
+    --text: #0f172a;
+    --text-light: #64748b;
+    --text-muted: #94a3b8;
+    --border: #e2e8f0;
+    --card-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    --card-shadow-hover: 0 10px 30px rgba(0,0,0,0.12);
+    --navbar-bg: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    --skeleton-base: #e2e8f0;
+    --skeleton-shine: #f1f5f9;
+}
+
+/* Variables para tema oscuro */
+[data-theme="dark"] {
+    --primary: #3b82f6;
+    --primary-dark: #2563eb;
+    --primary-light: #60a5fa;
+    --danger: #ef4444;
+    --warning: #fbbf24;
+    --info: #60a5fa;
+    --success: #34d399;
+    --bg: #0f172a;
+    --bg-secondary: #1e293b;
+    --text: #f1f5f9;
+    --text-light: #cbd5e1;
+    --text-muted: #94a3b8;
+    --border: #334155;
+    --card-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    --card-shadow-hover: 0 10px 30px rgba(0,0,0,0.5);
+    --navbar-bg: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+    --skeleton-base: #1e293b;
+    --skeleton-shine: #334155;
+}
+
+/* Transición suave para cambio de tema */
+body,
+.navbar,
+.action-card,
+.stat,
+.header,
+.welcome,
+.action,
+.info-card,
+.modal-content,
+.form-control,
+.form-select,
+.btn,
+.badge,
+.alert,
+.table {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Toggle de modo oscuro */
+.theme-toggle {
+    position: relative;
+    width: 60px;
+    height: 30px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding: 0 5px;
+    transition: background 0.3s ease;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.theme-toggle:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.theme-toggle-slider {
+    position: absolute;
+    width: 22px;
+    height: 22px;
+    background: white;
+    border-radius: 50%;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+}
+
+[data-theme="dark"] .theme-toggle-slider {
+    transform: translateX(30px);
+    background: #1e293b;
+    color: #fbbf24;
+}
+
+[data-theme="light"] .theme-toggle-slider {
+    transform: translateX(0);
+    color: #f59e0b;
+}
+
+.theme-toggle-icon {
+    transition: opacity 0.2s ease;
+}
+
+/* Animaciones suaves para modales */
+.modal.fade .modal-dialog {
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
+}
+
+.modal.show .modal-dialog {
+    animation: modalSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes modalSlideIn {
+    from {
+        transform: translateY(-50px) scale(0.95);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+}
+
+/* Animaciones para cards */
+.action-card,
+.stat,
+.action {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.action-card:hover,
+.stat:hover,
+.action:hover {
+    transform: translateY(-5px);
+}
+
+/* Skeleton Loaders */
+.skeleton {
+    background: linear-gradient(
+        90deg,
+        var(--skeleton-base) 0%,
+        var(--skeleton-shine) 50%,
+        var(--skeleton-base) 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 8px;
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+.skeleton-text {
+    height: 16px;
+    margin-bottom: 8px;
+    border-radius: 4px;
+}
+
+.skeleton-text.large {
+    height: 24px;
+}
+
+.skeleton-text.small {
+    height: 12px;
+}
+
+.skeleton-card {
+    background: var(--bg-secondary);
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: var(--card-shadow);
+    border: 1px solid var(--border);
+}
+
+.skeleton-stat {
+    text-align: center;
+}
+
+.skeleton-circle {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    margin: 0 auto 1rem;
+}
+
+.skeleton-number {
+    height: 40px;
+    width: 80px;
+    margin: 0 auto 0.5rem;
+}
+
+.skeleton-label {
+    height: 14px;
+    width: 100px;
+    margin: 0 auto;
+}
+
+/* Skeleton para tabla */
+.skeleton-table-row {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.skeleton-table-cell {
+    flex: 1;
+    height: 20px;
+}
+
+/* Transiciones suaves para botones */
+.btn {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.btn:active::before {
+    width: 300px;
+    height: 300px;
+}
+
+/* Iconos personalizados para tipos de conductor */
+.conductor-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    font-size: 1.2rem;
+    margin-right: 0.5rem;
+    transition: transform 0.3s ease;
+}
+
+.conductor-icon:hover {
+    transform: scale(1.1) rotate(5deg);
+}
+
+.conductor-icon.urbano {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: white;
+}
+
+.conductor-icon.carretera {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: white;
+}
+
+.conductor-icon.furgones {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+}
+
+.conductor-icon.administrativo {
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+    color: white;
+}
+
+/* Animación de entrada para elementos */
+.fade-in {
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Animación de salida */
+.fade-out {
+    animation: fadeOut 0.3s ease-out;
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+}
+
+/* Mejoras para modo oscuro en elementos específicos */
+[data-theme="dark"] body {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+}
+
+[data-theme="dark"] .navbar {
+    background: var(--navbar-bg);
+}
+
+[data-theme="dark"] .action-card,
+[data-theme="dark"] .stat,
+[data-theme="dark"] .header,
+[data-theme="dark"] .welcome {
+    background: var(--bg-secondary);
+    color: var(--text);
+    border-color: var(--border);
+}
+
+[data-theme="dark"] .modal-content {
+    background: var(--bg-secondary);
+    color: var(--text);
+}
+
+[data-theme="dark"] .form-control,
+[data-theme="dark"] .form-select {
+    background: var(--bg);
+    color: var(--text);
+    border-color: var(--border);
+}
+
+[data-theme="dark"] .form-control:focus,
+[data-theme="dark"] .form-select:focus {
+    background: var(--bg);
+    color: var(--text);
+    border-color: var(--primary);
+}
+
+[data-theme="dark"] .table {
+    color: var(--text);
+}
+
+[data-theme="dark"] .table-hover tbody tr:hover {
+    background: rgba(59, 130, 246, 0.1);
+}
+
+[data-theme="dark"] .alert {
+    background: var(--bg);
+    color: var(--text);
+    border-color: var(--border);
+}
+
+[data-theme="dark"] .badge {
+    filter: brightness(1.2);
+}
+
+/* Transición suave para scroll */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Mejora visual para focus */
+*:focus {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
+/* Animación de carga para botones */
+.btn-loading {
+    position: relative;
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+.btn-loading::after {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    top: 50%;
+    left: 50%;
+    margin-left: -8px;
+    margin-top: -8px;
+    border: 2px solid transparent;
+    border-top-color: currentColor;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Mejoras de accesibilidad */
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+/* Responsive para toggle */
+@media (max-width: 768px) {
+    .theme-toggle {
+        width: 50px;
+        height: 26px;
+    }
+    
+    .theme-toggle-slider {
+        width: 18px;
+        height: 18px;
+    }
+    
+    [data-theme="dark"] .theme-toggle-slider {
+        transform: translateX(24px);
+    }
+}

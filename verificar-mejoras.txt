@@ -1,0 +1,45 @@
+LISTA DE VERIFICACIÓN - MEJORAS VISUALES COOMOTOR
+================================================
+
+Antes de subir a GitHub, verifica:
+
+✓ ARCHIVOS ELIMINADOS (no deben existir):
+  - sistema-regalos/test-dashboard-empleado.html
+  - sistema-regalos/test-dashboard.html
+  - sistema-regalos/demo-mejoras-visuales.html
+
+✓ ARCHIVOS NUEVOS CREADOS:
+  - sistema-regalos/css/theme-toggle.css
+  - sistema-regalos/js/theme-manager.js
+  - MEJORAS-VISUALES.md
+
+✓ ARCHIVOS MODIFICADOS:
+  - sistema-regalos/dashboards/admin.html
+  - sistema-regalos/dashboards/empleado.html
+  - sistema-regalos/js/dashboard-admin.js
+
+✓ FUNCIONALIDADES A PROBAR EN LOCAL:
+  1. Abrir admin.html - debe aparecer toggle de tema en navbar
+  2. Click en toggle - debe cambiar a modo oscuro suavemente
+  3. Recargar página - debe mantener el tema seleccionado
+  4. Ir a sección "Postulaciones" - debe mostrar skeleton loader
+  5. Ver iconos de conductores en la tabla (🚌 🚛 🚐 💼)
+  6. Hover sobre cards - deben tener animación suave
+  7. Abrir modal - debe tener animación slide-in
+
+✓ COMANDOS GIT PARA SUBIR:
+  git add .
+  git commit -m "Mejoras visuales: modo oscuro, animaciones, skeleton loaders e iconos"
+  git push origin main
+
+✓ VERIFICAR EN RENDER:
+  - Esperar que Render detecte el nuevo commit
+  - Verificar que el deploy sea exitoso
+  - Probar la página en producción
+  - Hacer Hard Refresh (Ctrl+Shift+R)
+
+NOTAS IMPORTANTES:
+- Los archivos CSS y JS tienen ?v=1.0 para forzar recarga
+- El tema se guarda en localStorage del navegador
+- Compatible con todos los navegadores modernos
+- Responsive en móviles y tablets
