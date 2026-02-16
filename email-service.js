@@ -145,7 +145,7 @@ class EmailService {
                     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
                 }
                 .header {
-                    background: linear-gradient(135deg, #2e8b57, #c41e3a);
+                    background: linear-gradient(135deg, #2563eb, #c41e3a);
                     color: white;
                     padding: 20px;
                     border-radius: 10px 10px 0 0;
@@ -180,7 +180,7 @@ class EmailService {
                 }
                 .info-label {
                     font-weight: bold;
-                    color: #2e8b57;
+                    color: #2563eb;
                     margin-bottom: 5px;
                 }
                 .mensaje-box {
@@ -199,7 +199,7 @@ class EmailService {
                 }
                 .btn {
                     display: inline-block;
-                    background: #2e8b57;
+                    background: #2563eb;
                     color: white;
                     padding: 12px 24px;
                     text-decoration: none;
@@ -227,7 +227,7 @@ class EmailService {
                     </span>
                 </div>
 
-                <h2 style="color: #2e8b57; margin-bottom: 20px;">
+                <h2 style="color: #2563eb; margin-bottom: 20px;">
                     📝 ${datosContacto.asunto}
                 </h2>
 
@@ -262,7 +262,7 @@ class EmailService {
                 </div>
 
                 <div style="background: #e9ecef; padding: 15px; border-radius: 8px; margin: 20px 0;">
-                    <h4 style="color: #2e8b57; margin-top: 0;">📋 Información del Ticket:</h4>
+                    <h4 style="color: #2563eb; margin-top: 0;">📋 Información del Ticket:</h4>
                     <p><strong>Ticket ID:</strong> ${datosContacto.ticket || 'COOMOTOR-' + Date.now()}</p>
                     <p><strong>Fecha:</strong> ${new Date().toLocaleString('es-CO')}</p>
                     <p><strong>Estado:</strong> Pendiente de revisión</p>
@@ -421,7 +421,7 @@ Sistema de Regalos Navideños 2024
                     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
                 }
                 .header {
-                    background: linear-gradient(135deg, #2e8b57, #c41e3a);
+                    background: linear-gradient(135deg, #2563eb, #c41e3a);
                     color: white;
                     padding: 20px;
                     border-radius: 10px 10px 0 0;
@@ -469,12 +469,12 @@ Sistema de Regalos Navideños 2024
 
                 <div class="ticket-box">
                     <h3 style="margin-top: 0; color: #28a745;">📋 Número de Ticket</h3>
-                    <h2 style="margin: 10px 0; color: #2e8b57; font-family: monospace;">${datosContacto.ticket || 'COOMOTOR-' + Date.now()}</h2>
+                    <h2 style="margin: 10px 0; color: #2563eb; font-family: monospace;">${datosContacto.ticket || 'COOMOTOR-' + Date.now()}</h2>
                     <p style="margin-bottom: 0;">Guarda este número para futuras referencias</p>
                 </div>
 
                 <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 20px 0;">
-                    <h4 style="color: #2e8b57; margin-top: 0;">⏰ Tiempos de Respuesta:</h4>
+                    <h4 style="color: #2563eb; margin-top: 0;">⏰ Tiempos de Respuesta:</h4>
                     <ul style="margin: 0;">
                         <li><strong>Consultas generales:</strong> 24-48 horas</li>
                         <li><strong>Quejas y problemas:</strong> 12-24 horas</li>

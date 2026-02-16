@@ -166,7 +166,7 @@ function mostrarInicio() {
                         <div class="row text-center mt-3">
                             <div class="col-6 mb-3">
                                 <div style="background: white; padding: 1rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
-                                    <div style="font-size: 2rem; font-weight: 800; color: #059669;" id="totalUsuariosInicio">
+                                    <div style="font-size: 2rem; font-weight: 800; color: #2563eb;" id="totalUsuariosInicio">
                                         <div class="spinner-border spinner-border-sm text-success" role="status"></div>
                                     </div>
                                     <div style="font-size: 0.75rem; color: #6b7280; font-weight: 600; text-transform: uppercase;">Usuarios</div>
@@ -190,7 +190,7 @@ function mostrarInicio() {
                             </div>
                             <div class="col-6">
                                 <div style="background: white; padding: 1rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
-                                    <div style="font-size: 2rem; font-weight: 800; color: #10b981;" id="aprobadasInicio">
+                                    <div style="font-size: 2rem; font-weight: 800; color: #3b82f6;" id="aprobadasInicio">
                                         <div class="spinner-border spinner-border-sm text-success" role="status"></div>
                                     </div>
                                     <div style="font-size: 0.75rem; color: #6b7280; font-weight: 600; text-transform: uppercase;">Aprobadas</div>

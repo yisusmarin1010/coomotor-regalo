@@ -22,7 +22,7 @@ function generarCaptcha() {
                 Por seguridad, resuelve esta operación matemática:
             </p>
             <div class="d-flex align-items-center gap-3">
-                <div class="captcha-question" style="background: white; padding: 0.75rem 1.5rem; border-radius: 8px; font-size: 1.25rem; font-weight: 700; color: #059669; border: 2px solid #10b981;">
+                <div class="captcha-question" style="background: white; padding: 0.75rem 1.5rem; border-radius: 8px; font-size: 1.25rem; font-weight: 700; color: #2563eb; border: 2px solid #3b82f6;">
                     ${num1} + ${num2} = ?
                 </div>
                 <input type="number" id="captchaInput" class="form-control" placeholder="Tu respuesta" required style="max-width: 120px; font-size: 1.1rem; font-weight: 600; text-align: center;">

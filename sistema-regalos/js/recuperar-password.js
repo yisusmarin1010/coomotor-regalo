@@ -354,7 +354,7 @@ function mostrarEmojiFeedback(tipo, emoji, titulo, mensaje) {
 }
 
 function crearConfetti() {
-    const colores = ['#059669', '#fbbf24', '#dc2626', '#3b82f6', '#8b5cf6'];
+    const colores = ['#2563eb', '#fbbf24', '#dc2626', '#3b82f6', '#8b5cf6'];
     const cantidad = 50;
     
     for (let i = 0; i < cantidad; i++) {

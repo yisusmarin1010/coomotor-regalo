@@ -4,12 +4,12 @@
    ============================================ */
 
 :root {
-    --coomotor-primary: #2e8b57;
+    --coomotor-primary: #2563eb;
     --coomotor-secondary: #c41e3a;
     --coomotor-dark: #1a1a1a;
     --coomotor-light: #ffffff;
     --christmas-red: #c41e3a;
-    --christmas-green: #2e8b57;
+    --christmas-blue: #2563eb;
     --christmas-gold: #ffd700;
     --bg-light: #f8f9fa;
     --text-dark: #2d3748;
@@ -106,13 +106,13 @@ body {
     font-size: 1rem;
     margin: 0.5rem;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 12px rgba(46, 139, 87, 0.2);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
 }
 
 .btn-christmas:hover {
-    background: var(--christmas-red);
+    background: #1e40af;
     transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(196, 30, 58, 0.3);
+    box-shadow: 0 6px 16px rgba(30, 64, 175, 0.3);
     color: white;
 }
 

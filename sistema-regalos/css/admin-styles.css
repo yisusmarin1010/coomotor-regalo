@@ -75,7 +75,7 @@
 }
 
 .btn-success-admin {
-    background: linear-gradient(135deg, var(--christmas-green), #22c55e);
+    background: linear-gradient(135deg, var(--christmas-blue), #3b82f6);
     border: none;
     border-radius: 10px;
     padding: 0.75rem 1.5rem;

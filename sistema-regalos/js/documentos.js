@@ -40,7 +40,7 @@ function mostrarModalSubirDocumento() {
         <div class="modal fade" id="modalSubirDocumento" tabindex="-1">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <div class="modal-header" style="background: linear-gradient(135deg, var(--primary), #047857); color: white;">
+                    <div class="modal-header" style="background: linear-gradient(135deg, var(--primary), #1e40af); color: white;">
                         <h5 class="modal-title">
                             <i class="bi bi-cloud-upload-fill me-2"></i>
                             Subir Documento Solicitado
