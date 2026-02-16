@@ -5,11 +5,15 @@
 let currentStep = 1;
 let userEmail = '';
 let recoveryToken = '';
+let captchaNum1 = 0;
+let captchaNum2 = 0;
+let captchaRespuesta = 0;
 
 // Inicializar
 document.addEventListener('DOMContentLoaded', function() {
     setupCodeInputs();
     setupForms();
+    generarCaptcha();
 });
 
 // Configurar inputs de código
@@ -114,6 +118,21 @@ async function verificarCodigo() {
         return;
     }
     
+    // Validar CAPTCHA primero
+    const captchaInput = parseInt(document.getElementById('captchaInput').value);
+    
+    if (!captchaInput) {
+        mostrarEmojiFeedback('error', '🤨', '¡Espera!', 'Debes resolver el CAPTCHA de seguridad primero.');
+        return;
+    }
+    
+    if (captchaInput !== captchaRespuesta) {
+        mostrarEmojiFeedback('error', '😵', '¡CAPTCHA Incorrecto!', 'La respuesta matemática no es correcta. Intenta nuevamente.');
+        regenerarCaptcha();
+        document.getElementById('captchaInput').value = '';
+        return;
+    }
+    
     try {
         mostrarAlerta('Verificando código...', 'info');
         
@@ -132,17 +151,21 @@ async function verificarCodigo() {
         
         if (result.success) {
             recoveryToken = result.token;
-            mostrarAlerta('✅ Código verificado correctamente', 'success');
+            // Emoji súper feliz con confetti
+            mostrarEmojiFeedback('success', '🎊', '¡Código Correcto!', '¡Excelente! Ahora puedes cambiar tu contraseña de forma segura.');
+            crearConfetti();
             setTimeout(() => {
                 irAPaso(3);
-            }, 1500);
+            }, 2500);
         } else {
-            mostrarAlerta(result.error || 'Código incorrecto', 'danger');
+            // Emoji triste y decepcionado
+            mostrarEmojiFeedback('error', '😢', '¡Código Inválido!', 'El código que ingresaste no es válido o ya expiró. Verifica e intenta nuevamente.');
             limpiarCodigo();
+            regenerarCaptcha();
         }
     } catch (error) {
         console.error('Error:', error);
-        mostrarAlerta('Error de conexión. Intenta nuevamente.', 'danger');
+        mostrarEmojiFeedback('error', '😰', '¡Error!', 'No pudimos verificar el código. Intenta más tarde.');
     }
 }
 
@@ -222,6 +245,11 @@ function irAPaso(paso) {
     }
     
     currentStep = paso;
+    
+    // Regenerar CAPTCHA si vamos al paso 2
+    if (paso === 2) {
+        generarCaptcha();
+    }
     
     // Limpiar alertas
     document.getElementById('alertContainer').innerHTML = '';
@@ -341,4 +369,37 @@ function crearConfetti() {
             }, 3000);
         }, i * 30);
     }
+}
+
+// ============================================
+// FUNCIONES DE CAPTCHA
+// ============================================
+
+function generarCaptcha() {
+    captchaNum1 = Math.floor(Math.random() * 10) + 1;
+    captchaNum2 = Math.floor(Math.random() * 10) + 1;
+    captchaRespuesta = captchaNum1 + captchaNum2;
+    
+    const operaciones = ['+', '-', '×'];
+    const operacion = operaciones[Math.floor(Math.random() * operaciones.length)];
+    
+    if (operacion === '-') {
+        // Asegurar que el resultado sea positivo
+        if (captchaNum1 < captchaNum2) {
+            [captchaNum1, captchaNum2] = [captchaNum2, captchaNum1];
+        }
+        captchaRespuesta = captchaNum1 - captchaNum2;
+    } else if (operacion === '×') {
+        captchaNum1 = Math.floor(Math.random() * 5) + 1;
+        captchaNum2 = Math.floor(Math.random() * 5) + 1;
+        captchaRespuesta = captchaNum1 * captchaNum2;
+    }
+    
+    document.getElementById('captchaQuestion').innerHTML = `¿Cuánto es ${captchaNum1} ${operacion} ${captchaNum2}?`;
+    document.getElementById('captchaInput').value = '';
+}
+
+function regenerarCaptcha() {
+    generarCaptcha();
+    mostrarAlerta('🔄 CAPTCHA regenerado', 'info');
 }
