@@ -79,48 +79,22 @@ async function enviarCodigo() {
     }
     
     try {
-        // Obtener el método de envío seleccionado
-        const metodoEnvio = document.querySelector('input[name="metodoEnvio"]:checked').value;
-        
-        let mensajeEnvio = '';
-        if (metodoEnvio === 'email') {
-            mensajeEnvio = 'Enviando código a tu correo...';
-        } else if (metodoEnvio === 'sms') {
-            mensajeEnvio = 'Enviando código a tu celular...';
-        } else {
-            mensajeEnvio = 'Enviando código por email y SMS...';
-        }
-        
-        mostrarAlerta(mensajeEnvio, 'info');
+        mostrarAlerta('Enviando código...', 'info');
         
         const response = await fetch('/api/auth/recuperar-password/solicitar', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ 
-                email,
-                metodoEnvio // Enviar el método seleccionado
-            })
+            body: JSON.stringify({ email })
         });
         
         const result = await response.json();
         
         if (result.success) {
             userEmail = email;
-            
-            // Mensaje personalizado según el método
-            let mensajeExito = '';
-            if (metodoEnvio === 'email') {
-                mensajeExito = '¡Código enviado a tu correo!';
-            } else if (metodoEnvio === 'sms') {
-                mensajeExito = '¡Código enviado a tu celular!';
-            } else {
-                mensajeExito = '¡Código enviado por email y SMS!';
-            }
-            
             // Mostrar emoji feliz con confetti
-            mostrarEmojiFeedback('success', '🎉', '¡Perfecto!', mensajeExito);
+            mostrarEmojiFeedback('success', '🎉', '¡Perfecto!', 'Código enviado exitosamente. ¡Revisa tu correo!');
             crearConfetti();
             setTimeout(() => {
                 irAPaso(2);

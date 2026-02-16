@@ -19,7 +19,6 @@ require('dotenv').config();
 
 // Importar servicios de notificaciones
 const notificationService = require('./email-service-notifications');
-const smsService = require('./sms-service');
 
 // Crear app Express
 const app = express();
@@ -432,22 +431,6 @@ app.post('/api/usuarios/register', async (req, res) => {
         
         console.log(`✅ Nuevo usuario registrado: ${nuevoUsuario.nombres} ${nuevoUsuario.apellidos} (${nuevoUsuario.correo})`);
         
-        // Enviar notificación SMS de bienvenida (no bloqueante)
-        const datosSMS = {
-            nombres: nuevoUsuario.nombres,
-            celular: nuevoUsuario.celular
-        };
-        
-        smsService.notificarRegistro(datosSMS)
-            .then(result => {
-                if (result.success) {
-                    console.log(`✅ SMS de bienvenida enviado a ${nuevoUsuario.celular}`);
-                } else {
-                    console.log(`⚠️ No se pudo enviar SMS de bienvenida`);
-                }
-            })
-            .catch(err => console.error('Error al enviar SMS:', err));
-        
         res.status(201).json({
             success: true,
             message: 'Usuario registrado exitosamente',
@@ -585,7 +568,7 @@ function generarCodigoRecuperacion() {
 // Solicitar recuperación de contraseña
 app.post('/api/auth/recuperar-password/solicitar', async (req, res) => {
     try {
-        const { email, metodoEnvio = 'ambos' } = req.body; // Por defecto ambos
+        const { email } = req.body;
         
         if (!email) {
             return res.status(400).json({
@@ -597,7 +580,7 @@ app.post('/api/auth/recuperar-password/solicitar', async (req, res) => {
         // Verificar que el usuario existe
         const result = await poolConnection.request()
             .input('email', sql.NVarChar, email.toLowerCase())
-            .query('SELECT id, nombres, apellidos, correo, celular FROM usuarios WHERE correo = @email AND estado = \'activo\'');
+            .query('SELECT id, nombres, apellidos, correo FROM usuarios WHERE correo = @email AND estado = \'activo\'');
         
         if (result.recordset.length === 0) {
             return res.status(404).json({
@@ -607,14 +590,6 @@ app.post('/api/auth/recuperar-password/solicitar', async (req, res) => {
         }
         
         const usuario = result.recordset[0];
-        
-        // Validar que tenga celular si eligió SMS
-        if ((metodoEnvio === 'sms' || metodoEnvio === 'ambos') && !usuario.celular) {
-            return res.status(400).json({
-                success: false,
-                error: 'Tu cuenta no tiene un número de celular registrado. Por favor usa el método de correo electrónico.'
-            });
-        }
         
         // Generar código de 6 dígitos
         const codigo = generarCodigoRecuperacion();
@@ -626,63 +601,30 @@ app.post('/api/auth/recuperar-password/solicitar', async (req, res) => {
             intentos: 0
         });
         
-        let envioExitoso = false;
-        let mensajeRespuesta = '';
-        
-        // Enviar por EMAIL si se seleccionó email o ambos
-        if (metodoEnvio === 'email' || metodoEnvio === 'ambos') {
-            try {
-                const resultado = await notificationService.enviarCodigoRecuperacion({
-                    email: usuario.correo,
-                    codigo: codigo
-                });
-                
-                if (resultado.success) {
-                    console.log(`📧 Código de recuperación enviado a: ${usuario.correo}`);
-                    envioExitoso = true;
-                    mensajeRespuesta = 'Código enviado a tu correo electrónico';
-                }
-            } catch (emailError) {
-                console.error('Error al enviar correo:', emailError);
-            }
-        }
-        
-        // Enviar por SMS si se seleccionó sms o ambos
-        if ((metodoEnvio === 'sms' || metodoEnvio === 'ambos') && usuario.celular) {
-            try {
-                const datosSMS = {
-                    celular: usuario.celular,
-                    codigo: codigo
-                };
-                
-                const resultadoSMS = await smsService.enviarCodigoRecuperacion(datosSMS);
-                
-                if (resultadoSMS.success) {
-                    console.log(`✅ SMS con código enviado a ${usuario.celular}`);
-                    envioExitoso = true;
-                    
-                    if (metodoEnvio === 'sms') {
-                        mensajeRespuesta = 'Código enviado a tu celular';
-                    } else if (metodoEnvio === 'ambos') {
-                        mensajeRespuesta = 'Código enviado a tu correo y celular';
-                    }
-                } else {
-                    console.log(`⚠️ No se pudo enviar SMS con código: ${resultadoSMS.error}`);
-                }
-            } catch (smsError) {
-                console.error('Error al enviar SMS:', smsError);
-            }
-        }
-        
-        if (envioExitoso) {
-            res.json({
-                success: true,
-                message: mensajeRespuesta
+        // Enviar código por correo usando SendGrid
+        try {
+            const resultado = await notificationService.enviarCodigoRecuperacion({
+                email: usuario.correo,
+                codigo: codigo
             });
-        } else {
+            
+            if (resultado.success) {
+                console.log(`📧 Código de recuperación enviado a: ${usuario.correo}`);
+                res.json({
+                    success: true,
+                    message: 'Código enviado a tu correo electrónico'
+                });
+            } else {
+                res.status(500).json({
+                    success: false,
+                    error: 'Error al enviar el correo. Intenta nuevamente.'
+                });
+            }
+        } catch (emailError) {
+            console.error('Error al enviar correo:', emailError);
             res.status(500).json({
                 success: false,
-                error: 'Error al enviar el código. Intenta nuevamente.'
+                error: 'Error al enviar el correo. Intenta nuevamente.'
             });
         }
         
@@ -2651,40 +2593,20 @@ app.put('/api/admin/postulaciones/:id/aprobar', authenticateToken, requireAdmin,
             edad: postulacion.hijo_edad
         };
         
-        // Enviar notificación por EMAIL (no bloqueante)
+        // Enviar notificación (no bloqueante)
         notificationService.notificarPostulacionAprobada(datosNotificacion)
             .then(result => {
                 if (result.success) {
-                    console.log(`✅ Email de aprobación enviado a ${postulacion.usuario_correo}`);
+                    console.log(`✅ Notificación de aprobación enviada a ${postulacion.usuario_correo}`);
                 } else {
-                    console.log(`⚠️ No se pudo enviar email de aprobación`);
+                    console.log(`⚠️ No se pudo enviar notificación`);
                 }
             })
-            .catch(err => console.error('Error al enviar email:', err));
-        
-        // Enviar notificación por SMS (no bloqueante)
-        if (postulacion.usuario_celular) {
-            const datosSMS = {
-                nombres: postulacion.usuario_nombres,
-                celular: postulacion.usuario_celular,
-                nombre_hijo: `${postulacion.hijo_nombres} ${postulacion.hijo_apellidos}`,
-                tipo_regalo: 'Regalo navideño'
-            };
-            
-            smsService.notificarPostulacionAprobada(datosSMS)
-                .then(result => {
-                    if (result.success) {
-                        console.log(`✅ SMS de aprobación enviado a ${postulacion.usuario_celular}`);
-                    } else {
-                        console.log(`⚠️ No se pudo enviar SMS de aprobación`);
-                    }
-                })
-                .catch(err => console.error('Error al enviar SMS:', err));
-        }
+            .catch(err => console.error('Error al enviar notificación:', err));
         
         res.json({ 
             success: true, 
-            message: 'Postulación aprobada exitosamente. Se han enviado notificaciones al usuario.' 
+            message: 'Postulación aprobada exitosamente. Se ha enviado una notificación al usuario.' 
         });
     } catch (error) {
         console.error('Error al aprobar postulación:', error);
@@ -2746,40 +2668,20 @@ app.put('/api/admin/postulaciones/:id/rechazar', authenticateToken, requireAdmin
             motivo: motivo || 'No se proporcionó un motivo específico'
         };
         
-        // Enviar notificación por EMAIL (no bloqueante)
+        // Enviar notificación (no bloqueante)
         notificationService.notificarPostulacionRechazada(datosNotificacion)
             .then(result => {
                 if (result.success) {
-                    console.log(`✅ Email de rechazo enviado a ${postulacion.usuario_correo}`);
+                    console.log(`✅ Notificación de rechazo enviada a ${postulacion.usuario_correo}`);
                 } else {
-                    console.log(`⚠️ No se pudo enviar email de rechazo`);
+                    console.log(`⚠️ No se pudo enviar notificación`);
                 }
             })
-            .catch(err => console.error('Error al enviar email:', err));
-        
-        // Enviar notificación por SMS (no bloqueante)
-        if (postulacion.usuario_celular) {
-            const datosSMS = {
-                nombres: postulacion.usuario_nombres,
-                celular: postulacion.usuario_celular,
-                nombre_hijo: `${postulacion.hijo_nombres} ${postulacion.hijo_apellidos}`,
-                motivo_rechazo: motivo || 'No se proporcionó un motivo específico'
-            };
-            
-            smsService.notificarPostulacionRechazada(datosSMS)
-                .then(result => {
-                    if (result.success) {
-                        console.log(`✅ SMS de rechazo enviado a ${postulacion.usuario_celular}`);
-                    } else {
-                        console.log(`⚠️ No se pudo enviar SMS de rechazo`);
-                    }
-                })
-                .catch(err => console.error('Error al enviar SMS:', err));
-        }
+            .catch(err => console.error('Error al enviar notificación:', err));
         
         res.json({ 
             success: true, 
-            message: 'Postulación rechazada. Se han enviado notificaciones al usuario.' 
+            message: 'Postulación rechazada. Se ha enviado una notificación al usuario.' 
         });
     } catch (error) {
         console.error('Error al rechazar postulación:', error);
