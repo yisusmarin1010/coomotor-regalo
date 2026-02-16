@@ -2305,6 +2305,10 @@ app.delete('/api/documentos/:id', authenticateToken, async (req, res) => {
 // INICIAR SERVIDOR
 // ============================================
 
+// Importar sistema de recordatorios automáticos
+const RecordatoriosAutomaticos = require('./cron-recordatorios-automaticos');
+let recordatorios = null;
+
 async function startServer() {
     try {
         // Conectar a la base de datos primero
@@ -2317,11 +2321,23 @@ async function startServer() {
             console.log(`📡 Health check: http://localhost:${PORT}/api/health`);
             console.log(`🔵 Base de datos: Azure SQL Database`);
             console.log(`📧 Correo: SendGrid ${notificationService.initialized ? 'Activo ✓' : 'No configurado'}`);
+            
+            // Iniciar recordatorios automáticos
+            if (poolConnection) {
+                recordatorios = new RecordatoriosAutomaticos(poolConnection);
+                recordatorios.iniciarTodos();
+            }
         });
         
         // Manejo de cierre graceful
         process.on('SIGTERM', () => {
             console.log('🛑 SIGTERM recibido, cerrando servidor...');
+            
+            // Detener recordatorios
+            if (recordatorios) {
+                recordatorios.detenerTodos();
+            }
+            
             server.close(() => {
                 console.log('✅ Servidor cerrado');
                 if (poolConnection) {
@@ -2334,6 +2350,12 @@ async function startServer() {
         
         process.on('SIGINT', () => {
             console.log('🛑 SIGINT recibido, cerrando servidor...');
+            
+            // Detener recordatorios
+            if (recordatorios) {
+                recordatorios.detenerTodos();
+            }
+            
             server.close(() => {
                 console.log('✅ Servidor cerrado');
                 if (poolConnection) {
