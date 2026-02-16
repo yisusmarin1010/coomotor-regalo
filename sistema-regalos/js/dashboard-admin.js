@@ -1444,6 +1444,9 @@ function mostrarUsuarios(usuarios) {
                         <button class="btn btn-outline-warning" onclick="editarUsuario(${usuario.id})" title="Editar">
                             <i class="bi bi-pencil"></i>
                         </button>
+                        <button class="btn btn-outline-info" onclick="cambiarRolUsuario(${usuario.id}, '${usuario.nombres} ${usuario.apellidos}', '${usuario.rol}')" title="Cambiar rol">
+                            <i class="bi bi-person-badge"></i>
+                        </button>
                         ${usuario.estado === 'activo' ? 
                             `<button class="btn btn-outline-secondary" onclick="cambiarEstadoUsuario(${usuario.id}, 'inactivo')" title="Desactivar">
                                 <i class="bi bi-pause-circle"></i>
@@ -2071,4 +2074,183 @@ async function eliminarAprobacion(postulacionId, nombreHijo) {
         console.error('Error:', error);
         mostrarAlerta('danger', 'Error de conexión');
     }
+}
+
+
+// ============================================
+// FUNCIÓN PARA CAMBIAR ROL DE USUARIO
+// ============================================
+
+function cambiarRolUsuario(usuarioId, nombreUsuario, rolActual) {
+    const modalHTML = `
+        <div class="modal fade" id="modalCambiarRol" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content" style="border-radius: 20px; overflow: hidden; border: none;">
+                    <div class="modal-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 2rem;">
+                        <div class="w-100 text-center">
+                            <div style="font-size: 4rem; margin-bottom: 0.5rem;">👑</div>
+                            <h5 class="modal-title fw-bold" style="font-size: 1.5rem;">Cambiar Rol de Usuario</h5>
+                            <p class="mb-0 mt-2" style="font-size: 0.9rem; opacity: 0.9;">${nombreUsuario}</p>
+                        </div>
+                    </div>
+                    <div class="modal-body" style="padding: 2rem;">
+                        <div class="alert alert-info" style="background: #e0f2fe; border: none; border-left: 4px solid #3b82f6;">
+                            <i class="bi bi-info-circle me-2"></i>
+                            <strong>Rol actual:</strong> <span class="badge bg-primary">${rolActual}</span>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Selecciona el nuevo rol:</label>
+                            <div class="d-grid gap-3">
+                                <div class="form-check p-3" style="background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 12px; cursor: pointer;" onclick="document.getElementById('rolEmpleado').checked = true">
+                                    <input class="form-check-input" type="radio" name="nuevoRol" id="rolEmpleado" value="empleado" ${rolActual === 'empleado' ? 'checked' : ''}>
+                                    <label class="form-check-label w-100" for="rolEmpleado" style="cursor: pointer;">
+                                        <div class="d-flex align-items-center">
+                                            <div style="font-size: 2rem; margin-right: 1rem;">👤</div>
+                                            <div>
+                                                <strong style="font-size: 1.1rem;">Empleado</strong>
+                                                <p class="mb-0 text-muted" style="font-size: 0.85rem;">Acceso básico al sistema</p>
+                                            </div>
+                                        </div>
+                                    </label>
+                                </div>
+                                
+                                <div class="form-check p-3" style="background: #f0f9ff; border: 2px solid #3b82f6; border-radius: 12px; cursor: pointer;" onclick="document.getElementById('rolConductor').checked = true">
+                                    <input class="form-check-input" type="radio" name="nuevoRol" id="rolConductor" value="conductor" ${rolActual === 'conductor' ? 'checked' : ''}>
+                                    <label class="form-check-label w-100" for="rolConductor" style="cursor: pointer;">
+                                        <div class="d-flex align-items-center">
+                                            <div style="font-size: 2rem; margin-right: 1rem;">🚗</div>
+                                            <div>
+                                                <strong style="font-size: 1.1rem; color: #3b82f6;">Conductor</strong>
+                                                <p class="mb-0 text-muted" style="font-size: 0.85rem;">Permisos de conductor</p>
+                                            </div>
+                                        </div>
+                                    </label>
+                                </div>
+                                
+                                <div class="form-check p-3" style="background: #fef3c7; border: 2px solid #f59e0b; border-radius: 12px; cursor: pointer;" onclick="document.getElementById('rolAdmin').checked = true">
+                                    <input class="form-check-input" type="radio" name="nuevoRol" id="rolAdmin" value="admin" ${rolActual === 'admin' ? 'checked' : ''}>
+                                    <label class="form-check-label w-100" for="rolAdmin" style="cursor: pointer;">
+                                        <div class="d-flex align-items-center">
+                                            <div style="font-size: 2rem; margin-right: 1rem;">👑</div>
+                                            <div>
+                                                <strong style="font-size: 1.1rem; color: #f59e0b;">Administrador</strong>
+                                                <p class="mb-0 text-muted" style="font-size: 0.85rem;">Acceso completo al sistema + 2FA</p>
+                                            </div>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="alert alert-warning" style="background: #fef3c7; border: none; border-left: 4px solid #f59e0b;">
+                            <i class="bi bi-exclamation-triangle me-2"></i>
+                            <strong>Importante:</strong> El usuario recibirá un email notificando el cambio de rol.
+                            ${rolActual !== 'admin' ? '<br><small>Si lo conviertes en admin, se activará 2FA en su cuenta.</small>' : ''}
+                        </div>
+                        
+                        <div id="alertaCambioRol"></div>
+                        
+                        <div class="d-grid gap-2">
+                            <button type="button" class="btn btn-primary btn-lg" onclick="confirmarCambioRol(${usuarioId})" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; border-radius: 10px; font-weight: 600; padding: 0.875rem;">
+                                <i class="bi bi-check-circle me-2"></i>Confirmar Cambio
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" style="border-radius: 10px; font-weight: 600;">
+                                <i class="bi bi-x-circle me-2"></i>Cancelar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    // Remover modal anterior si existe
+    const modalAnterior = document.getElementById('modalCambiarRol');
+    if (modalAnterior) {
+        modalAnterior.remove();
+    }
+    
+    // Agregar modal al body
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+    
+    // Mostrar modal
+    const modal = new bootstrap.Modal(document.getElementById('modalCambiarRol'));
+    modal.show();
+}
+
+async function confirmarCambioRol(usuarioId) {
+    const rolSeleccionado = document.querySelector('input[name="nuevoRol"]:checked');
+    
+    if (!rolSeleccionado) {
+        mostrarAlertaCambioRol('warning', 'Por favor selecciona un rol');
+        return;
+    }
+    
+    const nuevoRol = rolSeleccionado.value;
+    
+    // Mostrar loading
+    const btn = event.target;
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Cambiando rol...';
+    btn.disabled = true;
+    
+    try {
+        const response = await fetch(`/api/admin/usuarios/${usuarioId}/rol`, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('coomotor_token')}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ rol: nuevoRol })
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            mostrarAlertaCambioRol('success', `✅ ${result.message}`);
+            
+            // Cerrar modal después de 2 segundos
+            setTimeout(() => {
+                const modal = bootstrap.Modal.getInstance(document.getElementById('modalCambiarRol'));
+                if (modal) {
+                    modal.hide();
+                }
+                // Recargar lista de usuarios
+                cargarUsuarios();
+            }, 2000);
+        } else {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+            mostrarAlertaCambioRol('danger', result.error || 'Error al cambiar rol');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+        mostrarAlertaCambioRol('danger', 'Error de conexión. Intenta nuevamente.');
+    }
+}
+
+function mostrarAlertaCambioRol(tipo, mensaje) {
+    const alertaDiv = document.getElementById('alertaCambioRol');
+    const iconos = {
+        success: 'bi-check-circle-fill',
+        danger: 'bi-x-circle-fill',
+        warning: 'bi-exclamation-triangle-fill',
+        info: 'bi-info-circle-fill'
+    };
+    
+    alertaDiv.innerHTML = `
+        <div class="alert alert-${tipo} alert-dismissible fade show" role="alert" style="border-radius: 10px; border: none;">
+            <i class="bi ${iconos[tipo]} me-2"></i>
+            ${mensaje}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    `;
+    
+    // Auto-ocultar después de 5 segundos
+    setTimeout(() => {
+        alertaDiv.innerHTML = '';
+    }, 5000);
 }

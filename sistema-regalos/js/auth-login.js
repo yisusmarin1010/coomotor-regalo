@@ -127,7 +127,16 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
         const result = await response.json();
         
         if (result.success) {
-            // Login exitoso - resetear intentos
+            // Verificar si requiere 2FA
+            if (result.requiere2FA) {
+                // Mostrar modal de 2FA
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+                mostrarModal2FA(correo, recordarme);
+                return;
+            }
+            
+            // Login exitoso sin 2FA - resetear intentos
             resetearIntentos();
             
             // Guardar datos del usuario
@@ -234,4 +243,275 @@ if (localStorage.getItem('coomotor_token') && localStorage.getItem('coomotor_use
     } else {
         window.location.href = '../dashboards/empleado.html';
     }
+}
+
+
+// ============================================
+// FUNCIONES PARA 2FA
+// ============================================
+
+function mostrarModal2FA(email, recordarme) {
+    const modalHTML = `
+        <div class="modal fade" id="modal2FA" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content" style="border-radius: 20px; overflow: hidden; border: none;">
+                    <div class="modal-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 2rem;">
+                        <div class="w-100 text-center">
+                            <div style="font-size: 4rem; margin-bottom: 0.5rem;">🔐</div>
+                            <h5 class="modal-title fw-bold" style="font-size: 1.5rem;">Verificación de Seguridad</h5>
+                            <p class="mb-0 mt-2" style="font-size: 0.9rem; opacity: 0.9;">Código enviado a tu correo</p>
+                        </div>
+                    </div>
+                    <div class="modal-body" style="padding: 2rem;">
+                        <div class="alert alert-info" style="background: #e0f2fe; border: none; border-left: 4px solid #3b82f6;">
+                            <i class="bi bi-info-circle me-2"></i>
+                            <strong>Revisa tu correo</strong><br>
+                            <small>Hemos enviado un código de 6 dígitos a <strong>${email}</strong></small>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Ingresa el código de verificación:</label>
+                            <div class="d-flex gap-2 justify-content-center" id="codigo2FAInputs">
+                                <input type="text" maxlength="1" class="form-control text-center codigo-input" style="width: 50px; height: 60px; font-size: 1.5rem; font-weight: 700; border: 2px solid #e2e8f0; border-radius: 10px;" data-index="0">
+                                <input type="text" maxlength="1" class="form-control text-center codigo-input" style="width: 50px; height: 60px; font-size: 1.5rem; font-weight: 700; border: 2px solid #e2e8f0; border-radius: 10px;" data-index="1">
+                                <input type="text" maxlength="1" class="form-control text-center codigo-input" style="width: 50px; height: 60px; font-size: 1.5rem; font-weight: 700; border: 2px solid #e2e8f0; border-radius: 10px;" data-index="2">
+                                <input type="text" maxlength="1" class="form-control text-center codigo-input" style="width: 50px; height: 60px; font-size: 1.5rem; font-weight: 700; border: 2px solid #e2e8f0; border-radius: 10px;" data-index="3">
+                                <input type="text" maxlength="1" class="form-control text-center codigo-input" style="width: 50px; height: 60px; font-size: 1.5rem; font-weight: 700; border: 2px solid #e2e8f0; border-radius: 10px;" data-index="4">
+                                <input type="text" maxlength="1" class="form-control text-center codigo-input" style="width: 50px; height: 60px; font-size: 1.5rem; font-weight: 700; border: 2px solid #e2e8f0; border-radius: 10px;" data-index="5">
+                            </div>
+                            <small class="text-muted d-block text-center mt-2">
+                                <i class="bi bi-clock me-1"></i>El código expira en 10 minutos
+                            </small>
+                        </div>
+                        
+                        <div id="alerta2FA"></div>
+                        
+                        <div class="d-grid gap-2">
+                            <button type="button" class="btn btn-primary btn-lg" onclick="verificarCodigo2FA('${email}', ${recordarme})" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; border-radius: 10px; font-weight: 600; padding: 0.875rem;">
+                                <i class="bi bi-shield-check me-2"></i>Verificar Código
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary" onclick="reenviarCodigo2FA('${email}')" style="border-radius: 10px; font-weight: 600;">
+                                <i class="bi bi-arrow-clockwise me-2"></i>Reenviar Código
+                            </button>
+                            <button type="button" class="btn btn-link text-muted" onclick="cerrarModal2FA()">
+                                <i class="bi bi-arrow-left me-1"></i>Volver al login
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    // Remover modal anterior si existe
+    const modalAnterior = document.getElementById('modal2FA');
+    if (modalAnterior) {
+        modalAnterior.remove();
+    }
+    
+    // Agregar modal al body
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+    
+    // Mostrar modal
+    const modal = new bootstrap.Modal(document.getElementById('modal2FA'));
+    modal.show();
+    
+    // Configurar inputs de código
+    configurarInputsCodigo();
+    
+    // Focus en primer input
+    document.querySelector('.codigo-input').focus();
+}
+
+function configurarInputsCodigo() {
+    const inputs = document.querySelectorAll('.codigo-input');
+    
+    inputs.forEach((input, index) => {
+        // Auto-focus al siguiente input
+        input.addEventListener('input', function(e) {
+            if (this.value.length === 1 && index < inputs.length - 1) {
+                inputs[index + 1].focus();
+            }
+            
+            // Validar solo números
+            this.value = this.value.replace(/[^0-9]/g, '');
+            
+            // Cambiar color del borde cuando tiene valor
+            if (this.value) {
+                this.style.borderColor = '#667eea';
+                this.style.background = '#f0f4ff';
+            } else {
+                this.style.borderColor = '#e2e8f0';
+                this.style.background = 'white';
+            }
+        });
+        
+        // Backspace para volver al anterior
+        input.addEventListener('keydown', function(e) {
+            if (e.key === 'Backspace' && !this.value && index > 0) {
+                inputs[index - 1].focus();
+            }
+            
+            // Enter para verificar
+            if (e.key === 'Enter') {
+                const email = document.getElementById('modal2FA').querySelector('.modal-body strong').textContent;
+                const recordarme = localStorage.getItem('coomotor_remember') === 'true';
+                verificarCodigo2FA(email, recordarme);
+            }
+        });
+        
+        // Paste para distribuir código
+        input.addEventListener('paste', function(e) {
+            e.preventDefault();
+            const pasteData = e.clipboardData.getData('text').replace(/[^0-9]/g, '');
+            
+            for (let i = 0; i < Math.min(pasteData.length, inputs.length); i++) {
+                inputs[i].value = pasteData[i];
+                inputs[i].style.borderColor = '#667eea';
+                inputs[i].style.background = '#f0f4ff';
+            }
+            
+            // Focus en el último input con valor
+            const lastIndex = Math.min(pasteData.length - 1, inputs.length - 1);
+            inputs[lastIndex].focus();
+        });
+    });
+}
+
+async function verificarCodigo2FA(email, recordarme) {
+    const inputs = document.querySelectorAll('.codigo-input');
+    const codigo = Array.from(inputs).map(input => input.value).join('');
+    
+    if (codigo.length !== 6) {
+        mostrarAlerta2FA('warning', 'Por favor ingresa los 6 dígitos del código');
+        return;
+    }
+    
+    // Mostrar loading
+    const btn = event.target;
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Verificando...';
+    btn.disabled = true;
+    
+    try {
+        const response = await fetch('/api/usuarios/login/verificar-2fa', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email, codigo })
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            // Guardar datos del usuario
+            localStorage.setItem('coomotor_token', result.data.token);
+            localStorage.setItem('coomotor_user', JSON.stringify(result.data.user));
+            
+            if (recordarme) {
+                localStorage.setItem('coomotor_remember', 'true');
+            }
+            
+            mostrarAlerta2FA('success', '✅ Verificación exitosa. Redirigiendo...');
+            
+            // Redirigir según el rol
+            setTimeout(() => {
+                const user = result.data.user;
+                if (user.rol === 'admin') {
+                    window.location.href = '../dashboards/admin.html';
+                } else {
+                    window.location.href = '../dashboards/empleado.html';
+                }
+            }, 1500);
+        } else {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+            mostrarAlerta2FA('danger', result.error || 'Código incorrecto');
+            
+            // Limpiar inputs
+            inputs.forEach(input => {
+                input.value = '';
+                input.style.borderColor = '#dc2626';
+                input.style.background = '#fef2f2';
+            });
+            inputs[0].focus();
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+        mostrarAlerta2FA('danger', 'Error de conexión. Intenta nuevamente.');
+    }
+}
+
+async function reenviarCodigo2FA(email) {
+    const btn = event.target;
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Reenviando...';
+    btn.disabled = true;
+    
+    try {
+        const response = await fetch('/api/usuarios/login/reenviar-2fa', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email })
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            mostrarAlerta2FA('success', '✅ Nuevo código enviado a tu correo');
+            
+            // Limpiar inputs
+            document.querySelectorAll('.codigo-input').forEach(input => {
+                input.value = '';
+                input.style.borderColor = '#e2e8f0';
+                input.style.background = 'white';
+            });
+            document.querySelector('.codigo-input').focus();
+        } else {
+            mostrarAlerta2FA('danger', result.error || 'Error al reenviar código');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        mostrarAlerta2FA('danger', 'Error de conexión. Intenta nuevamente.');
+    } finally {
+        setTimeout(() => {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        }, 3000);
+    }
+}
+
+function cerrarModal2FA() {
+    const modal = bootstrap.Modal.getInstance(document.getElementById('modal2FA'));
+    if (modal) {
+        modal.hide();
+    }
+}
+
+function mostrarAlerta2FA(tipo, mensaje) {
+    const alertaDiv = document.getElementById('alerta2FA');
+    const iconos = {
+        success: 'bi-check-circle-fill',
+        danger: 'bi-x-circle-fill',
+        warning: 'bi-exclamation-triangle-fill',
+        info: 'bi-info-circle-fill'
+    };
+    
+    alertaDiv.innerHTML = `
+        <div class="alert alert-${tipo} alert-dismissible fade show" role="alert" style="border-radius: 10px; border: none;">
+            <i class="bi ${iconos[tipo]} me-2"></i>
+            ${mensaje}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    `;
+    
+    // Auto-ocultar después de 5 segundos
+    setTimeout(() => {
+        alertaDiv.innerHTML = '';
+    }, 5000);
 }

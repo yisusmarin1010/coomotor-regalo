@@ -460,7 +460,19 @@ app.post('/api/usuarios/register', async (req, res) => {
     }
 });
 
-// Login de usuario
+// ============================================
+// AUTENTICACIÓN DE 2 FACTORES (2FA)
+// ============================================
+
+// Almacenamiento temporal de códigos 2FA (en memoria)
+const codigos2FA = new Map();
+
+// Generar código de 6 dígitos
+function generarCodigo2FA() {
+    return Math.floor(100000 + Math.random() * 900000).toString();
+}
+
+// Login de usuario - PASO 1: Verificar credenciales
 app.post('/api/usuarios/login', async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -508,12 +520,64 @@ app.post('/api/usuarios/login', async (req, res) => {
             });
         }
         
-        // Actualizar último acceso
+        // NUEVO: Verificar si requiere 2FA (solo para admin por ahora)
+        const requiere2FA = usuario.rol === 'admin';
+        
+        if (requiere2FA) {
+            // Generar código 2FA
+            const codigo = generarCodigo2FA();
+            
+            // Guardar código con expiración de 10 minutos
+            codigos2FA.set(email.toLowerCase(), {
+                codigo: codigo,
+                expiracion: Date.now() + (10 * 60 * 1000), // 10 minutos
+                intentos: 0,
+                usuarioId: usuario.id,
+                usuarioData: {
+                    id: usuario.id,
+                    nombres: usuario.nombres,
+                    apellidos: usuario.apellidos,
+                    correo: usuario.correo,
+                    celular: usuario.celular,
+                    tipo_documento: usuario.tipo_documento,
+                    numero_documento: usuario.numero_documento,
+                    tipo_conductor: usuario.tipo_conductor,
+                    subtipo_conductor: usuario.subtipo_conductor,
+                    rol: usuario.rol,
+                    fechaRegistro: usuario.fecha_registro
+                }
+            });
+            
+            // Enviar código por correo
+            try {
+                await notificationService.enviarCodigo2FA({
+                    email: usuario.correo,
+                    nombre: `${usuario.nombres} ${usuario.apellidos}`,
+                    codigo: codigo
+                });
+                
+                console.log(`🔐 Código 2FA enviado a: ${usuario.correo}`);
+                
+                return res.json({
+                    success: true,
+                    requiere2FA: true,
+                    message: 'Código de verificación enviado a tu correo',
+                    email: usuario.correo
+                });
+            } catch (emailError) {
+                console.error('Error al enviar código 2FA:', emailError);
+                return res.status(500).json({
+                    success: false,
+                    error: 'Error al enviar código de verificación. Intenta nuevamente.'
+                });
+            }
+        }
+        
+        // Si no requiere 2FA, login normal
         await poolConnection.request()
             .input('id', sql.Int, usuario.id)
             .query('UPDATE usuarios SET ultimo_acceso = GETDATE() WHERE id = @id');
         
-        // Generar token JWT
         const token = jwt.sign(
             { 
                 userId: usuario.id,
@@ -526,6 +590,7 @@ app.post('/api/usuarios/login', async (req, res) => {
         
         res.json({
             success: true,
+            requiere2FA: false,
             message: 'Login exitoso',
             data: {
                 user: {
@@ -548,6 +613,160 @@ app.post('/api/usuarios/login', async (req, res) => {
     } catch (error) {
         console.error('Error en login:', error);
         res.status(500).json({
+            success: false,
+            error: 'Error interno del servidor'
+        });
+    }
+});
+
+// Login de usuario - PASO 2: Verificar código 2FA
+app.post('/api/usuarios/login/verificar-2fa', async (req, res) => {
+    try {
+        const { email, codigo } = req.body;
+        
+        if (!email || !codigo) {
+            return res.status(400).json({
+                success: false,
+                error: 'Email y código son requeridos'
+            });
+        }
+        
+        const emailLower = email.toLowerCase();
+        const datos2FA = codigos2FA.get(emailLower);
+        
+        if (!datos2FA) {
+            return res.status(400).json({
+                success: false,
+                error: 'No hay una solicitud de verificación activa. Inicia sesión nuevamente.'
+            });
+        }
+        
+        // Verificar expiración
+        if (Date.now() > datos2FA.expiracion) {
+            codigos2FA.delete(emailLower);
+            return res.status(400).json({
+                success: false,
+                error: 'El código ha expirado. Inicia sesión nuevamente.'
+            });
+        }
+        
+        // Verificar intentos
+        if (datos2FA.intentos >= 3) {
+            codigos2FA.delete(emailLower);
+            return res.status(400).json({
+                success: false,
+                error: 'Demasiados intentos fallidos. Inicia sesión nuevamente.'
+            });
+        }
+        
+        // Verificar código
+        if (datos2FA.codigo !== codigo) {
+            datos2FA.intentos++;
+            return res.status(400).json({
+                success: false,
+                error: `Código incorrecto. Intentos restantes: ${3 - datos2FA.intentos}`
+            });
+        }
+        
+        // Código correcto - eliminar de memoria
+        codigos2FA.delete(emailLower);
+        
+        // Actualizar último acceso
+        await poolConnection.request()
+            .input('id', sql.Int, datos2FA.usuarioId)
+            .query('UPDATE usuarios SET ultimo_acceso = GETDATE() WHERE id = @id');
+        
+        // Generar token JWT
+        const token = jwt.sign(
+            { 
+                userId: datos2FA.usuarioId,
+                correo: emailLower,
+                rol: datos2FA.usuarioData.rol
+            },
+            process.env.JWT_SECRET,
+            { expiresIn: '7d' }
+        );
+        
+        console.log(`✅ Login 2FA exitoso para: ${email}`);
+        
+        res.json({
+            success: true,
+            message: 'Autenticación exitosa',
+            data: {
+                user: datos2FA.usuarioData,
+                token
+            }
+        });
+        
+    } catch (error) {
+        console.error('Error en verificación 2FA:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Error interno del servidor'
+        });
+    }
+});
+
+// Reenviar código 2FA
+app.post('/api/usuarios/login/reenviar-2fa', async (req, res) => {
+    try {
+        const { email } = req.body;
+        
+        if (!email) {
+            return res.status(400).json({
+                success: false,
+                error: 'Email es requerido'
+            });
+        }
+        
+        const emailLower = email.toLowerCase();
+        const datos2FA = codigos2FA.get(emailLower);
+        
+        if (!datos2FA) {
+            return res.status(400).json({
+                success: false,
+                error: 'No hay una solicitud de verificación activa. Inicia sesión nuevamente.'
+            });
+        }
+        
+        // Generar nuevo código
+        const nuevoCodigo = generarCodigo2FA();
+        
+        // Actualizar código y resetear intentos
+        datos2FA.codigo = nuevoCodigo;
+        datos2FA.expiracion = Date.now() + (10 * 60 * 1000);
+        datos2FA.intentos = 0;
+        
+        // Enviar nuevo código
+        try {
+            await notificationService.enviarCodigo2FA({
+                email: emailLower,
+                nombre: `${datos2FA.usuarioData.nombres} ${datos2FA.usuarioData.apellidos}`,
+                codigo: nuevoCodigo
+            });
+            
+            console.log(`🔐 Código 2FA reenviado a: ${emailLower}`);
+            
+            res.json({
+                success: true,
+                message: 'Nuevo código enviado a tu correo'
+            });
+        } catch (emailError) {
+            console.error('Error al reenviar código 2FA:', emailError);
+            res.status(500).json({
+                success: false,
+                error: 'Error al enviar código. Intenta nuevamente.'
+            });
+        }
+        
+    } catch (error) {
+        console.error('Error al reenviar 2FA:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Error interno del servidor'
+        });
+    }
+});
             success: false,
             error: 'Error interno del servidor'
         });
@@ -2998,6 +3217,91 @@ app.put('/api/admin/usuarios/:id/estado', authenticateToken, requireAdmin, async
         
     } catch (error) {
         console.error('Error al cambiar estado de usuario:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Error interno del servidor'
+        });
+    }
+});
+
+// Cambiar rol de usuario (para admin) - NUEVO ENDPOINT
+app.put('/api/admin/usuarios/:id/rol', authenticateToken, requireAdmin, async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { rol } = req.body;
+        
+        // Validar rol
+        if (!rol || !['empleado', 'conductor', 'admin'].includes(rol)) {
+            return res.status(400).json({
+                success: false,
+                error: 'Rol inválido. Debe ser: empleado, conductor o admin'
+            });
+        }
+        
+        // Verificar que el usuario existe
+        const checkUser = await poolConnection.request()
+            .input('id', sql.Int, id)
+            .query('SELECT id, nombres, apellidos, correo, rol FROM usuarios WHERE id = @id');
+        
+        if (checkUser.recordset.length === 0) {
+            return res.status(404).json({
+                success: false,
+                error: 'Usuario no encontrado'
+            });
+        }
+        
+        const usuario = checkUser.recordset[0];
+        
+        // Evitar que el admin se quite sus propios permisos
+        if (usuario.id === req.user.userId && rol !== 'admin') {
+            return res.status(400).json({
+                success: false,
+                error: 'No puedes quitarte tus propios permisos de administrador'
+            });
+        }
+        
+        // Actualizar rol
+        await poolConnection.request()
+            .input('id', sql.Int, id)
+            .input('rol', sql.NVarChar, rol)
+            .query('UPDATE usuarios SET rol = @rol WHERE id = @id');
+        
+        console.log(`✅ Rol de usuario ${id} (${usuario.nombres} ${usuario.apellidos}) cambiado a: ${rol}`);
+        
+        // Enviar notificación por email
+        try {
+            const rolNombres = {
+                'empleado': 'Empleado',
+                'conductor': 'Conductor',
+                'admin': 'Administrador'
+            };
+            
+            await notificationService.enviarCambioRol({
+                email: usuario.correo,
+                nombre: `${usuario.nombres} ${usuario.apellidos}`,
+                rolAnterior: usuario.rol,
+                rolNuevo: rol,
+                rolNuevoNombre: rolNombres[rol]
+            });
+        } catch (emailError) {
+            console.error('Error al enviar notificación de cambio de rol:', emailError);
+            // No fallar si el email no se envía
+        }
+        
+        res.json({
+            success: true,
+            message: `Rol cambiado exitosamente a ${rol}`,
+            data: {
+                id: usuario.id,
+                nombres: usuario.nombres,
+                apellidos: usuario.apellidos,
+                rolAnterior: usuario.rol,
+                rolNuevo: rol
+            }
+        });
+        
+    } catch (error) {
+        console.error('Error al cambiar rol de usuario:', error);
         res.status(500).json({
             success: false,
             error: 'Error interno del servidor'
