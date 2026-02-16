@@ -767,11 +767,6 @@ app.post('/api/usuarios/login/reenviar-2fa', async (req, res) => {
         });
     }
 });
-            success: false,
-            error: 'Error interno del servidor'
-        });
-    }
-});
 
 // ============================================
 // RECUPERACIÓN DE CONTRASEÑA
