@@ -11,54 +11,78 @@ class SettingsPanel {
     }
 
     // ============================================
-    // CREAR BOTÓN FLOTANTE
+    // CREAR BOTÓN EN NAVBAR
     // ============================================
     createFloatingButton() {
+        // Esperar a que el navbar esté disponible
+        const checkNavbar = setInterval(() => {
+            const navbar = document.querySelector('.navbar .container');
+            if (navbar) {
+                clearInterval(checkNavbar);
+                this.addButtonToNavbar(navbar);
+            }
+        }, 100);
+
+        // Timeout de seguridad
+        setTimeout(() => clearInterval(checkNavbar), 5000);
+    }
+
+    addButtonToNavbar(navbar) {
+        // Buscar el contenedor de botones en el navbar
+        let navButtons = navbar.querySelector('.d-none.d-md-flex, .d-flex.gap-4');
+        
+        if (!navButtons) {
+            // Si no existe, crear uno
+            navButtons = document.createElement('div');
+            navButtons.className = 'd-flex gap-3 align-items-center';
+            navbar.appendChild(navButtons);
+        }
+
+        // Crear botón de configuración
         const button = document.createElement('button');
-        button.id = 'settings-floating-btn';
-        button.innerHTML = '⚙️';
-        button.title = 'Configuración';
+        button.id = 'settings-navbar-btn';
+        button.innerHTML = '<i class="bi bi-gear-fill"></i>';
+        button.title = 'Configuración Navideña';
         button.style.cssText = `
-            position: fixed;
-            bottom: 100px;
-            right: 20px;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
-            color: white;
-            border: none;
-            font-size: 28px;
+            background: transparent;
+            border: 2px solid rgba(37, 99, 235, 0.3);
+            color: #2563eb;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            font-size: 18px;
             cursor: pointer;
-            box-shadow: 0 5px 20px rgba(37, 99, 235, 0.4);
-            z-index: 9994;
             transition: all 0.3s;
-            animation: pulse 2s ease-in-out infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         `;
 
         button.addEventListener('mouseenter', () => {
-            button.style.transform = 'scale(1.1) rotate(90deg)';
+            button.style.background = 'linear-gradient(135deg, #2563eb 0%, #1e40af 100%)';
+            button.style.color = 'white';
+            button.style.borderColor = 'transparent';
+            button.style.transform = 'scale(1.05)';
         });
 
         button.addEventListener('mouseleave', () => {
-            button.style.transform = 'scale(1) rotate(0deg)';
+            button.style.background = 'transparent';
+            button.style.color = '#2563eb';
+            button.style.borderColor = 'rgba(37, 99, 235, 0.3)';
+            button.style.transform = 'scale(1)';
         });
 
         button.addEventListener('click', () => {
             this.toggle();
         });
 
-        // Animación de pulso
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes pulse {
-                0%, 100% { box-shadow: 0 5px 20px rgba(37, 99, 235, 0.4); }
-                50% { box-shadow: 0 5px 30px rgba(37, 99, 235, 0.8); }
-            }
-        `;
-        document.head.appendChild(style);
-
-        document.body.appendChild(button);
+        // Insertar antes del botón de login si existe, o al final
+        const loginBtn = navButtons.querySelector('.btn-nav, a[href*="login"]');
+        if (loginBtn) {
+            navButtons.insertBefore(button, loginBtn);
+        } else {
+            navButtons.appendChild(button);
+        }
     }
 
     // ============================================
