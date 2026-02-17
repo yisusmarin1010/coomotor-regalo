@@ -109,6 +109,9 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
         return;
     }
     
+    // Obtener deviceToken si existe
+    const deviceToken = localStorage.getItem('coomotor_device_token');
+    
     // Mostrar loading
     const submitBtn = document.querySelector('.btn-christmas');
     const originalText = submitBtn.innerHTML;
@@ -121,7 +124,11 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ email: correo, password: password })
+            body: JSON.stringify({ 
+                email: correo, 
+                password: password,
+                deviceToken: deviceToken // Enviar deviceToken si existe
+            })
         });
         
         const result = await response.json();
@@ -143,11 +150,21 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
             localStorage.setItem('coomotor_token', result.data.token);
             localStorage.setItem('coomotor_user', JSON.stringify(result.data.user));
             
+            // Guardar deviceToken si viene en la respuesta
+            if (result.data.deviceToken) {
+                localStorage.setItem('coomotor_device_token', result.data.deviceToken);
+            }
+            
             if (recordarme) {
                 localStorage.setItem('coomotor_remember', 'true');
             }
             
-            mostrarAlerta('success', '¡Bienvenido! Redirigiendo...');
+            // Mostrar mensaje especial si se omitió 2FA
+            if (result.omitido2FA) {
+                mostrarAlerta('success', '¡Bienvenido de nuevo! (Dispositivo recordado)');
+            } else {
+                mostrarAlerta('success', '¡Bienvenido! Redirigiendo...');
+            }
             
             // Redirigir según el rol
             setTimeout(() => {
@@ -408,6 +425,11 @@ async function verificarCodigo2FA(email, recordarme) {
             // Guardar datos del usuario
             localStorage.setItem('coomotor_token', result.data.token);
             localStorage.setItem('coomotor_user', JSON.stringify(result.data.user));
+            
+            // Guardar deviceToken para omitir 2FA por 10 minutos
+            if (result.data.deviceToken) {
+                localStorage.setItem('coomotor_device_token', result.data.deviceToken);
+            }
             
             if (recordarme) {
                 localStorage.setItem('coomotor_remember', 'true');

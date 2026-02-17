@@ -3,7 +3,7 @@
 // ============================================
 
 // Función global para cerrar sesión - disponible en todas las páginas
-function cerrarSesion(event) {
+async function cerrarSesion(event) {
     // Prevenir comportamiento por defecto si es un enlace
     if (event) {
         event.preventDefault();
@@ -17,10 +17,36 @@ function cerrarSesion(event) {
         console.log('✅ Usuario confirmó cerrar sesión');
         
         try {
-            // Limpiar localStorage
+            // Obtener datos antes de limpiar
+            const deviceToken = localStorage.getItem('coomotor_device_token');
+            const userData = localStorage.getItem('coomotor_user');
+            
+            // Registrar logout en el servidor para recordar dispositivo
+            if (deviceToken && userData) {
+                try {
+                    const user = JSON.parse(userData);
+                    await fetch('/api/usuarios/logout', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            deviceToken: deviceToken,
+                            email: user.correo,
+                            usuarioId: user.id
+                        })
+                    });
+                    console.log('📱 Dispositivo registrado para omitir 2FA por 10 minutos');
+                } catch (error) {
+                    console.error('Error al registrar logout:', error);
+                }
+            }
+            
+            // Limpiar localStorage (excepto deviceToken)
             localStorage.removeItem('coomotor_token');
             localStorage.removeItem('coomotor_user');
             localStorage.removeItem('coomotor_remember');
+            // NO eliminar coomotor_device_token para mantenerlo
             
             // Limpiar sessionStorage
             sessionStorage.clear();

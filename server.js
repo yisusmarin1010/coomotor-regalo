@@ -14,6 +14,7 @@ const validator = require('validator');
 const path = require('path');
 const multer = require('multer');
 const fs = require('fs');
+const crypto = require('crypto');
 const { BlobServiceClient } = require('@azure/storage-blob');
 require('dotenv').config();
 
@@ -467,6 +468,10 @@ app.post('/api/usuarios/register', async (req, res) => {
 // Almacenamiento temporal de códigos 2FA (en memoria)
 const codigos2FA = new Map();
 
+// Almacenamiento de dispositivos recordados (en memoria)
+// Estructura: { deviceToken: { usuarioId, ultimoLogout, email } }
+const dispositivosRecordados = new Map();
+
 // Generar código de 6 dígitos
 function generarCodigo2FA() {
     return Math.floor(100000 + Math.random() * 900000).toString();
@@ -475,7 +480,7 @@ function generarCodigo2FA() {
 // Login de usuario - PASO 1: Verificar credenciales
 app.post('/api/usuarios/login', async (req, res) => {
     try {
-        const { email, password } = req.body;
+        const { email, password, deviceToken } = req.body;
         
         // Validaciones básicas
         if (!email || !password) {
@@ -524,6 +529,60 @@ app.post('/api/usuarios/login', async (req, res) => {
         const requiere2FA = usuario.rol === 'admin';
         
         if (requiere2FA) {
+            // Verificar si el dispositivo está recordado (menos de 10 minutos desde último logout)
+            if (deviceToken && dispositivosRecordados.has(deviceToken)) {
+                const dispositivo = dispositivosRecordados.get(deviceToken);
+                const tiempoTranscurrido = Date.now() - dispositivo.ultimoLogout;
+                const diezMinutos = 10 * 60 * 1000; // 10 minutos en milisegundos
+                
+                // Si han pasado menos de 10 minutos y es el mismo usuario, omitir 2FA
+                if (tiempoTranscurrido < diezMinutos && dispositivo.usuarioId === usuario.id) {
+                    console.log(`✅ Dispositivo recordado para ${usuario.correo} - Omitiendo 2FA`);
+                    
+                    // Actualizar último acceso
+                    await poolConnection.request()
+                        .input('id', sql.Int, usuario.id)
+                        .query('UPDATE usuarios SET ultimo_acceso = GETDATE() WHERE id = @id');
+                    
+                    const token = jwt.sign(
+                        { 
+                            userId: usuario.id,
+                            correo: usuario.correo,
+                            rol: usuario.rol
+                        },
+                        process.env.JWT_SECRET,
+                        { expiresIn: '7d' }
+                    );
+                    
+                    return res.json({
+                        success: true,
+                        requiere2FA: false,
+                        omitido2FA: true,
+                        message: 'Login exitoso (dispositivo recordado)',
+                        data: {
+                            user: {
+                                id: usuario.id,
+                                nombres: usuario.nombres,
+                                apellidos: usuario.apellidos,
+                                correo: usuario.correo,
+                                celular: usuario.celular,
+                                tipo_documento: usuario.tipo_documento,
+                                numero_documento: usuario.numero_documento,
+                                tipo_conductor: usuario.tipo_conductor,
+                                subtipo_conductor: usuario.subtipo_conductor,
+                                rol: usuario.rol,
+                                fechaRegistro: usuario.fecha_registro
+                            },
+                            token,
+                            deviceToken
+                        }
+                    });
+                } else {
+                    // Han pasado más de 10 minutos o es otro usuario, eliminar dispositivo
+                    dispositivosRecordados.delete(deviceToken);
+                }
+            }
+            
             // Generar código 2FA
             const codigo = generarCodigo2FA();
             
@@ -671,6 +730,9 @@ app.post('/api/usuarios/login/verificar-2fa', async (req, res) => {
         // Código correcto - eliminar de memoria
         codigos2FA.delete(emailLower);
         
+        // Generar deviceToken único para recordar este dispositivo
+        const deviceToken = crypto.randomBytes(32).toString('hex');
+        
         // Actualizar último acceso
         await poolConnection.request()
             .input('id', sql.Int, datos2FA.usuarioId)
@@ -694,7 +756,8 @@ app.post('/api/usuarios/login/verificar-2fa', async (req, res) => {
             message: 'Autenticación exitosa',
             data: {
                 user: datos2FA.usuarioData,
-                token
+                token,
+                deviceToken // Enviar deviceToken al cliente
             }
         });
         
@@ -761,6 +824,44 @@ app.post('/api/usuarios/login/reenviar-2fa', async (req, res) => {
         
     } catch (error) {
         console.error('Error al reenviar 2FA:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Error interno del servidor'
+        });
+    }
+});
+
+// Logout - Registrar dispositivo para omitir 2FA por 10 minutos
+app.post('/api/usuarios/logout', async (req, res) => {
+    try {
+        const { deviceToken, email, usuarioId } = req.body;
+        
+        if (deviceToken && email && usuarioId) {
+            // Guardar dispositivo con timestamp de logout
+            dispositivosRecordados.set(deviceToken, {
+                usuarioId: usuarioId,
+                email: email.toLowerCase(),
+                ultimoLogout: Date.now()
+            });
+            
+            console.log(`📱 Dispositivo recordado para ${email} - Válido por 10 minutos`);
+            
+            // Limpiar dispositivos expirados (más de 10 minutos)
+            const diezMinutos = 10 * 60 * 1000;
+            for (const [token, datos] of dispositivosRecordados.entries()) {
+                if (Date.now() - datos.ultimoLogout > diezMinutos) {
+                    dispositivosRecordados.delete(token);
+                }
+            }
+        }
+        
+        res.json({
+            success: true,
+            message: 'Logout exitoso'
+        });
+        
+    } catch (error) {
+        console.error('Error en logout:', error);
         res.status(500).json({
             success: false,
             error: 'Error interno del servidor'
