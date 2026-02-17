@@ -6,7 +6,7 @@
  */
 
 const API_CONFIG = {
-    // Detectar automáticamente el entorno
+    // Detectar aautomáticamente el entorno
     BASE_URL: window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
         ? 'http://localhost:3001'  // Desarrollo local
         : window.location.origin,   // Producción (mismo dominio)

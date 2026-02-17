@@ -3,7 +3,7 @@
 // Componente reutilizable para todas las páginas
 // ============================================
 
-// HTML del Footer Legal Completo
+// HTML del Footer Legal Completoo
 const footerLegalHTML = `
     <!-- Footer Legal Completo -->
     <footer style="background: #0a0f1e; color: white; padding: 4rem 0 2rem;">

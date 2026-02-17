@@ -7,7 +7,7 @@ let intentosFallidos = 0;
 let captchaActivo = false;
 let captchaRespuestaCorrecta = 0;
 
-// Función para generar CAPTCHA matemático
+// Función para generaar CAPTCHA matemático
 function generarCaptcha() {
     const num1 = Math.floor(Math.random() * 10) + 1;
     const num2 = Math.floor(Math.random() * 10) + 1;

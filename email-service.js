@@ -11,7 +11,7 @@ class EmailService {
         this.initializeTransporter();
     }
 
-    // Inicializar el transportador de correo
+    // Inicializar el transportador de correoo
     initializeTransporter() {
         try {
             const email = process.env.SMTP_USER;
