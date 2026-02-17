@@ -74,8 +74,22 @@ function mostrarModalSubirDocumento() {
                             <div class="mb-3">
                                 <label class="form-label">Archivo (PDF, PNG, JPG) *</label>
                                 <input type="file" class="form-control" id="archivoDocumento" 
-                                       accept=".pdf,.png,.jpg,.jpeg" required>
+                                       accept=".pdf,.png,.jpg,.jpeg" required onchange="previsualizarDocumento(this)">
                                 <div class="form-text">Tamaño máximo: 5MB</div>
+                            </div>
+                            
+                            <!-- Vista Previa del Documento -->
+                            <div id="previewContainer" class="mb-3" style="display: none;">
+                                <label class="form-label">Vista Previa:</label>
+                                <div id="previewContent" style="border: 2px solid #e2e8f0; border-radius: 12px; padding: 20px; background: #f8fafc; text-align: center; min-height: 200px;">
+                                    <!-- Aquí se mostrará la preview -->
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center mt-2">
+                                    <small class="text-muted" id="fileInfo"></small>
+                                    <button type="button" class="btn btn-sm btn-outline-danger" onclick="limpiarPreview()">
+                                        <i class="bi bi-x-circle me-1"></i>Cambiar archivo
+                                    </button>
+                                </div>
                             </div>
 
                             <div class="mb-3">
@@ -599,6 +613,219 @@ function formatearFecha(fecha) {
         month: 'short',
         day: 'numeric'
     });
+}
+
+// ============================================
+// VISTA PREVIA DE DOCUMENTOS
+// ============================================
+
+// Previsualizar documento antes de subir
+function previsualizarDocumento(input) {
+    const archivo = input.files[0];
+    const previewContainer = document.getElementById('previewContainer');
+    const previewContent = document.getElementById('previewContent');
+    const fileInfo = document.getElementById('fileInfo');
+    
+    if (!archivo) {
+        previewContainer.style.display = 'none';
+        return;
+    }
+    
+    // Validar tamaño (5MB)
+    const maxSize = 5 * 1024 * 1024;
+    if (archivo.size > maxSize) {
+        mostrarAlerta('danger', 'El archivo es demasiado grande. Máximo 5MB');
+        input.value = '';
+        previewContainer.style.display = 'none';
+        return;
+    }
+    
+    // Validar tipo de archivo
+    const tiposPermitidos = ['application/pdf', 'image/png', 'image/jpeg', 'image/jpg'];
+    if (!tiposPermitidos.includes(archivo.type)) {
+        mostrarAlerta('danger', 'Tipo de archivo no permitido. Solo PDF, PNG y JPG');
+        input.value = '';
+        previewContainer.style.display = 'none';
+        return;
+    }
+    
+    // Mostrar información del archivo
+    const tamanoMB = (archivo.size / (1024 * 1024)).toFixed(2);
+    fileInfo.innerHTML = `
+        <i class="bi bi-file-earmark-check text-success me-1"></i>
+        <strong>${archivo.name}</strong> (${tamanoMB} MB)
+    `;
+    
+    // Mostrar preview según el tipo
+    if (archivo.type === 'application/pdf') {
+        previsualizarPDF(archivo, previewContent);
+    } else {
+        previsualizarImagen(archivo, previewContent);
+    }
+    
+    previewContainer.style.display = 'block';
+}
+
+// Previsualizar PDF
+function previsualizarPDF(archivo, container) {
+    const reader = new FileReader();
+    
+    reader.onload = function(e) {
+        container.innerHTML = `
+            <div style="position: relative;">
+                <i class="bi bi-file-pdf-fill text-danger" style="font-size: 80px; margin-bottom: 15px;"></i>
+                <h5 style="color: #dc2626; font-weight: 700; margin-bottom: 10px;">
+                    Documento PDF
+                </h5>
+                <p style="color: #64748b; font-size: 0.9rem; margin-bottom: 20px;">
+                    ${archivo.name}
+                </p>
+                <div class="alert alert-info" style="font-size: 0.85rem; margin: 0;">
+                    <i class="bi bi-info-circle me-2"></i>
+                    La vista previa completa del PDF estará disponible después de subirlo
+                </div>
+                <button type="button" class="btn btn-sm btn-outline-primary mt-3" onclick="abrirPDFEnNuevaVentana()">
+                    <i class="bi bi-eye me-1"></i>Ver PDF en nueva ventana
+                </button>
+            </div>
+        `;
+        
+        // Guardar el data URL para poder abrirlo
+        window.currentPDFDataURL = e.target.result;
+    };
+    
+    reader.readAsDataURL(archivo);
+}
+
+// Abrir PDF en nueva ventana
+function abrirPDFEnNuevaVentana() {
+    if (window.currentPDFDataURL) {
+        const ventana = window.open('', '_blank');
+        ventana.document.write(`
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <title>Vista Previa PDF</title>
+                <style>
+                    body { margin: 0; padding: 0; }
+                    iframe { width: 100%; height: 100vh; border: none; }
+                </style>
+            </head>
+            <body>
+                <iframe src="${window.currentPDFDataURL}"></iframe>
+            </body>
+            </html>
+        `);
+    }
+}
+
+// Previsualizar imagen
+function previsualizarImagen(archivo, container) {
+    const reader = new FileReader();
+    
+    reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+            // Calcular dimensiones para la preview (máximo 400px de ancho)
+            let width = this.width;
+            let height = this.height;
+            const maxWidth = 400;
+            
+            if (width > maxWidth) {
+                height = (height * maxWidth) / width;
+                width = maxWidth;
+            }
+            
+            container.innerHTML = `
+                <div style="position: relative;">
+                    <div style="margin-bottom: 15px;">
+                        <img src="${e.target.result}" 
+                             style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"
+                             alt="Vista previa">
+                    </div>
+                    <div class="alert alert-success" style="font-size: 0.85rem; margin: 0;">
+                        <i class="bi bi-check-circle me-2"></i>
+                        <strong>Imagen válida</strong> - Dimensiones: ${this.width} x ${this.height} px
+                    </div>
+                    <div class="mt-2">
+                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="verImagenCompleta()">
+                            <i class="bi bi-arrows-fullscreen me-1"></i>Ver tamaño completo
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            // Guardar la imagen para verla en tamaño completo
+            window.currentImageDataURL = e.target.result;
+        };
+        
+        img.onerror = function() {
+            container.innerHTML = `
+                <div class="alert alert-danger">
+                    <i class="bi bi-exclamation-triangle me-2"></i>
+                    Error al cargar la imagen. Por favor, selecciona otro archivo.
+                </div>
+            `;
+        };
+        
+        img.src = e.target.result;
+    };
+    
+    reader.readAsDataURL(archivo);
+}
+
+// Ver imagen en tamaño completo
+function verImagenCompleta() {
+    if (window.currentImageDataURL) {
+        const modal = `
+            <div class="modal fade" id="modalImagenCompleta" tabindex="-1">
+                <div class="modal-dialog modal-xl modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">
+                                <i class="bi bi-image me-2"></i>Vista Previa - Tamaño Completo
+                            </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body text-center" style="background: #f8fafc;">
+                            <img src="${window.currentImageDataURL}" 
+                                 style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.15);"
+                                 alt="Vista previa completa">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        // Crear modal temporal
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = modal;
+        document.body.appendChild(tempDiv);
+        
+        const modalElement = new bootstrap.Modal(document.getElementById('modalImagenCompleta'));
+        modalElement.show();
+        
+        // Limpiar al cerrar
+        document.getElementById('modalImagenCompleta').addEventListener('hidden.bs.modal', function() {
+            tempDiv.remove();
+        });
+    }
+}
+
+// Limpiar preview
+function limpiarPreview() {
+    const input = document.getElementById('archivoDocumento');
+    const previewContainer = document.getElementById('previewContainer');
+    
+    input.value = '';
+    previewContainer.style.display = 'none';
+    
+    // Limpiar variables globales
+    window.currentPDFDataURL = null;
+    window.currentImageDataURL = null;
 }
 
 // Función auxiliar para mostrar alertas

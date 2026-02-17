@@ -1,0 +1,192 @@
+/* ============================================
+   ESTILOS PARA VISTA PREVIA DE DOCUMENTOS
+   ============================================ */
+
+#previewContainer {
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#previewContent {
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+#previewContent:hover {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* Estilos para el contenedor de preview de PDF */
+.pdf-preview-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+}
+
+/* Estilos para el contenedor de preview de imagen */
+.image-preview-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Animación de carga */
+.preview-loading {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    border: 4px solid #f3f4f6;
+    border-top-color: #2563eb;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Estilos para información del archivo */
+#fileInfo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: #f0f9ff;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    color: #0369a1;
+}
+
+/* Botón de limpiar preview */
+.btn-clear-preview {
+    transition: all 0.3s ease;
+}
+
+.btn-clear-preview:hover {
+    transform: scale(1.05);
+}
+
+/* Estilos para modal de imagen completa */
+#modalImagenCompleta .modal-body {
+    max-height: 80vh;
+    overflow: auto;
+}
+
+#modalImagenCompleta img {
+    transition: transform 0.3s ease;
+}
+
+#modalImagenCompleta img:hover {
+    transform: scale(1.02);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    #previewContent {
+        padding: 15px;
+    }
+    
+    .pdf-preview-container,
+    .image-preview-container {
+        padding: 20px 10px;
+    }
+    
+    #fileInfo {
+        font-size: 0.75rem;
+        flex-wrap: wrap;
+    }
+}
+
+/* Estilos para alertas dentro del preview */
+#previewContent .alert {
+    border-radius: 8px;
+    border: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+#previewContent .alert-info {
+    background: linear-gradient(135deg, #e0f2fe 0%, #dbeafe 100%);
+    color: #0369a1;
+}
+
+#previewContent .alert-success {
+    background: linear-gradient(135deg, #dcfce7 0%, #d1fae5 100%);
+    color: #15803d;
+}
+
+#previewContent .alert-danger {
+    background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+    color: #dc2626;
+}
+
+/* Botones dentro del preview */
+#previewContent .btn {
+    transition: all 0.3s ease;
+    font-weight: 600;
+}
+
+#previewContent .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Icono de PDF */
+.bi-file-pdf-fill {
+    filter: drop-shadow(0 4px 12px rgba(220, 38, 38, 0.3));
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+/* Mejoras visuales para imágenes */
+#previewContent img {
+    border: 3px solid white;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+/* Indicador de validación */
+.validation-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-top: 10px;
+}
+
+.validation-badge.success {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.validation-badge.error {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.validation-badge.warning {
+    background: #fef3c7;
+    color: #d97706;
+}
