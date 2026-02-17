@@ -668,54 +668,69 @@ function previsualizarDocumento(input) {
 
 // Previsualizar PDF
 function previsualizarPDF(archivo, container) {
-    const reader = new FileReader();
+    // Crear URL del blob para el PDF
+    const blobURL = URL.createObjectURL(archivo);
     
-    reader.onload = function(e) {
-        container.innerHTML = `
-            <div style="position: relative;">
-                <i class="bi bi-file-pdf-fill text-danger" style="font-size: 80px; margin-bottom: 15px;"></i>
-                <h5 style="color: #dc2626; font-weight: 700; margin-bottom: 10px;">
-                    Documento PDF
-                </h5>
-                <p style="color: #64748b; font-size: 0.9rem; margin-bottom: 20px;">
-                    ${archivo.name}
-                </p>
-                <div class="alert alert-info" style="font-size: 0.85rem; margin: 0;">
-                    <i class="bi bi-info-circle me-2"></i>
-                    La vista previa completa del PDF estará disponible después de subirlo
-                </div>
-                <button type="button" class="btn btn-sm btn-outline-primary mt-3" onclick="abrirPDFEnNuevaVentana()">
-                    <i class="bi bi-eye me-1"></i>Ver PDF en nueva ventana
+    // Guardar el blob URL globalmente
+    window.currentPDFBlobURL = blobURL;
+    window.currentPDFFileName = archivo.name;
+    
+    container.innerHTML = `
+        <div style="position: relative;">
+            <i class="bi bi-file-pdf-fill text-danger" style="font-size: 80px; margin-bottom: 15px;"></i>
+            <h5 style="color: #dc2626; font-weight: 700; margin-bottom: 10px;">
+                Documento PDF
+            </h5>
+            <p style="color: #64748b; font-size: 0.9rem; margin-bottom: 20px;">
+                ${archivo.name}
+            </p>
+            
+            <!-- Vista previa embebida del PDF -->
+            <div style="margin: 20px 0;">
+                <iframe src="${blobURL}" 
+                        style="width: 100%; height: 400px; border: 2px solid #e2e8f0; border-radius: 8px;"
+                        title="Vista previa PDF">
+                </iframe>
+            </div>
+            
+            <div class="d-flex gap-2 justify-content-center">
+                <button type="button" class="btn btn-sm btn-outline-primary" onclick="abrirPDFEnNuevaVentana()">
+                    <i class="bi bi-arrows-fullscreen me-1"></i>Ver en pantalla completa
+                </button>
+                <button type="button" class="btn btn-sm btn-outline-secondary" onclick="descargarPDFPreview()">
+                    <i class="bi bi-download me-1"></i>Descargar preview
                 </button>
             </div>
-        `;
-        
-        // Guardar el data URL para poder abrirlo
-        window.currentPDFDataURL = e.target.result;
-    };
-    
-    reader.readAsDataURL(archivo);
+            
+            <div class="alert alert-success mt-3" style="font-size: 0.85rem; margin: 0;">
+                <i class="bi bi-check-circle me-2"></i>
+                <strong>PDF válido</strong> - Puedes ver el contenido arriba
+            </div>
+        </div>
+    `;
 }
 
 // Abrir PDF en nueva ventana
 function abrirPDFEnNuevaVentana() {
-    if (window.currentPDFDataURL) {
-        const ventana = window.open('', '_blank');
-        ventana.document.write(`
-            <!DOCTYPE html>
-            <html>
-            <head>
-                <title>Vista Previa PDF</title>
-                <style>
-                    body { margin: 0; padding: 0; }
-                    iframe { width: 100%; height: 100vh; border: none; }
-                </style>
-            </head>
-            <body>
-                <iframe src="${window.currentPDFDataURL}"></iframe>
-            </body>
-            </html>
-        `);
+    if (window.currentPDFBlobURL) {
+        // Abrir directamente el blob URL en nueva ventana
+        window.open(window.currentPDFBlobURL, '_blank');
+    } else {
+        alert('No hay PDF cargado para mostrar');
+    }
+}
+
+// Descargar PDF de preview
+function descargarPDFPreview() {
+    if (window.currentPDFBlobURL && window.currentPDFFileName) {
+        const a = document.createElement('a');
+        a.href = window.currentPDFBlobURL;
+        a.download = window.currentPDFFileName;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    } else {
+        alert('No hay PDF cargado para descargar');
     }
 }
 
@@ -823,8 +838,14 @@ function limpiarPreview() {
     input.value = '';
     previewContainer.style.display = 'none';
     
+    // Liberar blob URLs para evitar memory leaks
+    if (window.currentPDFBlobURL) {
+        URL.revokeObjectURL(window.currentPDFBlobURL);
+        window.currentPDFBlobURL = null;
+    }
+    
     // Limpiar variables globales
-    window.currentPDFDataURL = null;
+    window.currentPDFFileName = null;
     window.currentImageDataURL = null;
 }
 
