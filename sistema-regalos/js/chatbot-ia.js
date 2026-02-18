@@ -207,8 +207,124 @@ Usa emojis ocasionalmente para ser más amigable. Habla en español colombiano.
         // Intentar usar API de OpenAI (si está configurada)
         // Si no, usar respuestas predefinidas inteligentes
         
-        const respuesta = await this.obtenerRespuestaLocal(pregunta, contextoSistema);
-        return respuesta;
+        const respuestaLocal = await this.obtenerRespuestaLocal(pregunta, contextoSistema);
+        
+        // Si la respuesta local es genérica, usar respuesta mejorada
+        if (respuestaLocal.includes('no estoy seguro de entender')) {
+            return this.obtenerRespuestaMejorada(pregunta);
+        }
+        
+        return respuestaLocal;
+    }
+
+    obtenerRespuestaMejorada(pregunta) {
+        const preguntaLower = pregunta.toLowerCase();
+        
+        // Saludos informales
+        if (preguntaLower.match(/^(q tal|que tal|qué tal|como estas|cómo estás|todo bien|buenas|ey|oye)$/i)) {
+            return `¡Hola! 😊 Todo bien por aquí. Estoy listo para ayudarte con el sistema de regalos.
+
+¿Qué necesitas saber?`;
+        }
+        
+        // Contacto (palabra sola)
+        if (preguntaLower.match(/^(contacto|contactar|admin|administrador)$/i)) {
+            return `📞 **Para contactar al administrador:**
+
+1. Ve a la sección "Contacto" en tu dashboard
+2. Completa el formulario con tu consulta
+3. Recibirás respuesta por email en 24-48 horas
+
+💡 Antes de contactar, pregúntame a mí. Puedo resolver la mayoría de dudas al instante.
+
+¿Qué necesitas específicamente?`;
+        }
+        
+        // Registro (palabra sola)
+        if (preguntaLower.match(/^(registro|registrar|registrarme)$/i)) {
+            return `📋 **Para registrar a tu hijo:**
+
+1. Ve a tu dashboard
+2. Click en "Registrar Hijo"
+3. Completa los datos del niño
+4. Guarda
+
+⏰ Plazo: Hasta el 10 de diciembre
+
+¿Necesitas ayuda con algún paso?`;
+        }
+        
+        // Documentos (palabra sola)
+        if (preguntaLower.match(/^(documentos|documento|papeles|docs)$/i)) {
+            return `📄 **Documentos necesarios:**
+
+• Registro civil del niño
+• Foto del niño
+• Cédula del empleado (para conductores)
+
+📸 Formato: JPG, PNG o PDF (máx 5MB)
+
+¿Tienes los documentos listos?`;
+        }
+        
+        // Fechas (palabra sola)
+        if (preguntaLower.match(/^(fechas|fecha|cuando|cuándo|plazo|plazos)$/i)) {
+            return `📅 **Fechas importantes 2024:**
+
+✅ Registro: Hasta 10 dic
+🎁 Postulaciones: Hasta 15 dic
+📋 Revisión: 16-20 dic
+🎄 Entrega: 21-24 dic
+
+¿Sobre qué fecha tienes dudas?`;
+        }
+        
+        // Estado (palabra sola)
+        if (preguntaLower.match(/^(estado|estados|postulacion|postulación)$/i)) {
+            return `📊 **Ver estado de postulación:**
+
+Ve a tu dashboard → Sección "Mis Hijos"
+
+**Estados:**
+⏳ Pendiente
+📄 Docs solicitados
+✅ Aprobada
+❌ Rechazada
+📦 Entregado
+
+¿Quieres saber más sobre algún estado?`;
+        }
+        
+        // Ayuda
+        if (preguntaLower.match(/^(ayuda|help|auxilio|sos)$/i)) {
+            return `🆘 **¿En qué puedo ayudarte?**
+
+Puedo responder sobre:
+• Registro de hijos
+• Documentos necesarios
+• Fechas y plazos
+• Estado de postulaciones
+• Contacto con admin
+
+Pregúntame lo que necesites. 😊`;
+        }
+        
+        // Respuesta por defecto mejorada
+        return `Entiendo que preguntas sobre "${pregunta}". 
+
+Intenta preguntarme así:
+• "¿Cómo registro a mi hijo?"
+• "¿Qué documentos necesito?"
+• "¿Cuándo es el plazo?"
+
+O dime una palabra clave:
+• Registro
+• Documentos
+• Fechas
+• Estado
+• Contacto
+
+¿Qué necesitas?`;
     }
 
     async obtenerRespuestaLocal(pregunta, contexto) {
