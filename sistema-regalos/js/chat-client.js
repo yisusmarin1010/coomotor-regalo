@@ -183,3 +183,70 @@ class ChatClient {
         }
     }
 }
+
+// ============================================
+// AUTO-INICIALIZACIÓN DEL CHAT
+// ============================================
+
+// Variables globales
+window.chatClient = null;
+window.chatUI = null;
+
+// Función de inicialización
+window.initChat = function(userId, rol) {
+    try {
+        console.log('🚀 Inicializando chat...', { userId, rol });
+        
+        // Esperar a que ChatUI esté disponible
+        if (typeof ChatUI === 'undefined') {
+            console.log('⏳ Esperando ChatUI...');
+            setTimeout(() => window.initChat(userId, rol), 500);
+            return;
+        }
+        
+        window.chatClient = new ChatClient(userId, rol);
+        window.chatUI = new ChatUI(window.chatClient);
+        window.chatClient.connect();
+        console.log('✅ Chat inicializado correctamente');
+    } catch (error) {
+        console.error('❌ Error inicializando chat:', error);
+    }
+};
+
+// Auto-inicializar cuando todo esté listo
+function autoInitChat() {
+    try {
+        const userData = JSON.parse(localStorage.getItem('userData'));
+        console.log('🔍 Verificando auto-inicialización...', {
+            userData: !!userData,
+            userId: userData?.id,
+            ChatClient: typeof ChatClient,
+            ChatUI: typeof ChatUI
+        });
+        
+        if (userData && userData.id) {
+            if (typeof ChatClient !== 'undefined' && typeof ChatUI !== 'undefined') {
+                console.log('✅ Todo listo, inicializando chat...');
+                window.initChat(userData.id, userData.rol || 'empleado');
+            } else {
+                console.log('⏳ Esperando clases del chat...');
+                setTimeout(autoInitChat, 500);
+            }
+        } else {
+            console.log('⚠️ No hay datos de usuario en localStorage');
+        }
+    } catch (error) {
+        console.error('❌ Error en auto-inicialización:', error);
+    }
+}
+
+// Ejecutar cuando el DOM esté listo
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('📄 DOM cargado, esperando 1 segundo...');
+        setTimeout(autoInitChat, 1000);
+    });
+} else {
+    console.log('📄 DOM ya está listo, esperando 1 segundo...');
+    setTimeout(autoInitChat, 1000);
+}
