@@ -25,7 +25,8 @@
     "multer": "^2.0.2",
     "node-cron": "^3.0.3",
     "nodemailer": "^8.0.0",
-    "validator": "^13.11.0"
+    "validator": "^13.11.0",
+    "ws": "^8.19.0"
   },
   "devDependencies": {
     "nodemon": "^3.0.2"

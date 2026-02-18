@@ -94,7 +94,7 @@ app.use(helmet({
             scriptSrcAttr: ["'unsafe-inline'"], // Permitir onclick en HTML
             imgSrc: ["'self'", "data:", "https:"],
             fontSrc: ["'self'", "https:", "fonts.gstatic.com"],
-            connectSrc: ["'self'", "https:", "ws:", "wss:"],
+            connectSrc: ["'self'", "https:", "ws:", "wss:", "*.onrender.com"],
         },
     },
 }));
@@ -1544,6 +1544,78 @@ app.post('/api/contacto', async (req, res) => {
     }
 });
 
+// ============================================
+// RUTAS DE CHAT
+// ============================================
+
+// Inicializar tablas de chat
+app.post('/api/chat/init-tables', authenticateToken, requireAdmin, async (req, res) => {
+    try {
+        console.log('🔧 Inicializando tablas de chat...');
+        
+        // Crear tabla de conversaciones
+        await poolConnection.request().query(`
+            IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'chat_conversaciones')
+            BEGIN
+                CREATE TABLE chat_conversaciones (
+                    id INT IDENTITY(1,1) PRIMARY KEY,
+                    empleado_id INT NOT NULL,
+                    estado NVARCHAR(20) NOT NULL DEFAULT 'activa',
+                    fecha_inicio DATETIME2 DEFAULT GETDATE(),
+                    fecha_cierre DATETIME2 NULL,
+                    
+                    CONSTRAINT FK_chat_conversaciones_empleado FOREIGN KEY (empleado_id) 
+                        REFERENCES usuarios(id) ON DELETE CASCADE,
+                    CONSTRAINT CK_chat_conversaciones_estado CHECK (estado IN ('activa', 'cerrada'))
+                );
+                
+                CREATE INDEX IX_chat_conversaciones_empleado ON chat_conversaciones(empleado_id);
+                CREATE INDEX IX_chat_conversaciones_estado ON chat_conversaciones(estado);
+            END
+        `);
+        
+        // Crear tabla de mensajes
+        await poolConnection.request().query(`
+            IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'chat_mensajes')
+            BEGIN
+                CREATE TABLE chat_mensajes (
+                    id INT IDENTITY(1,1) PRIMARY KEY,
+                    conversacion_id INT NOT NULL,
+                    usuario_id INT NOT NULL,
+                    mensaje NVARCHAR(MAX) NOT NULL,
+                    tipo_usuario NVARCHAR(20) NOT NULL,
+                    fecha_envio DATETIME2 DEFAULT GETDATE(),
+                    leido BIT DEFAULT 0,
+                    
+                    CONSTRAINT FK_chat_mensajes_conversacion FOREIGN KEY (conversacion_id) 
+                        REFERENCES chat_conversaciones(id) ON DELETE CASCADE,
+                    CONSTRAINT FK_chat_mensajes_usuario FOREIGN KEY (usuario_id) 
+                        REFERENCES usuarios(id),
+                    CONSTRAINT CK_chat_mensajes_tipo CHECK (tipo_usuario IN ('empleado', 'conductor', 'admin'))
+                );
+                
+                CREATE INDEX IX_chat_mensajes_conversacion ON chat_mensajes(conversacion_id);
+                CREATE INDEX IX_chat_mensajes_fecha ON chat_mensajes(fecha_envio);
+                CREATE INDEX IX_chat_mensajes_leido ON chat_mensajes(leido);
+            END
+        `);
+        
+        console.log('✅ Tablas de chat creadas exitosamente');
+        
+        res.json({
+            success: true,
+            message: 'Tablas de chat inicializadas correctamente'
+        });
+        
+    } catch (error) {
+        console.error('❌ Error inicializando tablas de chat:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Error inicializando tablas de chat: ' + error.message
+        });
+    }
+});
+
 // Obtener mensajes de contacto (para administradores)
 app.get('/api/contactos', authenticateToken, async (req, res) => {
     try {
@@ -2408,7 +2480,9 @@ app.delete('/api/documentos/:id', authenticateToken, async (req, res) => {
 
 // Importar sistema de recordatorios automáticos
 const RecordatoriosAutomaticos = require('./cron-recordatorios-automaticos');
+const ChatService = require('./chat-service');
 let recordatorios = null;
+let chatService = null;
 
 async function startServer() {
     try {
@@ -2428,6 +2502,10 @@ async function startServer() {
                 recordatorios = new RecordatoriosAutomaticos(poolConnection);
                 recordatorios.iniciarTodos();
             }
+            
+            // Iniciar servicio de chat
+            chatService = new ChatService(server, poolConnection);
+            console.log(`💬 Chat en vivo: Activo ✓`);
         });
         
         // Manejo de cierre graceful
