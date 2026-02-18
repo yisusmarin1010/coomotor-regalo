@@ -2489,8 +2489,8 @@ async function startServer() {
         // Conectar a la base de datos primero
         await connectToDatabase();
         
-        // Iniciar servidor
-        const server = app.listen(PORT, () => {
+        // Iniciar servidor - Escuchar en 0.0.0.0 para Render
+        const server = app.listen(PORT, '0.0.0.0', () => {
             console.log(`🚀 Servidor Coomotor API ejecutándose en puerto ${PORT}`);
             console.log(`🌐 Entorno: ${process.env.NODE_ENV || 'production'}`);
             console.log(`📡 Health check: http://localhost:${PORT}/api/health`);
