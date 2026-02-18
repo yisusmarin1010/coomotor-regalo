@@ -215,6 +215,41 @@ Usa emojis ocasionalmente para ser más amigable. Habla en español colombiano.
         // Sistema de respuestas inteligente basado en palabras clave
         const preguntaLower = pregunta.toLowerCase();
 
+        // Respuestas a saludos
+        if (preguntaLower.match(/^(hola|hi|hey|buenos dias|buenas tardes|buenas noches|saludos)$/i)) {
+            return `¡Hola! 😊 Bienvenido al sistema de regalos navideños de COOMOTOR.
+
+Estoy aquí para ayudarte. Puedes preguntarme sobre:
+
+• 📋 Cómo registrar a tus hijos
+• 📄 Qué documentos necesitas subir
+• 📅 Fechas importantes y plazos
+• 🎁 Estado de tus postulaciones
+• 🎂 Requisitos de edad
+• 📍 Dónde y cuándo recoger los regalos
+
+¿Qué necesitas saber?`;
+        }
+
+        // Respuestas sobre contactar admin
+        if (preguntaLower.includes('admin') || preguntaLower.includes('contactar') || preguntaLower.includes('hablar') || preguntaLower.includes('comunicar')) {
+            return `Para contactar al administrador:
+
+📧 **Opción 1: Desde tu dashboard**
+1. Ve a la sección "Contacto" o "Mensajes"
+2. Completa el formulario con tu consulta
+3. El admin te responderá por email
+
+📞 **Opción 2: Mensaje directo**
+• Busca la sección de "Contacto" en el menú
+• Describe tu problema o consulta
+• Recibirás respuesta en 24-48 horas
+
+💡 **Tip:** Antes de contactar al admin, intenta preguntarme a mí. Puedo resolver la mayoría de dudas al instante.
+
+¿Tienes alguna pregunta específica que pueda ayudarte a resolver ahora?`;
+        }
+
         // Respuestas sobre registro
         if (preguntaLower.includes('registrar') || preguntaLower.includes('registro') || preguntaLower.includes('cómo') && preguntaLower.includes('hijo')) {
             return `Para registrar a tu hijo, sigue estos pasos:
@@ -348,23 +383,147 @@ Solo pueden participar niños **menores de 12 años** al 24 de diciembre de 2024
 ¿Necesitas más información?`;
         }
 
-        // Respuesta genérica inteligente
-        return `Entiendo tu pregunta sobre "${pregunta}".
+        // Respuestas sobre cómo funciona el sistema
+        if (preguntaLower.includes('funciona') || preguntaLower.includes('proceso') || preguntaLower.includes('pasos')) {
+            return `📋 **Así funciona el sistema de regalos:**
 
-📋 **Puedo ayudarte con:**
-• Cómo registrar a tus hijos
-• Qué documentos necesitas
-• Fechas importantes del proceso
-• Estado de tus postulaciones
-• Requisitos de edad
-• Proceso de entrega
+**PASO 1: Registrar hijo(s)** 👶
+• Ve a tu dashboard
+• Click en "Registrar Hijo"
+• Completa los datos del niño
 
-💬 ¿Podrías ser más específico sobre qué necesitas saber?
+**PASO 2: Hacer postulación** 🎁
+• Selecciona el hijo registrado
+• Click en "Postular para Regalo"
+• Confirma la postulación
 
-O si prefieres, puedes:
-• Revisar la sección de ayuda en tu dashboard
-• Contactar directamente al administrador
-• Enviar un mensaje desde "Contacto"`;
+**PASO 3: Subir documentos** 📄
+• Sube registro civil del niño
+• Sube foto del niño
+• Sube tu cédula (si eres conductor)
+
+**PASO 4: Esperar aprobación** ⏳
+• El admin revisa tu postulación
+• Recibirás email con el resultado
+
+**PASO 5: Recoger regalo** 🎄
+• Si aprueba, recibirás fecha y lugar
+• Lleva tu cédula y código
+• ¡Recoge el regalo!
+
+¿Tienes dudas sobre algún paso específico?`;
+        }
+
+        // Respuestas sobre quién puede participar
+        if (preguntaLower.includes('quién') || preguntaLower.includes('quien') || preguntaLower.includes('puedo') || preguntaLower.includes('participar')) {
+            return `👥 **¿Quién puede participar?**
+
+✅ **Pueden participar:**
+• Todos los empleados de COOMOTOR
+• Conductores (carretera, urbano, furgones)
+• Personal administrativo
+• Con hijos menores de 12 años
+
+❌ **NO pueden participar:**
+• Niños que cumplan 12 años antes del 24 de diciembre
+• Hijos que no estén registrados en el sistema
+• Empleados que no completen el proceso a tiempo
+
+📋 **Requisitos:**
+• Estar activo en COOMOTOR
+• Registrar al niño antes del 10 de diciembre
+• Subir documentos completos
+• Esperar aprobación del admin
+
+¿Tu caso cumple con los requisitos?`;
+        }
+
+        // Respuestas sobre cuántos hijos
+        if (preguntaLower.includes('cuántos') || preguntaLower.includes('cuantos') || preguntaLower.includes('varios') || preguntaLower.includes('múltiples')) {
+            return `👨‍👩‍👧‍👦 **Registro de múltiples hijos:**
+
+✅ Puedes registrar a **todos tus hijos** menores de 12 años.
+
+📋 **Proceso:**
+1. Registra al primer hijo
+2. Click en "Registrar Nuevo Hijo"
+3. Repite para cada hijo
+4. Postula a cada uno individualmente
+
+⚠️ **Importante:**
+• Cada hijo necesita su propia postulación
+• Cada hijo necesita sus propios documentos
+• Todos deben ser menores de 12 años
+
+💡 **Tip:** Registra a todos tus hijos de una vez para no olvidar ninguno.
+
+¿Cuántos hijos vas a registrar?`;
+        }
+
+        // Respuestas sobre ayuda general
+
+        // Respuestas sobre ayuda general
+        if (preguntaLower.includes('ayuda') || preguntaLower.includes('ayudar') || preguntaLower.includes('necesito')) {
+            return `¡Claro! Estoy aquí para ayudarte. 😊
+
+Dime específicamente qué necesitas:
+
+🔹 **Si quieres registrar a tu hijo:**
+   Pregunta: "¿Cómo registro a mi hijo?"
+
+🔹 **Si necesitas saber qué documentos subir:**
+   Pregunta: "¿Qué documentos necesito?"
+
+🔹 **Si quieres saber las fechas:**
+   Pregunta: "¿Cuándo entregan los regalos?"
+
+🔹 **Si tienes dudas sobre la edad:**
+   Pregunta: "¿Mi hijo puede participar?"
+
+🔹 **Si quieres ver el estado:**
+   Pregunta: "¿Cómo veo mi postulación?"
+
+También puedo ayudarte con problemas técnicos, dudas sobre el proceso, o cualquier otra consulta.
+
+¿Qué necesitas saber?`;
+        }
+
+        // Respuestas sobre gracias
+        if (preguntaLower.match(/^(gracias|muchas gracias|thanks|thank you|ok|vale|perfecto|excelente|genial)$/i)) {
+            return `¡De nada! 😊 Fue un placer ayudarte.
+
+Si tienes más preguntas, aquí estaré. ¡Que tengas un excelente día! 🎄✨`;
+        }
+
+        // Respuestas sobre despedidas
+        if (preguntaLower.match(/^(adios|adiós|chao|hasta luego|bye|nos vemos)$/i)) {
+            return `¡Hasta pronto! 👋 
+
+Recuerda que estoy disponible 24/7 para ayudarte con cualquier duda sobre el sistema de regalos.
+
+¡Felices fiestas! 🎄🎁`;
+        }
+
+        // Respuesta genérica mejorada
+        return `Hmm, no estoy seguro de entender exactamente qué necesitas. 🤔
+
+Pero puedo ayudarte con estas cosas:
+
+📋 **Registro:** "¿Cómo registro a mi hijo?"
+📄 **Documentos:** "¿Qué documentos necesito?"
+📅 **Fechas:** "¿Cuándo es el plazo?"
+🎁 **Estado:** "¿Cómo veo mi postulación?"
+🎂 **Edad:** "¿Mi hijo puede participar?"
+📍 **Entrega:** "¿Dónde recojo el regalo?"
+🔧 **Problemas:** "Tengo un error"
+📞 **Contacto:** "¿Cómo contacto al admin?"
+
+Intenta preguntarme de forma más específica, por ejemplo:
+• "¿Cómo registro a mi hijo?"
+• "¿Qué documentos necesito subir?"
+• "¿Hasta cuándo puedo registrar?"
+
+¿Qué te gustaría saber?`;
     }
 
     agregarMensaje(texto, tipo) {
