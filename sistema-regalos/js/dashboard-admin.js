@@ -289,12 +289,106 @@ async function mostrarPostulaciones() {
                     <i class="bi bi-list-check me-2"></i>
                     Gestión de Postulaciones
                 </h3>
-                <div>
-                    <button class="btn btn-outline-primary" onclick="filtrarPostulaciones('todas')">Todas</button>
-                    <button class="btn btn-outline-warning" onclick="filtrarPostulaciones('pendiente')">Pendientes</button>
-                    <button class="btn btn-outline-success" onclick="filtrarPostulaciones('aprobada')">Aprobadas</button>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-outline-primary btn-sm" onclick="toggleBusquedaAvanzada()">
+                        <i class="bi bi-search me-1"></i>
+                        Búsqueda Avanzada
+                    </button>
+                    <button class="btn btn-outline-success btn-sm" onclick="exportarResultados()">
+                        <i class="bi bi-download me-1"></i>
+                        Exportar
+                    </button>
                 </div>
             </div>
+            
+            <!-- Panel de Búsqueda Avanzada -->
+            <div id="panelBusquedaAvanzada" style="display: none;" class="card mb-3">
+                <div class="card-header bg-primary text-white">
+                    <h6 class="mb-0">
+                        <i class="bi bi-funnel-fill me-2"></i>
+                        Búsqueda Avanzada de Postulaciones
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-3">
+                            <label class="form-label small fw-bold">Nombre Empleado</label>
+                            <input type="text" class="form-control form-control-sm" id="buscarEmpleado" 
+                                   placeholder="Ej: Juan Pérez">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label small fw-bold">Nombre Hijo</label>
+                            <input type="text" class="form-control form-control-sm" id="buscarHijo" 
+                                   placeholder="Ej: María">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label small fw-bold">Número Documento</label>
+                            <input type="text" class="form-control form-control-sm" id="buscarDocumento" 
+                                   placeholder="Ej: 1234567890">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label small fw-bold">Tipo Conductor</label>
+                            <select class="form-select form-select-sm" id="buscarTipoConductor">
+                                <option value="">Todos</option>
+                                <option value="carretera">🚛 Carretera</option>
+                                <option value="urbano">🚌 Urbano</option>
+                                <option value="furgones">🚐 Furgones</option>
+                                <option value="administrativo">💼 Administrativo</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label small fw-bold">Estado Postulación</label>
+                            <select class="form-select form-select-sm" id="buscarEstado">
+                                <option value="">Todos</option>
+                                <option value="pendiente">⏳ Pendiente</option>
+                                <option value="documentos_solicitados">📄 Docs Solicitados</option>
+                                <option value="documentos_recibidos">📥 Docs Recibidos</option>
+                                <option value="aprobada">✅ Aprobada</option>
+                                <option value="entregado">📦 Entregado</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label small fw-bold">Edad Hijo</label>
+                            <select class="form-select form-select-sm" id="buscarEdad">
+                                <option value="">Todas</option>
+                                <option value="0-3">0-3 años</option>
+                                <option value="4-6">4-6 años</option>
+                                <option value="7-9">7-9 años</option>
+                                <option value="10-12">10-12 años</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label small fw-bold">Fecha Desde</label>
+                            <input type="date" class="form-control form-control-sm" id="buscarFechaDesde">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label small fw-bold">Fecha Hasta</label>
+                            <input type="date" class="form-control form-control-sm" id="buscarFechaHasta">
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <button class="btn btn-primary btn-sm me-2" onclick="aplicarBusquedaAvanzada()">
+                                <i class="bi bi-search me-1"></i>
+                                Buscar
+                            </button>
+                            <button class="btn btn-outline-secondary btn-sm" onclick="limpiarBusquedaAvanzada()">
+                                <i class="bi bi-x-circle me-1"></i>
+                                Limpiar Filtros
+                            </button>
+                            <span class="ms-3 small text-muted" id="resultadosCount"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Filtros Rápidos -->
+            <div class="mb-3">
+                <button class="btn btn-outline-primary btn-sm" onclick="filtrarPostulaciones('todas')">Todas</button>
+                <button class="btn btn-outline-warning btn-sm" onclick="filtrarPostulaciones('pendiente')">Pendientes</button>
+                <button class="btn btn-outline-success btn-sm" onclick="filtrarPostulaciones('aprobada')">Aprobadas</button>
+            </div>
+            
             <div class="alert alert-info" style="font-size: 0.75rem; padding: 0.75rem;">
                 <i class="bi bi-info-circle me-2"></i>
                 <strong>Nota:</strong> Las postulaciones rechazadas se ocultan automáticamente del panel.
@@ -324,6 +418,10 @@ async function cargarPostulaciones(filtro = 'todas') {
             if (result.success) {
                 // Filtrar postulaciones rechazadas - no mostrarlas en el panel
                 const postulacionesFiltradas = result.data.filter(p => p.estado_postulacion !== 'rechazada');
+                
+                // Guardar en variable global para búsqueda avanzada
+                todasLasPostulaciones = postulacionesFiltradas;
+                
                 mostrarTablaPostulaciones(postulacionesFiltradas);
             }
         }
@@ -2253,4 +2351,175 @@ function mostrarAlertaCambioRol(tipo, mensaje) {
     setTimeout(() => {
         alertaDiv.innerHTML = '';
     }, 5000);
+}
+
+
+// ============================================
+// BÚSQUEDA AVANZADA DE POSTULACIONES
+// ============================================
+
+// Variable global para almacenar todas las postulaciones
+let todasLasPostulaciones = [];
+
+// Toggle panel de búsqueda avanzada
+function toggleBusquedaAvanzada() {
+    const panel = document.getElementById('panelBusquedaAvanzada');
+    if (panel.style.display === 'none') {
+        panel.style.display = 'block';
+        panel.classList.add('fade-in');
+    } else {
+        panel.style.display = 'none';
+    }
+}
+
+// Aplicar búsqueda avanzada
+function aplicarBusquedaAvanzada() {
+    const filtros = {
+        empleado: document.getElementById('buscarEmpleado').value.toLowerCase().trim(),
+        hijo: document.getElementById('buscarHijo').value.toLowerCase().trim(),
+        documento: document.getElementById('buscarDocumento').value.trim(),
+        tipoConductor: document.getElementById('buscarTipoConductor').value,
+        estado: document.getElementById('buscarEstado').value,
+        edad: document.getElementById('buscarEdad').value,
+        fechaDesde: document.getElementById('buscarFechaDesde').value,
+        fechaHasta: document.getElementById('buscarFechaHasta').value
+    };
+    
+    // Filtrar postulaciones
+    let resultados = todasLasPostulaciones.filter(postulacion => {
+        // Filtro por nombre empleado
+        if (filtros.empleado) {
+            const nombreCompleto = `${postulacion.empleado_nombres} ${postulacion.empleado_apellidos}`.toLowerCase();
+            if (!nombreCompleto.includes(filtros.empleado)) return false;
+        }
+        
+        // Filtro por nombre hijo
+        if (filtros.hijo) {
+            const nombreHijo = `${postulacion.hijo_nombres} ${postulacion.hijo_apellidos}`.toLowerCase();
+            if (!nombreHijo.includes(filtros.hijo)) return false;
+        }
+        
+        // Filtro por número de documento
+        if (filtros.documento) {
+            if (!postulacion.numero_documento.includes(filtros.documento)) return false;
+        }
+        
+        // Filtro por tipo de conductor
+        if (filtros.tipoConductor) {
+            if (postulacion.tipo_conductor !== filtros.tipoConductor) return false;
+        }
+        
+        // Filtro por estado
+        if (filtros.estado) {
+            if (postulacion.estado_postulacion !== filtros.estado) return false;
+        }
+        
+        // Filtro por edad
+        if (filtros.edad) {
+            const edad = calcularEdad(postulacion.fecha_nacimiento_hijo);
+            const [min, max] = filtros.edad.split('-').map(Number);
+            if (edad < min || edad > max) return false;
+        }
+        
+        // Filtro por fecha desde
+        if (filtros.fechaDesde) {
+            const fechaPostulacion = new Date(postulacion.fecha_postulacion);
+            const fechaDesde = new Date(filtros.fechaDesde);
+            if (fechaPostulacion < fechaDesde) return false;
+        }
+        
+        // Filtro por fecha hasta
+        if (filtros.fechaHasta) {
+            const fechaPostulacion = new Date(postulacion.fecha_postulacion);
+            const fechaHasta = new Date(filtros.fechaHasta);
+            fechaHasta.setHours(23, 59, 59); // Incluir todo el día
+            if (fechaPostulacion > fechaHasta) return false;
+        }
+        
+        return true;
+    });
+    
+    // Mostrar resultados
+    mostrarTablaPostulaciones(resultados);
+    
+    // Actualizar contador
+    document.getElementById('resultadosCount').innerHTML = `
+        <i class="bi bi-check-circle-fill text-success me-1"></i>
+        <strong>${resultados.length}</strong> resultado(s) encontrado(s)
+    `;
+    
+    // Mostrar mensaje si no hay resultados
+    if (resultados.length === 0) {
+        document.getElementById('postulacionesContainer').innerHTML = `
+            <div class="alert alert-warning">
+                <i class="bi bi-exclamation-triangle me-2"></i>
+                No se encontraron postulaciones con los filtros aplicados. Intenta con otros criterios.
+            </div>
+        `;
+    }
+}
+
+// Limpiar búsqueda avanzada
+function limpiarBusquedaAvanzada() {
+    document.getElementById('buscarEmpleado').value = '';
+    document.getElementById('buscarHijo').value = '';
+    document.getElementById('buscarDocumento').value = '';
+    document.getElementById('buscarTipoConductor').value = '';
+    document.getElementById('buscarEstado').value = '';
+    document.getElementById('buscarEdad').value = '';
+    document.getElementById('buscarFechaDesde').value = '';
+    document.getElementById('buscarFechaHasta').value = '';
+    document.getElementById('resultadosCount').textContent = '';
+    
+    // Mostrar todas las postulaciones
+    mostrarTablaPostulaciones(todasLasPostulaciones);
+}
+
+// Exportar resultados a CSV
+function exportarResultados() {
+    // Obtener las postulaciones visibles actualmente
+    const postulacionesVisibles = document.querySelectorAll('#postulacionesContainer tbody tr');
+    
+    if (postulacionesVisibles.length === 0) {
+        alert('No hay resultados para exportar');
+        return;
+    }
+    
+    // Crear CSV
+    let csv = 'Empleado,Documento Empleado,Hijo,Documento Hijo,Edad,Tipo Conductor,Estado,Fecha Postulación\n';
+    
+    // Obtener datos de las postulaciones filtradas
+    const postulacionesFiltradas = todasLasPostulaciones.filter((postulacion, index) => {
+        return index < postulacionesVisibles.length;
+    });
+    
+    postulacionesFiltradas.forEach(postulacion => {
+        const edad = calcularEdad(postulacion.fecha_nacimiento_hijo);
+        const nombreEmpleado = `${postulacion.empleado_nombres} ${postulacion.empleado_apellidos}`;
+        const nombreHijo = `${postulacion.hijo_nombres} ${postulacion.hijo_apellidos}`;
+        const documentoEmpleado = `${postulacion.tipo_documento_empleado || 'CC'}: ${postulacion.numero_documento_empleado || 'N/A'}`;
+        const documentoHijo = `${postulacion.tipo_documento}: ${postulacion.numero_documento}`;
+        const tipoConductor = postulacion.subtipo_conductor 
+            ? `${postulacion.tipo_conductor} (${postulacion.subtipo_conductor})`
+            : postulacion.tipo_conductor;
+        
+        csv += `"${nombreEmpleado}","${documentoEmpleado}","${nombreHijo}","${documentoHijo}",${edad},"${tipoConductor}","${postulacion.estado_postulacion}","${formatearFecha(postulacion.fecha_postulacion)}"\n`;
+    });
+    
+    // Descargar archivo
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    
+    const fecha = new Date().toISOString().split('T')[0];
+    link.setAttribute('href', url);
+    link.setAttribute('download', `postulaciones_coomotor_${fecha}.csv`);
+    link.style.visibility = 'hidden';
+    
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    // Mostrar mensaje de éxito
+    mostrarAlerta('success', `✅ Archivo exportado exitosamente: ${postulacionesFiltradas.length} registros`);
 }

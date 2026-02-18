@@ -536,6 +536,49 @@
         .stat.danger:hover {
             animation: pulse 2s infinite;
         }
+
+        /* Estilos para Búsqueda Avanzada */
+        #panelBusquedaAvanzada {
+            animation: slideDown 0.3s ease-out;
+            border: 2px solid var(--primary);
+            box-shadow: 0 4px 20px rgba(37, 99, 235, 0.15);
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        #panelBusquedaAvanzada .form-label {
+            color: var(--text);
+            margin-bottom: 0.25rem;
+        }
+
+        #panelBusquedaAvanzada .form-control,
+        #panelBusquedaAvanzada .form-select {
+            border: 1px solid var(--border);
+            transition: all 0.2s;
+        }
+
+        #panelBusquedaAvanzada .form-control:focus,
+        #panelBusquedaAvanzada .form-select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.15);
+        }
+
+        #resultadosCount {
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            border-radius: 8px;
+            display: inline-block;
+        }
     </style>
 </head>
 <body>
