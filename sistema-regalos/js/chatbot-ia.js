@@ -231,6 +231,54 @@ Estoy aquí para ayudarte. Puedes preguntarme sobre:
 ¿Qué necesitas saber?`;
         }
 
+        // Respuestas sobre NO cumplir requisitos
+        if (preguntaLower.includes('no cumple') || preguntaLower.includes('no puede') || preguntaLower.includes('mayor de 12') || preguntaLower.includes('tiene 12') || preguntaLower.includes('cumple 12')) {
+            return `😔 Lamento informarte que si tu hijo **no cumple con el requisito de edad**, no podrá participar este año.
+
+📋 **Requisito estricto:**
+• Solo niños **menores de 12 años** al 24 de diciembre de 2024
+
+❌ **No pueden participar:**
+• Niños que cumplan 12 años antes del 24 de diciembre
+• Niños que ya tengan 12 años o más
+
+💡 **Alternativas:**
+• Si tienes otros hijos menores de 12 años, puedes registrarlos
+• El próximo año podrás participar con otros hijos que cumplan el requisito
+
+📞 **¿Tienes dudas?**
+Si crees que hay un error o tienes una situación especial, contacta al administrador para que revise tu caso.
+
+¿Tienes otros hijos que sí cumplan el requisito?`;
+        }
+
+        // Respuestas sobre SÍ cumplir requisitos
+        if (preguntaLower.match(/^(si|sí|yes|claro|por supuesto|cumple|si cumple)$/i)) {
+            return `¡Excelente! 🎉 Si tu hijo cumple con el requisito de edad, puedes continuar con el proceso.
+
+📋 **Próximos pasos:**
+
+1️⃣ **Registrar a tu hijo**
+   • Ve a tu dashboard
+   • Click en "Registrar Hijo"
+   • Completa todos los datos
+
+2️⃣ **Hacer la postulación**
+   • Selecciona al hijo registrado
+   • Click en "Postular para Regalo"
+
+3️⃣ **Subir documentos**
+   • Registro civil del niño
+   • Foto del niño
+   • Tu cédula (si eres conductor)
+
+⏰ **Recuerda las fechas:**
+• Registro: Hasta el 10 de diciembre
+• Postulaciones: Hasta el 15 de diciembre
+
+¿Necesitas ayuda con algún paso específico?`;
+        }
+
         // Respuestas sobre contactar admin
         if (preguntaLower.includes('admin') || preguntaLower.includes('contactar') || preguntaLower.includes('hablar') || preguntaLower.includes('comunicar')) {
             return `Para contactar al administrador:
@@ -327,11 +375,20 @@ Estoy aquí para ayudarte. Puedes preguntarme sobre:
 Solo pueden participar niños **menores de 12 años** al 24 de diciembre de 2024.
 
 ⚠️ **Importante:**
-• Si tu hijo cumple 12 años antes del 24 de diciembre, NO puede participar
+• Si tu hijo cumple 12 años **antes** del 24 de diciembre, NO puede participar
+• Si cumple 12 años **después** del 24 de diciembre, SÍ puede participar
 • El sistema calcula la edad automáticamente
-• Debes ingresar la fecha de nacimiento correcta
 
-¿Tu hijo cumple con el requisito de edad?`;
+✅ **Ejemplo que SÍ puede:**
+• Niño nace: 25 de diciembre de 2012
+• Edad al 24 dic 2024: 11 años ✅
+
+❌ **Ejemplo que NO puede:**
+• Niño nace: 20 de diciembre de 2012
+• Edad al 24 dic 2024: 12 años ❌
+
+💡 **¿Tu hijo cumple el requisito?**
+Responde "sí" o "no" y te ayudo con los siguientes pasos.`;
         }
 
         // Respuestas sobre entrega
@@ -486,6 +543,61 @@ Dime específicamente qué necesitas:
 También puedo ayudarte con problemas técnicos, dudas sobre el proceso, o cualquier otra consulta.
 
 ¿Qué necesitas saber?`;
+        }
+
+        // Respuestas sobre no entender o no saber
+        if (preguntaLower.includes('no entiendo') || preguntaLower.includes('no sé') || preguntaLower.includes('confundido') || preguntaLower.includes('explicar mejor')) {
+            return `Entiendo que puede ser confuso. Déjame explicarte de forma más simple. 😊
+
+🎁 **El sistema de regalos en 3 pasos:**
+
+**PASO 1: Registrar** 👶
+• Entra a tu dashboard
+• Agrega los datos de tu hijo
+• Solo menores de 12 años
+
+**PASO 2: Postular** 📋
+• Selecciona al hijo que registraste
+• Haz click en "Postular"
+• Sube los documentos que te pidan
+
+**PASO 3: Esperar** ⏰
+• El admin revisa tu postulación
+• Te llega un email con la respuesta
+• Si aprueban, te dicen cuándo recoger
+
+💡 **¿Qué parte específica no entiendes?**
+Dime y te explico con más detalle.`;
+        }
+
+        // Respuestas sobre problemas o errores
+        if (preguntaLower.includes('error') || preguntaLower.includes('no funciona') || preguntaLower.includes('problema') || preguntaLower.includes('falla')) {
+            return `😟 Lamento que tengas problemas. Vamos a solucionarlo:
+
+🔧 **Soluciones rápidas:**
+
+1️⃣ **Recarga la página**
+   • Presiona Ctrl + F5 (Windows)
+   • Presiona Cmd + Shift + R (Mac)
+
+2️⃣ **Verifica tu conexión**
+   • Asegúrate de tener internet
+   • Intenta desde otro navegador
+
+3️⃣ **Limpia el caché**
+   • Borra datos del navegador
+   • Cierra y vuelve a abrir
+
+4️⃣ **Intenta desde otro dispositivo**
+   • Usa tu celular
+   • Prueba desde otra computadora
+
+📞 **Si persiste el problema:**
+• Describe exactamente qué error ves
+• Toma captura de pantalla
+• Contacta al administrador
+
+¿Qué error específico estás viendo?`;
         }
 
         // Respuestas sobre gracias
