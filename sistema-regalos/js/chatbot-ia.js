@@ -232,7 +232,7 @@ Estoy aquí para ayudarte. Puedes preguntarme sobre:
         }
 
         // Respuestas sobre NO cumplir requisitos
-        if (preguntaLower.includes('no cumple') || preguntaLower.includes('no puede') || preguntaLower.includes('mayor de 12') || preguntaLower.includes('tiene 12') || preguntaLower.includes('cumple 12')) {
+        if (preguntaLower.match(/^(no|nop|nope)$/i) || preguntaLower.includes('no cumple') || preguntaLower.includes('no puede') || preguntaLower.includes('mayor de 12') || preguntaLower.includes('tiene 12') || preguntaLower.includes('cumple 12')) {
             return `😔 Lamento informarte que si tu hijo **no cumple con el requisito de edad**, no podrá participar este año.
 
 📋 **Requisito estricto:**
@@ -409,7 +409,7 @@ Responde "sí" o "no" y te ayudo con los siguientes pasos.`;
         }
 
         // Respuestas sobre problemas
-        if (preguntaLower.includes('problema') || preguntaLower.includes('error') || preguntaLower.includes('no puedo')) {
+        if (preguntaLower.includes('problema') || preguntaLower.includes('no puedo')) {
             return `😟 Lamento que tengas problemas. Vamos a solucionarlo:
 
 🔧 **Soluciones rápidas:**
