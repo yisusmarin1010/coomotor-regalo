@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recordatorio de Documentos</title>
+</head>
+<body style="margin:0;padding:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:#b91c1c;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="background:#b91c1c;padding:40px 20px;">
+        <tr>
+            <td align="center">
+                <table width="600" cellpadding="0" cellspacing="0" style="background:white;border-radius:24px;overflow:hidden;box-shadow:0 25px 70px rgba(0,0,0,0.5);">
+                    
+                    <!-- Header Urgente -->
+                    <tr>
+                        <td style="background:linear-gradient(135deg, #dc2626 0%, #991b1b 50%, #7f1d1d 100%);padding:60px 40px;text-align:center;">
+                            <div style="font-size:120px;margin-bottom:20px;filter:drop-shadow(0 10px 30px rgba(0,0,0,0.5));animation:pulse 2s infinite;">
+                                ⚠️
+                            </div>
+                            <h1 style="margin:0;color:white;font-size:42px;font-weight:900;text-shadow:3px 3px 6px rgba(0,0,0,0.5);">
+                                COOMOTOR
+                            </h1>
+                            <p style="margin:15px 0 0 0;color:rgba(255,255,255,0.95);font-size:18px;font-weight:600;">
+                                Recordatorio de Documentos Pendientes
+                            </p>
+                        </td>
+                    </tr>
+
+                    <!-- Contenido -->
+                    <tr>
+                        <td style="padding:50px 40px;">
+                            
+                            <!-- Badge de Urgencia -->
+                            <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:40px;">
+                                <tr>
+                                    <td align="center">
+                                        <div style="background:linear-gradient(135deg, #f59e0b 0%, #d97706 100%);padding:50px;border-radius:20px;box-shadow:0 15px 40px rgba(245,158,11,0.5);">
+                                            <div style="font-size:100px;margin-bottom:20px;">
+                                                📄
+                                            </div>
+                                            <h2 style="margin:0;color:white;font-size:36px;font-weight:900;text-shadow:2px 2px 4px rgba(0,0,0,0.3);">
+                                                {{urgencia}}
+                                            </h2>
+                                            <p style="margin:15px 0 0 0;color:rgba(255,255,255,0.95);font-size:18px;font-weight:600;">
+                                                Documentos Pendientes
+                                            </p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <p style="margin:0 0 25px 0;font-size:20px;line-height:1.6;color:#1e293b;font-weight:600;">
+                                Hola <span style="color:#dc2626;">{{nombre}}</span>,
+                            </p>
+
+                            <p style="margin:0 0 30px 0;font-size:17px;line-height:1.8;color:#475569;">
+                                Te recordamos que tienes documentos pendientes de revisión en el sistema de regalos navideños.
+                            </p>
+
+                            <!-- Estado de Documentos -->
+                            <table width="100%" cellpadding="0" cellspacing="0" style="background:linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);border-radius:16px;margin:35px 0;border:3px solid #f59e0b;">
+                                <tr>
+                                    <td style="padding:35px;">
+                                        <p style="margin:0 0 25px 0;font-size:16px;font-weight:800;color:#92400e;text-transform:uppercase;letter-spacing:1px;">
+                                            📊 Estado de Documentos:
+                                        </p>
+                                        <table width="100%" cellpadding="0" cellspacing="0">
+                                            <tr>
+                                                <td style="padding:15px 0;border-bottom:2px dashed #fbbf24;">
+                                                    <p style="margin:0;font-size:20px;color:#92400e;">
+                                                        <strong>⏳ Pendientes de revisión:</strong> {{docsPendientes}}
+                                                    </p>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding:15px 0;border-bottom:2px dashed #fbbf24;">
+                                                    <p style="margin:0;font-size:20px;color:#dc2626;">
+                                                        <strong>❌ Rechazados (requieren corrección):</strong> {{docsRechazados}}
+                                                    </p>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding:15px 0;">
+                                                    <p style="margin:0;font-size:18px;color:#92400e;">
+                                                        <strong>📅 Días transcurridos:</strong> {{diasTranscurridos}} días
+                                                    </p>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <!-- Acción Requerida -->
+                            <table width="100%" cellpadding="0" cellspacing="0" style="background:#fef2f2;border-left:5px solid #dc2626;border-radius:12px;margin:35px 0;">
+                                <tr>
+                                    <td style="padding:30px;">
+                                        <p style="margin:0 0 15px 0;font-size:18px;font-weight:900;color:#991b1b;text-transform:uppercase;">
+                                            ⚡ ACCIÓN REQUERIDA:
+                                        </p>
+                                        <ul style="margin:0;padding-left:25px;color:#991b1b;font-size:16px;line-height:2.2;">
+                                            <li>Revisa el estado de tus documentos en tu panel</li>
+                                            <li>Corrige los documentos rechazados según las observaciones</li>
+                                            <li>Sube nuevamente los documentos corregidos</li>
+                                            <li><strong>Completa este proceso lo antes posible</strong></li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <!-- Botón de Acción -->
+                            <table width="100%" cellpadding="0" cellspacing="0" style="margin:40px 0;">
+                                <tr>
+                                    <td align="center">
+                                        <a href="https://coomotor-regalos.onrender.com/sistema-regalos/dashboards/empleado.html" 
+                                           style="display:inline-block;background:linear-gradient(135deg, #dc2626 0%, #991b1b 100%);color:white;text-decoration:none;padding:22px 55px;border-radius:12px;font-weight:900;font-size:20px;box-shadow:0 10px 30px rgba(220,38,38,0.5);text-transform:uppercase;letter-spacing:2px;">
+                                            📤 IR A MI PANEL
+                                        </a>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <p style="margin:30px 0 0 0;font-size:15px;line-height:1.8;color:#64748b;text-align:center;">
+                                Si tienes dudas, contacta al administrador del sistema
+                            </p>
+
+                        </td>
+                    </tr>
+
+                    <!-- Footer -->
+                    <tr>
+                        <td style="background:linear-gradient(135deg, #dc2626 0%, #7f1d1d 100%);padding:40px;text-align:center;">
+                            <p style="margin:0 0 10px 0;font-size:18px;color:white;font-weight:800;">
+                                🚌 COOMOTOR
+                            </p>
+                            <p style="margin:0 0 5px 0;font-size:14px;color:rgba(255,255,255,0.9);">
+                                Cooperativa de Motoristas del Huila
+                            </p>
+                            <p style="margin:0;font-size:13px;color:rgba(255,255,255,0.8);">
+                                Neiva, Huila - Colombia 🇨🇴
+                            </p>
+                        </td>
+                    </tr>
+
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

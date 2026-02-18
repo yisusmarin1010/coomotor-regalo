@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¡Postulación Aprobada!</title>
+</head>
+<body style="margin:0;padding:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:#f0f4f8;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="background:#f0f4f8;padding:40px 20px;">
+        <tr>
+            <td align="center">
+                <!-- Container Principal -->
+                <table width="600" cellpadding="0" cellspacing="0" style="background:white;border-radius:24px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.15);">
+                    
+                    <!-- Header con Animación -->
+                    <tr>
+                        <td style="background:linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #10b981 100%);padding:60px 40px;text-align:center;position:relative;">
+                            <!-- Confetti Animation -->
+                            <div style="position:absolute;top:0;left:0;right:0;bottom:0;overflow:hidden;">
+                                <span style="position:absolute;top:10%;left:10%;font-size:30px;animation:float 3s ease-in-out infinite;">🎉</span>
+                                <span style="position:absolute;top:20%;right:15%;font-size:25px;animation:float 4s ease-in-out infinite;">✨</span>
+                                <span style="position:absolute;bottom:15%;left:20%;font-size:28px;animation:float 3.5s ease-in-out infinite;">🎊</span>
+                                <span style="position:absolute;bottom:20%;right:10%;font-size:32px;animation:float 4.5s ease-in-out infinite;">🎁</span>
+                            </div>
+                            
+                            <div style="font-size:100px;margin-bottom:20px;filter:drop-shadow(0 10px 30px rgba(0,0,0,0.3));animation:bounce 2s ease-in-out infinite;">
+                                🎄
+                            </div>
+                            <h1 style="margin:0;color:white;font-size:42px;font-weight:900;text-shadow:3px 3px 6px rgba(0,0,0,0.3);letter-spacing:-1px;">
+                                COOMOTOR
+                            </h1>
+                            <p style="margin:15px 0 0 0;color:rgba(255,255,255,0.95);font-size:18px;font-weight:600;">
+                                🎅 Regalos Navideños 2024 🎅
+                            </p>
+                        </td>
+                    </tr>
+
+                    <!-- Mensaje Principal -->
+                    <tr>
+                        <td style="padding:50px 40px;">
+                            
+                            <!-- Badge de Aprobación -->
+                            <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:40px;">
+                                <tr>
+                                    <td align="center">
+                                        <div style="background:linear-gradient(135deg, #10b981 0%, #059669 100%);padding:40px;border-radius:20px;box-shadow:0 15px 40px rgba(16,185,129,0.4);transform:scale(1);transition:transform 0.3s;">
+                                            <div style="font-size:80px;margin-bottom:15px;filter:drop-shadow(0 8px 20px rgba(0,0,0,0.2));">
+                                                ✅
+                                            </div>
+                                            <h2 style="margin:0;color:white;font-size:32px;font-weight:900;text-shadow:2px 2px 4px rgba(0,0,0,0.2);letter-spacing:-0.5px;">
+                                                ¡POSTULACIÓN APROBADA!
+                                            </h2>
+                                            <p style="margin:15px 0 0 0;color:rgba(255,255,255,0.95);font-size:16px;font-weight:600;">
+                                                🎊 ¡Felicitaciones! 🎊
+                                            </p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <!-- Saludo Personalizado -->
+                            <p style="margin:0 0 25px 0;font-size:20px;line-height:1.6;color:#1e293b;font-weight:600;">
+                                Estimado/a <span style="color:#3b82f6;font-weight:800;">{{nombreEmpleado}}</span>,
+                            </p>
+
+                            <p style="margin:0 0 30px 0;font-size:17px;line-height:1.8;color:#475569;">
+                                Nos complace informarte que tu postulación para 
+                                <strong style="color:#10b981;font-size:19px;">{{nombreHijo}}</strong> 
+                                ha sido <strong style="color:#10b981;">APROBADA</strong> exitosamente. 🎉
+                            </p>
+
+                            <!-- Card de Información del Niño -->
+                            <table width="100%" cellpadding="0" cellspacing="0" style="background:linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);border-radius:16px;margin:35px 0;overflow:hidden;border:3px solid #3b82f6;">
+                                <tr>
+                                    <td style="padding:30px;">
+                                        <table width="100%" cellpadding="0" cellspacing="0">
+                                            <tr>
+                                                <td style="padding-bottom:15px;border-bottom:2px solid #93c5fd;">
+                                                    <p style="margin:0;font-size:14px;font-weight:700;color:#1e40af;text-transform:uppercase;letter-spacing:1px;">
+                                                        👶 INFORMACIÓN DEL NIÑO/A
+                                                    </p>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding-top:20px;">
+                                                    <p style="margin:0 0 10px 0;font-size:28px;font-weight:900;color:#1e40af;">
+                                                        {{nombreHijo}}
+                                                    </p>
+                                                    <p style="margin:0;font-size:18px;color:#1e40af;font-weight:600;">
+                                                        🎂 {{edad}} años
+                                                    </p>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <!-- Próximos Pasos -->
+                            <table width="100%" cellpadding="0" cellspacing="0" style="background:linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);border-radius:16px;margin:35px 0;overflow:hidden;border:3px solid #f59e0b;">
+                                <tr>
+                                    <td style="padding:30px;">
+                                        <p style="margin:0 0 20px 0;font-size:16px;font-weight:700;color:#92400e;text-transform:uppercase;letter-spacing:1px;">
+                                            📋 PRÓXIMOS PASOS:
+                                        </p>
+                                        <ol style="margin:0;padding-left:25px;color:#92400e;font-size:16px;line-height:2;">
+                                            <li><strong>Confirmación:</strong> Recibirás más detalles por correo</li>
+                                            <li><strong>Fecha de entrega:</strong> Te notificaremos pronto</li>
+                                            <li><strong>Lugar:</strong> Se informará con anticipación</li>
+                                            <li><strong>Documentación:</strong> Lleva tu cédula el día de la entrega</li>
+                                        </ol>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <!-- Mensaje Motivacional -->
+                            <table width="100%" cellpadding="0" cellspacing="0" style="margin:40px 0;">
+                                <tr>
+                                    <td align="center" style="padding:35px;background:linear-gradient(135deg, #fce7f3 0%, #fbcfe8 100%);border-radius:16px;border:3px solid #ec4899;">
+                                        <p style="margin:0 0 10px 0;font-size:24px;font-weight:800;color:#be185d;">
+                                            ¡Felices Fiestas! 🎅🎁✨
+                                        </p>
+                                        <p style="margin:0;font-size:16px;color:#9f1239;font-weight:600;line-height:1.6;">
+                                            Que la magia de la Navidad llene tu hogar de alegría y amor
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <!-- Botón de Acción -->
+                            <table width="100%" cellpadding="0" cellspacing="0" style="margin:40px 0;">
+                                <tr>
+                                    <td align="center">
+                                        <a href="https://coomotor-regalos.onrender.com/dashboards/empleado.html" 
+                                           style="display:inline-block;background:linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);color:white;text-decoration:none;padding:18px 45px;border-radius:12px;font-weight:800;font-size:18px;box-shadow:0 8px 25px rgba(59,130,246,0.4);transition:all 0.3s;">
+                                            🎯 Ver Mi Panel
+                                        </a>
+                                    </td>
+                                </tr>
+                            </table>
+
+                        </td>
+                    </tr>
+
+                    <!-- Footer -->
+                    <tr>
+                        <td style="background:linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);padding:40px;text-align:center;">
+                            <p style="margin:0 0 10px 0;font-size:18px;color:white;font-weight:800;">
+                                🚌 COOMOTOR
+                            </p>
+                            <p style="margin:0 0 5px 0;font-size:14px;color:rgba(255,255,255,0.9);font-weight:600;">
+                                Cooperativa de Motoristas del Huila
+                            </p>
+                            <p style="margin:0;font-size:13px;color:rgba(255,255,255,0.8);">
+                                Neiva, Huila - Colombia 🇨🇴
+                            </p>
+                            <p style="margin:15px 0 0 0;font-size:12px;color:rgba(255,255,255,0.7);">
+                                © 2024 COOMOTOR - Más de 60 años conectando Colombia
+                            </p>
+                        </td>
+                    </tr>
+
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

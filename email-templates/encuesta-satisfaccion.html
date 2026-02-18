@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Encuesta de Satisfacción</title>
+</head>
+<body style="margin:0;padding:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:#7c3aed;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="background:#7c3aed;padding:40px 20px;">
+        <tr>
+            <td align="center">
+                <table width="600" cellpadding="0" cellspacing="0" style="background:white;border-radius:24px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
+                    
+                    <!-- Header -->
+                    <tr>
+                        <td style="background:linear-gradient(135deg, #8b5cf6 0%, #7c3aed 50%, #6d28d9 100%);padding:60px 40px;text-align:center;">
+                            <div style="font-size:100px;margin-bottom:20px;filter:drop-shadow(0 10px 30px rgba(0,0,0,0.3));">
+                                ⭐
+                            </div>
+                            <h1 style="margin:0;color:white;font-size:42px;font-weight:900;text-shadow:3px 3px 6px rgba(0,0,0,0.3);">
+                                COOMOTOR
+                            </h1>
+                            <p style="margin:15px 0 0 0;color:rgba(255,255,255,0.95);font-size:18px;font-weight:600;">
+                                Tu Opinión es Importante
+                            </p>
+                        </td>
+                    </tr>
+
+                    <!-- Contenido -->
+                    <tr>
+                        <td style="padding:50px 40px;">
+                            
+                            <!-- Badge -->
+                            <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:40px;">
+                                <tr>
+                                    <td align="center">
+                                        <div style="background:linear-gradient(135deg, #f59e0b 0%, #d97706 100%);padding:40px;border-radius:20px;box-shadow:0 15px 40px rgba(245,158,11,0.4);">
+                                            <div style="font-size:80px;margin-bottom:15px;">
+                                                📋
+                                            </div>
+                                            <h2 style="margin:0;color:white;font-size:32px;font-weight:900;text-shadow:2px 2px 4px rgba(0,0,0,0.2);">
+                                                Encuesta de Satisfacción
+                                            </h2>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <p style="margin:0 0 25px 0;font-size:20px;line-height:1.6;color:#1e293b;font-weight:600;">
+                                Hola <span style="color:#8b5cf6;">{{nombre}}</span>,
+                            </p>
+
+                            <p style="margin:0 0 30px 0;font-size:17px;line-height:1.8;color:#475569;">
+                                Esperamos que <strong style="color:#f59e0b;">{{nombreHijo}}</strong> 
+                                haya disfrutado su regalo navideño. Tu opinión nos ayuda a mejorar cada año.
+                            </p>
+
+                            <!-- Preguntas -->
+                            <table width="100%" cellpadding="0" cellspacing="0" style="background:linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);border-radius:16px;margin:35px 0;border:3px solid #f59e0b;">
+                                <tr>
+                                    <td style="padding:35px;">
+                                        <p style="margin:0 0 20px 0;font-size:16px;font-weight:800;color:#92400e;text-transform:uppercase;letter-spacing:1px;">
+                                            📝 Ayúdanos a Mejorar:
+                                        </p>
+                                        <ul style="margin:0;padding-left:25px;color:#92400e;font-size:16px;line-height:2.2;font-weight:600;">
+                                            <li>¿Cómo fue tu experiencia con el proceso?</li>
+                                            <li>¿El regalo fue apropiado para la edad de tu hijo/a?</li>
+                                            <li>¿Qué podemos mejorar para el próximo año?</li>
+                                            <li>¿Recomendarías este programa a otros empleados?</li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <!-- Info Rápida -->
+                            <table width="100%" cellpadding="0" cellspacing="0" style="background:#dbeafe;border-left:5px solid #3b82f6;border-radius:12px;margin:35px 0;">
+                                <tr>
+                                    <td style="padding:30px;">
+                                        <p style="margin:0 0 10px 0;font-size:16px;font-weight:800;color:#1e40af;">
+                                            ⏱️ SOLO 2 MINUTOS:
+                                        </p>
+                                        <p style="margin:0;font-size:16px;color:#1e40af;line-height:1.8;font-weight:600;">
+                                            La encuesta es breve y anónima. Tus respuestas nos ayudarán a hacer que el programa de regalos sea aún mejor el próximo año.
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <!-- Botón de Encuesta -->
+                            <table width="100%" cellpadding="0" cellspacing="0" style="margin:40px 0;">
+                                <tr>
+                                    <td align="center">
+                                        <a href="{{urlEncuesta}}" 
+                                           style="display:inline-block;background:linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);color:white;text-decoration:none;padding:22px 55px;border-radius:12px;font-weight:900;font-size:20px;box-shadow:0 10px 30px rgba(139,92,246,0.5);text-transform:uppercase;letter-spacing:2px;">
+                                            ⭐ RESPONDER ENCUESTA
+                                        </a>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <!-- Link Alternativo -->
+                            <p style="margin:30px 0;font-size:13px;line-height:1.8;color:#94a3b8;text-align:center;">
+                                Si el botón no funciona, copia este enlace en tu navegador:<br>
+                                <span style="color:#8b5cf6;word-break:break-all;font-weight:600;">{{urlEncuesta}}</span>
+                            </p>
+
+                            <!-- Agradecimiento -->
+                            <table width="100%" cellpadding="0" cellspacing="0" style="margin:40px 0;">
+                                <tr>
+                                    <td align="center" style="padding:35px;background:linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);border-radius:16px;border:3px solid #10b981;">
+                                        <p style="margin:0 0 10px 0;font-size:22px;font-weight:900;color:#065f46;">
+                                            ¡Gracias por tu Participación! 🎄
+                                        </p>
+                                        <p style="margin:0;font-size:16px;color:#065f46;font-weight:600;">
+                                            COOMOTOR - Juntos construimos futuro
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+
+                        </td>
+                    </tr>
+
+                    <!-- Footer -->
+                    <tr>
+                        <td style="background:linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);padding:40px;text-align:center;">
+                            <p style="margin:0 0 10px 0;font-size:18px;color:white;font-weight:800;">
+                                🚌 COOMOTOR
+                            </p>
+                            <p style="margin:0 0 5px 0;font-size:14px;color:rgba(255,255,255,0.9);">
+                                Cooperativa de Motoristas del Huila
+                            </p>
+                            <p style="margin:0;font-size:13px;color:rgba(255,255,255,0.8);">
+                                Neiva, Huila - Colombia 🇨🇴
+                            </p>
+                        </td>
+                    </tr>
+
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

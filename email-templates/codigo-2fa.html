@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Código 2FA</title>
+</head>
+<body style="margin:0;padding:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:#0f172a;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="background:#0f172a;padding:40px 20px;">
+        <tr>
+            <td align="center">
+                <table width="600" cellpadding="0" cellspacing="0" style="background:white;border-radius:24px;overflow:hidden;box-shadow:0 25px 70px rgba(0,0,0,0.5);">
+                    
+                    <!-- Header de Seguridad -->
+                    <tr>
+                        <td style="background:linear-gradient(135deg, #1e293b 0%, #334155 50%, #475569 100%);padding:60px 40px;text-align:center;position:relative;">
+                            <div style="font-size:100px;margin-bottom:20px;filter:drop-shadow(0 10px 30px rgba(0,0,0,0.5));">
+                                🔐
+                            </div>
+                            <h1 style="margin:0;color:white;font-size:42px;font-weight:900;text-shadow:3px 3px 6px rgba(0,0,0,0.5);">
+                                COOMOTOR
+                            </h1>
+                            <p style="margin:15px 0 0 0;color:rgba(255,255,255,0.95);font-size:18px;font-weight:600;">
+                                🛡️ Verificación de Seguridad
+                            </p>
+                        </td>
+                    </tr>
+
+                    <!-- Contenido -->
+                    <tr>
+                        <td style="padding:50px 40px;">
+                            
+                            <!-- Badge de Seguridad -->
+                            <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:40px;">
+                                <tr>
+                                    <td align="center">
+                                        <div style="background:linear-gradient(135deg, #dc2626 0%, #991b1b 100%);padding:40px;border-radius:20px;box-shadow:0 15px 40px rgba(220,38,38,0.5);">
+                                            <div style="font-size:80px;margin-bottom:15px;">
+                                                🛡️
+                                            </div>
+                                            <h2 style="margin:0;color:white;font-size:32px;font-weight:900;text-shadow:2px 2px 4px rgba(0,0,0,0.3);">
+                                                Código de Verificación
+                                            </h2>
+                                            <p style="margin:15px 0 0 0;color:rgba(255,255,255,0.95);font-size:16px;">
+                                                Autenticación de Dos Factores (2FA)
+                                            </p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <p style="margin:0 0 25px 0;font-size:20px;line-height:1.6;color:#1e293b;font-weight:600;">
+                                Hola <span style="color:#dc2626;">{{nombre}}</span>,
+                            </p>
+
+                            <p style="margin:0 0 30px 0;font-size:17px;line-height:1.8;color:#475569;">
+                                Alguien está intentando iniciar sesión en tu cuenta. Si eres tú, usa este código para continuar:
+                            </p>
+
+                            <!-- Código 2FA -->
+                            <table width="100%" cellpadding="0" cellspacing="0" style="margin:35px 0;">
+                                <tr>
+                                    <td align="center">
+                                        <div style="background:linear-gradient(135deg, #1e293b 0%, #334155 100%);padding:50px;border-radius:20px;box-shadow:0 15px 50px rgba(30,41,59,0.6);">
+                                            <p style="margin:0 0 20px 0;font-size:14px;color:rgba(255,255,255,0.9);font-weight:700;letter-spacing:3px;text-transform:uppercase;">
+                                                Tu Código 2FA:
+                                            </p>
+                                            <div style="background:white;padding:30px 50px;border-radius:15px;margin:20px 0;box-shadow:inset 0 4px 10px rgba(0,0,0,0.1);">
+                                                <p style="margin:0;font-size:56px;font-weight:900;color:#dc2626;letter-spacing:15px;font-family:'Courier New',monospace;text-shadow:2px 2px 4px rgba(0,0,0,0.1);">
+                                                    {{codigo}}
+                                                </p>
+                                            </div>
+                                            <p style="margin:20px 0 0 0;font-size:14px;color:rgba(255,255,255,0.8);">
+                                                ⏰ Expira en 10 minutos
+                                            </p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <!-- Alerta de Seguridad -->
+                            <table width="100%" cellpadding="0" cellspacing="0" style="background:#fef2f2;border-left:5px solid #dc2626;border-radius:12px;margin:35px 0;">
+                                <tr>
+                                    <td style="padding:30px;">
+                                        <p style="margin:0 0 15px 0;font-size:16px;font-weight:800;color:#991b1b;text-transform:uppercase;">
+                                            🚨 IMPORTANTE - SEGURIDAD:
+                                        </p>
+                                        <ul style="margin:0;padding-left:25px;color:#991b1b;font-size:15px;line-height:2;">
+                                            <li><strong>NUNCA</strong> compartas este código con nadie</li>
+                                            <li>Si no fuiste tú, <strong>cambia tu contraseña INMEDIATAMENTE</strong></li>
+                                            <li>El código solo es válido por <strong>10 minutos</strong></li>
+                                            <li>Máximo <strong>3 intentos</strong> permitidos</li>
+                                            <li>COOMOTOR nunca te pedirá este código por teléfono o email</li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <!-- Info Adicional -->
+                            <table width="100%" cellpadding="0" cellspacing="0" style="background:linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);border-radius:16px;margin:35px 0;border:3px solid #3b82f6;">
+                                <tr>
+                                    <td style="padding:30px;text-align:center;">
+                                        <p style="margin:0 0 10px 0;font-size:18px;font-weight:700;color:#1e40af;">
+                                            🔒 Tu cuenta está protegida
+                                        </p>
+                                        <p style="margin:0;font-size:15px;color:#1e40af;line-height:1.7;">
+                                            La autenticación de dos factores mantiene tu información segura
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+
+                        </td>
+                    </tr>
+
+                    <!-- Footer -->
+                    <tr>
+                        <td style="background:linear-gradient(135deg, #1e293b 0%, #0f172a 100%);padding:40px;text-align:center;">
+                            <p style="margin:0 0 10px 0;font-size:18px;color:white;font-weight:800;">
+                                🚌 COOMOTOR
+                            </p>
+                            <p style="margin:0 0 5px 0;font-size:14px;color:rgba(255,255,255,0.9);">
+                                Cooperativa de Motoristas del Huila
+                            </p>
+                            <p style="margin:0;font-size:13px;color:rgba(255,255,255,0.8);">
+                                Neiva, Huila - Colombia 🇨🇴
+                            </p>
+                        </td>
+                    </tr>
+
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

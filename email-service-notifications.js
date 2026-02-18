@@ -1,8 +1,10 @@
 // ============================================
 // SERVICIO DE NOTIFICACIONES CON SENDGRID
+// Sistema de Plantillas HTML Mejoradas
 // ============================================
 
 const sgMail = require('@sendgrid/mail');
+const templateLoader = require('./email-template-loader');
 require('dotenv').config();
 
 class NotificationService {
@@ -21,6 +23,7 @@ class NotificationService {
             sgMail.setApiKey(apiKey);
             this.initialized = true;
             console.log('✅ Servicio de notificaciones por email inicializado correctamente');
+            console.log('✨ Sistema de plantillas HTML mejoradas cargado');
         } catch (error) {
             console.error('❌ Error:', error);
         }
@@ -63,68 +66,169 @@ class NotificationService {
         }
     }
 
+    // ============================================
+    // PLANTILLAS DE POSTULACIONES
+    // ============================================
 
-    // PLANTILLA: Postulación Aprobada - Diseño espectacular
     async notificarPostulacionAprobada(datos) {
-        const html = `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><style>@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');body{margin:0;padding:0;font-family:'Poppins',Arial,sans-serif}</style></head><body style="margin:0;padding:0;background:linear-gradient(135deg,#1e3c72 0%,#2a5298 100%)"><table width="100%" cellpadding="0" cellspacing="0" style="padding:40px 20px"><tr><td align="center"><table width="600" cellpadding="0" cellspacing="0" style="background:white;border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.3)"><tr><td style="background:linear-gradient(135deg,#2563eb 0%,#c41e3a 100%);padding:50px 30px;text-align:center"><div style="font-size:80px;margin-bottom:10px">🎄</div><h1 style="margin:0;color:white;font-size:36px;font-weight:700;text-shadow:2px 2px 4px rgba(0,0,0,0.3)">COOMOTOR</h1><p style="margin:10px 0 0 0;color:rgba(255,255,255,0.9);font-size:16px">Sistema de Regalos Navideños 2024</p></td></tr><tr><td style="padding:50px 40px"><table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:30px"><tr><td align="center"><div style="background:linear-gradient(135deg,#11998e 0%,#38ef7d 100%);padding:30px;border-radius:15px;box-shadow:0 10px 30px rgba(17,153,142,0.3)"><div style="font-size:60px;margin-bottom:10px">🎉</div><h2 style="margin:0;color:white;font-size:28px;font-weight:700;text-shadow:1px 1px 2px rgba(0,0,0,0.2)">¡POSTULACIÓN APROBADA!</h2></div></td></tr></table><p style="margin:0 0 20px 0;font-size:18px;line-height:1.6;color:#333">Estimado/a <strong style="color:#2563eb">${datos.nombreEmpleado}</strong>,</p><p style="margin:0 0 25px 0;font-size:16px;line-height:1.8;color:#555">Nos complace informarte que tu postulación para <strong style="color:#c41e3a">${datos.nombreHijo}</strong> ha sido <strong style="color:#11998e">APROBADA</strong> exitosamente.</p><table width="100%" cellpadding="0" cellspacing="0" style="background:linear-gradient(135deg,#f093fb 0%,#f5576c 100%);border-radius:12px;margin:30px 0;overflow:hidden"><tr><td style="padding:25px;color:white"><table width="100%" cellpadding="0" cellspacing="0"><tr><td style="font-size:14px;font-weight:600;opacity:0.9;padding-bottom:8px">INFORMACIÓN DEL NIÑO/A</td></tr><tr><td style="font-size:24px;font-weight:700">${datos.nombreHijo}</td></tr><tr><td style="font-size:16px;padding-top:5px"><strong>Edad:</strong> ${datos.edad} años 🎂</td></tr></table></td></tr></table><p style="margin:25px 0;font-size:16px;line-height:1.8;color:#555">Pronto recibirás más información sobre la <strong>fecha y lugar de entrega</strong> del regalo.</p><table width="100%" cellpadding="0" cellspacing="0" style="margin-top:40px"><tr><td align="center" style="padding:25px;background:linear-gradient(135deg,#ffecd2 0%,#fcb69f 100%);border-radius:12px"><p style="margin:0;font-size:20px;font-weight:600;color:#c41e3a">¡Felices Fiestas! 🎅🎁✨</p><p style="margin:10px 0 0 0;font-size:14px;color:#666">Que la magia de la Navidad llene tu hogar de alegría</p></td></tr></table></td></tr><tr><td style="background:linear-gradient(135deg,#2563eb 0%,#1a5c3a 100%);padding:30px;text-align:center"><p style="margin:0 0 5px 0;font-size:14px;color:white;font-weight:600">COOMOTOR</p><p style="margin:0;font-size:12px;color:rgba(255,255,255,0.8)">Cooperativa de Motoristas del Huila</p><p style="margin:10px 0 0 0;font-size:12px;color:rgba(255,255,255,0.7)">Neiva, Huila - Colombia 🇨🇴</p></td></tr></table></td></tr></table></body></html>`;
-        return await this.enviarEmail(datos.email, '🎉 ¡Postulación Aprobada! - COOMOTOR', html);
+        const html = templateLoader.getProcessedTemplate('postulacion-aprobada', {
+            nombreEmpleado: datos.nombreEmpleado,
+            nombreHijo: datos.nombreHijo,
+            edad: datos.edad
+        });
+        
+        return await this.enviarEmail(
+            datos.email, 
+            '🎉 ¡Postulación Aprobada! - COOMOTOR', 
+            html
+        );
     }
 
-
-    // PLANTILLA: Postulación Rechazada
-    async notificarPostulacionRechazada(datos) {
-        const html = `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><style>@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');body{margin:0;padding:0;font-family:'Poppins',Arial,sans-serif}</style></head><body style="margin:0;padding:0;background:linear-gradient(135deg,#434343 0%,#000000 100%)"><table width="100%" cellpadding="0" cellspacing="0" style="padding:40px 20px"><tr><td align="center"><table width="600" cellpadding="0" cellspacing="0" style="background:white;border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.3)"><tr><td style="background:linear-gradient(135deg,#2563eb 0%,#c41e3a 100%);padding:50px 30px;text-align:center"><div style="font-size:80px;margin-bottom:10px">🎄</div><h1 style="margin:0;color:white;font-size:36px;font-weight:700;text-shadow:2px 2px 4px rgba(0,0,0,0.3)">COOMOTOR</h1><p style="margin:10px 0 0 0;color:rgba(255,255,255,0.9);font-size:16px">Sistema de Regalos Navideños 2024</p></td></tr><tr><td style="padding:50px 40px"><table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:30px"><tr><td align="center"><div style="background:linear-gradient(135deg,#ff6b6b 0%,#ee5a6f 100%);padding:30px;border-radius:15px;box-shadow:0 10px 30px rgba(255,107,107,0.3)"><div style="font-size:60px;margin-bottom:10px">📋</div><h2 style="margin:0;color:white;font-size:28px;font-weight:700;text-shadow:1px 1px 2px rgba(0,0,0,0.2)">Actualización de Postulación</h2></div></td></tr></table><p style="margin:0 0 20px 0;font-size:18px;line-height:1.6;color:#333">Estimado/a <strong style="color:#2563eb">${datos.nombreEmpleado}</strong>,</p><p style="margin:0 0 25px 0;font-size:16px;line-height:1.8;color:#555">Lamentamos informarte que tu postulación para <strong style="color:#c41e3a">${datos.nombreHijo}</strong> no ha sido aprobada en esta ocasión.</p>${datos.motivo ? `<table width="100%" cellpadding="0" cellspacing="0" style="background:#fff3cd;border-left:4px solid #ffc107;border-radius:8px;margin:25px 0"><tr><td style="padding:20px"><p style="margin:0 0 10px 0;font-size:14px;font-weight:600;color:#856404">MOTIVO:</p><p style="margin:0;font-size:15px;line-height:1.6;color:#856404">${datos.motivo}</p></td></tr></table>` : ''}<p style="margin:25px 0;font-size:16px;line-height:1.8;color:#555">Agradecemos tu comprensión y participación en nuestro programa de regalos navideños.</p><table width="100%" cellpadding="0" cellspacing="0" style="margin-top:40px"><tr><td align="center" style="padding:25px;background:linear-gradient(135deg,#ffecd2 0%,#fcb69f 100%);border-radius:12px"><p style="margin:0;font-size:18px;font-weight:600;color:#c41e3a">Gracias por tu participación</p><p style="margin:10px 0 0 0;font-size:14px;color:#666">COOMOTOR - Juntos construimos futuro</p></td></tr></table></td></tr><tr><td style="background:linear-gradient(135deg,#2563eb 0%,#1a5c3a 100%);padding:30px;text-align:center"><p style="margin:0 0 5px 0;font-size:14px;color:white;font-weight:600">COOMOTOR</p><p style="margin:0;font-size:12px;color:rgba(255,255,255,0.8)">Cooperativa de Motoristas del Huila</p><p style="margin:10px 0 0 0;font-size:12px;color:rgba(255,255,255,0.7)">Neiva, Huila - Colombia 🇨🇴</p></td></tr></table></td></tr></table></body></html>`;
-        return await this.enviarEmail(datos.email, '📋 Actualización de Postulación - COOMOTOR', html);
-    }
-
-
-    // PLANTILLA: Respuesta de Contacto
-    async notificarRespuestaContacto(datos) {
-        const html = `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><style>@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');body{margin:0;padding:0;font-family:'Poppins',Arial,sans-serif}</style></head><body style="margin:0;padding:0;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%)"><table width="100%" cellpadding="0" cellspacing="0" style="padding:40px 20px"><tr><td align="center"><table width="600" cellpadding="0" cellspacing="0" style="background:white;border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.3)"><tr><td style="background:linear-gradient(135deg,#2563eb 0%,#c41e3a 100%);padding:50px 30px;text-align:center"><div style="font-size:80px;margin-bottom:10px">💬</div><h1 style="margin:0;color:white;font-size:36px;font-weight:700;text-shadow:2px 2px 4px rgba(0,0,0,0.3)">COOMOTOR</h1><p style="margin:10px 0 0 0;color:rgba(255,255,255,0.9);font-size:16px">Respuesta a tu Mensaje</p></td></tr><tr><td style="padding:50px 40px"><table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:30px"><tr><td align="center"><div style="background:linear-gradient(135deg,#4facfe 0%,#00f2fe 100%);padding:30px;border-radius:15px;box-shadow:0 10px 30px rgba(79,172,254,0.3)"><div style="font-size:60px;margin-bottom:10px">📨</div><h2 style="margin:0;color:white;font-size:28px;font-weight:700;text-shadow:1px 1px 2px rgba(0,0,0,0.2)">¡Tenemos una Respuesta!</h2></div></td></tr></table><p style="margin:0 0 20px 0;font-size:18px;line-height:1.6;color:#333">Estimado/a <strong style="color:#2563eb">${datos.nombreUsuario}</strong>,</p><p style="margin:0 0 25px 0;font-size:16px;line-height:1.8;color:#555">Hemos respondido a tu mensaje sobre: <strong style="color:#667eea">"${datos.asunto}"</strong></p><table width="100%" cellpadding="0" cellspacing="0" style="background:linear-gradient(135deg,#a8edea 0%,#fed6e3 100%);border-radius:12px;margin:30px 0;overflow:hidden"><tr><td style="padding:30px"><p style="margin:0 0 15px 0;font-size:14px;font-weight:600;color:#2563eb;text-transform:uppercase;letter-spacing:1px">💬 Nuestra Respuesta:</p><div style="background:white;padding:20px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.1)"><p style="margin:0;font-size:16px;line-height:1.8;color:#333">${datos.respuesta}</p></div></td></tr></table><p style="margin:25px 0;font-size:16px;line-height:1.8;color:#555">Si tienes más preguntas, no dudes en contactarnos nuevamente.</p><table width="100%" cellpadding="0" cellspacing="0" style="margin-top:40px"><tr><td align="center" style="padding:25px;background:linear-gradient(135deg,#ffecd2 0%,#fcb69f 100%);border-radius:12px"><p style="margin:0;font-size:18px;font-weight:600;color:#c41e3a">Gracias por comunicarte con nosotros</p><p style="margin:10px 0 0 0;font-size:14px;color:#666">Estamos aquí para ayudarte 🤝</p></td></tr></table></td></tr><tr><td style="background:linear-gradient(135deg,#2563eb 0%,#1a5c3a 100%);padding:30px;text-align:center"><p style="margin:0 0 5px 0;font-size:14px;color:white;font-weight:600">COOMOTOR</p><p style="margin:0;font-size:12px;color:rgba(255,255,255,0.8)">Cooperativa de Motoristas del Huila</p><p style="margin:10px 0 0 0;font-size:12px;color:rgba(255,255,255,0.7)">Neiva, Huila - Colombia 🇨🇴</p></td></tr></table></td></tr></table></body></html>`;
-        return await this.enviarEmail(datos.email, `💬 Respuesta: ${datos.asunto} - COOMOTOR`, html);
-    }
-
-
-    // PLANTILLA: Código de Recuperación
-    async enviarCodigoRecuperacion(datos) {
-        const html = `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><style>@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');body{margin:0;padding:0;font-family:'Poppins',Arial,sans-serif}</style></head><body style="margin:0;padding:0;background:linear-gradient(135deg,#f093fb 0%,#f5576c 100%)"><table width="100%" cellpadding="0" cellspacing="0" style="padding:40px 20px"><tr><td align="center"><table width="600" cellpadding="0" cellspacing="0" style="background:white;border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.3)"><tr><td style="background:linear-gradient(135deg,#2563eb 0%,#c41e3a 100%);padding:50px 30px;text-align:center"><div style="font-size:80px;margin-bottom:10px">🔐</div><h1 style="margin:0;color:white;font-size:36px;font-weight:700;text-shadow:2px 2px 4px rgba(0,0,0,0.3)">COOMOTOR</h1><p style="margin:10px 0 0 0;color:rgba(255,255,255,0.9);font-size:16px">Recuperación de Contraseña</p></td></tr><tr><td style="padding:50px 40px"><table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:30px"><tr><td align="center"><div style="background:linear-gradient(135deg,#fa709a 0%,#fee140 100%);padding:30px;border-radius:15px;box-shadow:0 10px 30px rgba(250,112,154,0.3)"><div style="font-size:60px;margin-bottom:10px">🔑</div><h2 style="margin:0;color:white;font-size:28px;font-weight:700;text-shadow:1px 1px 2px rgba(0,0,0,0.2)">Código de Verificación</h2></div></td></tr></table><p style="margin:0 0 30px 0;font-size:16px;line-height:1.8;color:#555;text-align:center">Usa este código para recuperar tu contraseña:</p><table width="100%" cellpadding="0" cellspacing="0" style="margin:30px 0"><tr><td align="center"><div style="background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);padding:40px;border-radius:15px;box-shadow:0 10px 30px rgba(102,126,234,0.4)"><p style="margin:0 0 15px 0;font-size:14px;color:rgba(255,255,255,0.9);font-weight:600;letter-spacing:2px">TU CÓDIGO ES:</p><div style="background:white;padding:25px 40px;border-radius:10px;margin:15px 0"><p style="margin:0;font-size:48px;font-weight:700;color:#667eea;letter-spacing:12px;font-family:monospace">${datos.codigo}</p></div><p style="margin:15px 0 0 0;font-size:13px;color:rgba(255,255,255,0.8)">⏰ Expira en 15 minutos</p></div></td></tr></table><table width="100%" cellpadding="0" cellspacing="0" style="background:#fff3cd;border-left:4px solid #ffc107;border-radius:8px;margin:30px 0"><tr><td style="padding:20px"><p style="margin:0 0 10px 0;font-size:14px;font-weight:600;color:#856404">⚠️ IMPORTANTE:</p><ul style="margin:0;padding-left:20px;color:#856404;font-size:14px;line-height:1.8"><li>No compartas este código con nadie</li><li>Si no solicitaste este cambio, ignora este correo</li><li>El código solo es válido por 15 minutos</li></ul></td></tr></table></td></tr><tr><td style="background:linear-gradient(135deg,#2563eb 0%,#1a5c3a 100%);padding:30px;text-align:center"><p style="margin:0 0 5px 0;font-size:14px;color:white;font-weight:600">COOMOTOR</p><p style="margin:0;font-size:12px;color:rgba(255,255,255,0.8)">Cooperativa de Motoristas del Huila</p><p style="margin:10px 0 0 0;font-size:12px;color:rgba(255,255,255,0.7)">Neiva, Huila - Colombia 🇨🇴</p></td></tr></table></td></tr></table></body></html>`;
-        return await this.enviarEmail(datos.email, '🔐 Código de Recuperación - COOMOTOR', html);
-    }
-
-    // PLANTILLA: Confirmación de Recuperación
-    async enviarConfirmacionRecuperacion(datos) {
-        const html = `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><style>@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');body{margin:0;padding:0;font-family:'Poppins',Arial,sans-serif}</style></head><body style="margin:0;padding:0;background:linear-gradient(135deg,#11998e 0%,#38ef7d 100%)"><table width="100%" cellpadding="0" cellspacing="0" style="padding:40px 20px"><tr><td align="center"><table width="600" cellpadding="0" cellspacing="0" style="background:white;border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.3)"><tr><td style="background:linear-gradient(135deg,#2563eb 0%,#c41e3a 100%);padding:50px 30px;text-align:center"><div style="font-size:80px;margin-bottom:10px">✅</div><h1 style="margin:0;color:white;font-size:36px;font-weight:700;text-shadow:2px 2px 4px rgba(0,0,0,0.3)">COOMOTOR</h1><p style="margin:10px 0 0 0;color:rgba(255,255,255,0.9);font-size:16px">Contraseña Actualizada</p></td></tr><tr><td style="padding:50px 40px"><table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:30px"><tr><td align="center"><div style="background:linear-gradient(135deg,#11998e 0%,#38ef7d 100%);padding:30px;border-radius:15px;box-shadow:0 10px 30px rgba(17,153,142,0.3)"><div style="font-size:60px;margin-bottom:10px">🎉</div><h2 style="margin:0;color:white;font-size:28px;font-weight:700;text-shadow:1px 1px 2px rgba(0,0,0,0.2)">¡Contraseña Cambiada!</h2></div></td></tr></table><p style="margin:0 0 25px 0;font-size:16px;line-height:1.8;color:#555;text-align:center">Tu contraseña ha sido actualizada exitosamente.</p><p style="margin:0 0 25px 0;font-size:16px;line-height:1.8;color:#555;text-align:center">Ya puedes iniciar sesión con tu nueva contraseña.</p><table width="100%" cellpadding="0" cellspacing="0" style="margin-top:40px"><tr><td align="center" style="padding:25px;background:linear-gradient(135deg,#ffecd2 0%,#fcb69f 100%);border-radius:12px"><p style="margin:0;font-size:18px;font-weight:600;color:#2563eb">¡Todo listo! 🚀</p><p style="margin:10px 0 0 0;font-size:14px;color:#666">Tu cuenta está segura</p></td></tr></table></td></tr><tr><td style="background:linear-gradient(135deg,#2563eb 0%,#1a5c3a 100%);padding:30px;text-align:center"><p style="margin:0 0 5px 0;font-size:14px;color:white;font-weight:600">COOMOTOR</p><p style="margin:0;font-size:12px;color:rgba(255,255,255,0.8)">Cooperativa de Motoristas del Huila</p><p style="margin:10px 0 0 0;font-size:12px;color:rgba(255,255,255,0.7)">Neiva, Huila - Colombia 🇨🇴</p></td></tr></table></td></tr></table></body></html>`;
-        return await this.enviarEmail(datos.email, '✅ Contraseña Actualizada - COOMOTOR', html);
-    }
-
-    // PLANTILLA: Código 2FA
-    async enviarCodigo2FA(datos) {
-        const html = `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><style>@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');body{margin:0;padding:0;font-family:'Poppins',Arial,sans-serif}</style></head><body style="margin:0;padding:0;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%)"><table width="100%" cellpadding="0" cellspacing="0" style="padding:40px 20px"><tr><td align="center"><table width="600" cellpadding="0" cellspacing="0" style="background:white;border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.3)"><tr><td style="background:linear-gradient(135deg,#2563eb 0%,#c41e3a 100%);padding:50px 30px;text-align:center"><div style="font-size:80px;margin-bottom:10px">🔐</div><h1 style="margin:0;color:white;font-size:36px;font-weight:700;text-shadow:2px 2px 4px rgba(0,0,0,0.3)">COOMOTOR</h1><p style="margin:10px 0 0 0;color:rgba(255,255,255,0.9);font-size:16px">Verificación de Seguridad</p></td></tr><tr><td style="padding:50px 40px"><table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:30px"><tr><td align="center"><div style="background:linear-gradient(135deg,#f093fb 0%,#f5576c 100%);padding:30px;border-radius:15px;box-shadow:0 10px 30px rgba(240,147,251,0.3)"><div style="font-size:60px;margin-bottom:10px">🛡️</div><h2 style="margin:0;color:white;font-size:28px;font-weight:700;text-shadow:1px 1px 2px rgba(0,0,0,0.2)">Código de Verificación</h2></div></td></tr></table><p style="margin:0 0 20px 0;font-size:18px;line-height:1.6;color:#333">Hola <strong style="color:#2563eb">${datos.nombre}</strong>,</p><p style="margin:0 0 30px 0;font-size:16px;line-height:1.8;color:#555;text-align:center">Alguien está intentando iniciar sesión en tu cuenta. Usa este código para continuar:</p><table width="100%" cellpadding="0" cellspacing="0" style="margin:30px 0"><tr><td align="center"><div style="background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);padding:40px;border-radius:15px;box-shadow:0 10px 30px rgba(102,126,234,0.4)"><p style="margin:0 0 15px 0;font-size:14px;color:rgba(255,255,255,0.9);font-weight:600;letter-spacing:2px">TU CÓDIGO 2FA:</p><div style="background:white;padding:25px 40px;border-radius:10px;margin:15px 0"><p style="margin:0;font-size:48px;font-weight:700;color:#667eea;letter-spacing:12px;font-family:monospace">${datos.codigo}</p></div><p style="margin:15px 0 0 0;font-size:13px;color:rgba(255,255,255,0.8)">⏰ Expira en 10 minutos</p></div></td></tr></table><table width="100%" cellpadding="0" cellspacing="0" style="background:#fff3cd;border-left:4px solid #ffc107;border-radius:8px;margin:30px 0"><tr><td style="padding:20px"><p style="margin:0 0 10px 0;font-size:14px;font-weight:600;color:#856404">⚠️ SEGURIDAD:</p><ul style="margin:0;padding-left:20px;color:#856404;font-size:14px;line-height:1.8"><li>No compartas este código con nadie</li><li>Si no fuiste tú, cambia tu contraseña inmediatamente</li><li>El código solo es válido por 10 minutos</li><li>Máximo 3 intentos permitidos</li></ul></td></tr></table><table width="100%" cellpadding="0" cellspacing="0" style="margin-top:40px"><tr><td align="center" style="padding:25px;background:linear-gradient(135deg,#ffecd2 0%,#fcb69f 100%);border-radius:12px"><p style="margin:0;font-size:18px;font-weight:600;color:#c41e3a">Protegemos tu cuenta 🔒</p><p style="margin:10px 0 0 0;font-size:14px;color:#666">Autenticación de dos factores activa</p></td></tr></table></td></tr><tr><td style="background:linear-gradient(135deg,#2563eb 0%,#1a5c3a 100%);padding:30px;text-align:center"><p style="margin:0 0 5px 0;font-size:14px;color:white;font-weight:600">COOMOTOR</p><p style="margin:0;font-size:12px;color:rgba(255,255,255,0.8)">Cooperativa de Motoristas del Huila</p><p style="margin:10px 0 0 0;font-size:12px;color:rgba(255,255,255,0.7)">Neiva, Huila - Colombia 🇨🇴</p></td></tr></table></td></tr></table></body></html>`;
-        return await this.enviarEmail(datos.email, '🔐 Código de Verificación 2FA - COOMOTOR', html);
-    }
-
-    // PLANTILLA: Aprobación Eliminada
-    async notificarAprobacionEliminada(datos) {
-        const html = `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><style>@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');body{margin:0;padding:0;font-family:'Poppins',Arial,sans-serif}</style></head><body style="margin:0;padding:0;background:linear-gradient(135deg,#434343 0%,#000000 100%)"><table width="100%" cellpadding="0" cellspacing="0" style="padding:40px 20px"><tr><td align="center"><table width="600" cellpadding="0" cellspacing="0" style="background:white;border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.3)"><tr><td style="background:linear-gradient(135deg,#2563eb 0%,#c41e3a 100%);padding:50px 30px;text-align:center"><div style="font-size:80px;margin-bottom:10px">🎄</div><h1 style="margin:0;color:white;font-size:36px;font-weight:700;text-shadow:2px 2px 4px rgba(0,0,0,0.3)">COOMOTOR</h1><p style="margin:10px 0 0 0;color:rgba(255,255,255,0.9);font-size:16px">Sistema de Regalos Navideños 2024</p></td></tr><tr><td style="padding:50px 40px"><table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:30px"><tr><td align="center"><div style="background:linear-gradient(135deg,#ff9966 0%,#ff5e62 100%);padding:30px;border-radius:15px;box-shadow:0 10px 30px rgba(255,153,102,0.3)"><div style="font-size:60px;margin-bottom:10px">⚠️</div><h2 style="margin:0;color:white;font-size:28px;font-weight:700;text-shadow:1px 1px 2px rgba(0,0,0,0.2)">Cambio en Aprobación</h2></div></td></tr></table><p style="margin:0 0 20px 0;font-size:18px;line-height:1.6;color:#333">Estimado/a <strong style="color:#2563eb">${datos.nombreEmpleado}</strong>,</p><p style="margin:0 0 25px 0;font-size:16px;line-height:1.8;color:#555">Lamentamos informarte que la aprobación previamente otorgada para <strong style="color:#c41e3a">${datos.nombreHijo}</strong> ha sido <strong style="color:#ff5e62">CANCELADA</strong>.</p><table width="100%" cellpadding="0" cellspacing="0" style="background:#fff3cd;border-left:4px solid #ffc107;border-radius:8px;margin:25px 0"><tr><td style="padding:20px"><p style="margin:0 0 10px 0;font-size:14px;font-weight:600;color:#856404">MOTIVO DE LA CANCELACIÓN:</p><p style="margin:0;font-size:15px;line-height:1.6;color:#856404">${datos.motivo}</p></td></tr></table><p style="margin:25px 0;font-size:16px;line-height:1.8;color:#555">Entendemos que esta situación puede ser decepcionante. Si tienes alguna pregunta o inquietud, por favor no dudes en contactarnos.</p><table width="100%" cellpadding="0" cellspacing="0" style="margin-top:40px"><tr><td align="center" style="padding:25px;background:linear-gradient(135deg,#ffecd2 0%,#fcb69f 100%);border-radius:12px"><p style="margin:0;font-size:18px;font-weight:600;color:#c41e3a">Disculpa las molestias</p><p style="margin:10px 0 0 0;font-size:14px;color:#666">COOMOTOR - Estamos aquí para ayudarte</p></td></tr></table></td></tr><tr><td style="background:linear-gradient(135deg,#2563eb 0%,#1a5c3a 100%);padding:30px;text-align:center"><p style="margin:0 0 5px 0;font-size:14px;color:white;font-weight:600">COOMOTOR</p><p style="margin:0;font-size:12px;color:rgba(255,255,255,0.8)">Cooperativa de Motoristas del Huila</p><p style="margin:10px 0 0 0;font-size:12px;color:rgba(255,255,255,0.7)">Neiva, Huila - Colombia 🇨🇴</p></td></tr></table></td></tr></table></body></html>`;
-        return await this.enviarEmail(datos.email, '⚠️ Cambio en Aprobación - COOMOTOR', html);
-    }
-
-
-    // Métodos adicionales (alertas y cambios de estado)
-    async notificarAlertaPlazo(datos) {
-        return { success: true };
-    }
-
-    async notificarCambioEstadoRegalo(datos) {
-        return { success: true };
-    }
-    // PLANTILLA: Confirmación de Postulación
     async notificarConfirmacionPostulacion(datos) {
-        const html = `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><style>@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');body{margin:0;padding:0;font-family:'Poppins',Arial,sans-serif}</style></head><body style="margin:0;padding:0;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%)"><table width="100%" cellpadding="0" cellspacing="0" style="padding:40px 20px"><tr><td align="center"><table width="600" cellpadding="0" cellspacing="0" style="background:white;border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.3)"><tr><td style="background:linear-gradient(135deg,#2563eb 0%,#c41e3a 100%);padding:50px 30px;text-align:center"><div style="font-size:80px;margin-bottom:10px">🎄</div><h1 style="margin:0;color:white;font-size:36px;font-weight:700;text-shadow:2px 2px 4px rgba(0,0,0,0.3)">COOMOTOR</h1><p style="margin:10px 0 0 0;color:rgba(255,255,255,0.9);font-size:16px">Sistema de Regalos Navideños 2024</p></td></tr><tr><td style="padding:50px 40px"><table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:30px"><tr><td align="center"><div style="background:linear-gradient(135deg,#11998e 0%,#38ef7d 100%);padding:30px;border-radius:15px;box-shadow:0 10px 30px rgba(17,153,142,0.3)"><div style="font-size:60px;margin-bottom:10px">✅</div><h2 style="margin:0;color:white;font-size:28px;font-weight:700;text-shadow:1px 1px 2px rgba(0,0,0,0.2)">¡Postulación Recibida!</h2></div></td></tr></table><p style="margin:0 0 20px 0;font-size:18px;line-height:1.6;color:#333">Estimado/a <strong style="color:#2563eb">${datos.nombreEmpleado}</strong>,</p><p style="margin:0 0 25px 0;font-size:16px;line-height:1.8;color:#555">Hemos recibido exitosamente tu postulación para <strong style="color:#c41e3a">${datos.nombreHijo}</strong> (${datos.edad} años).</p><table width="100%" cellpadding="0" cellspacing="0" style="background:linear-gradient(135deg,#a8edea 0%,#fed6e3 100%);border-radius:12px;margin:30px 0;overflow:hidden"><tr><td style="padding:30px"><p style="margin:0 0 15px 0;font-size:14px;font-weight:600;color:#2563eb;text-transform:uppercase;letter-spacing:1px">📋 Próximos Pasos:</p><div style="background:white;padding:20px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.1)"><ol style="margin:0;padding-left:20px;color:#333;font-size:15px;line-height:1.8"><li>Nuestro equipo revisará tu postulación</li><li>Te solicitaremos los documentos necesarios</li><li>Recibirás una notificación en tu panel y por correo</li><li>Una vez aprobada, te informaremos sobre la entrega</li></ol></div></td></tr></table><p style="margin:25px 0;font-size:16px;line-height:1.8;color:#555">Mantente atento a tu correo y panel de conductor para futuras actualizaciones.</p><table width="100%" cellpadding="0" cellspacing="0" style="margin-top:40px"><tr><td align="center" style="padding:25px;background:linear-gradient(135deg,#ffecd2 0%,#fcb69f 100%);border-radius:12px"><p style="margin:0;font-size:20px;font-weight:600;color:#c41e3a">¡Gracias por participar! 🎅🎁</p><p style="margin:10px 0 0 0;font-size:14px;color:#666">COOMOTOR - Juntos construimos futuro</p></td></tr></table></td></tr><tr><td style="background:linear-gradient(135deg,#2563eb 0%,#1a5c3a 100%);padding:30px;text-align:center"><p style="margin:0 0 5px 0;font-size:14px;color:white;font-weight:600">COOMOTOR</p><p style="margin:0;font-size:12px;color:rgba(255,255,255,0.8)">Cooperativa de Motoristas del Huila</p><p style="margin:10px 0 0 0;font-size:12px;color:rgba(255,255,255,0.7)">Neiva, Huila - Colombia 🇨🇴</p></td></tr></table></td></tr></table></body></html>`;
-        return await this.enviarEmail(datos.email, '✅ Postulación Recibida - COOMOTOR', html);
+        const html = templateLoader.getProcessedTemplate('confirmacion-postulacion', {
+            nombreEmpleado: datos.nombreEmpleado,
+            nombreHijo: datos.nombreHijo,
+            edad: datos.edad
+        });
+        
+        return await this.enviarEmail(
+            datos.email, 
+            '✅ Postulación Recibida - COOMOTOR', 
+            html
+        );
     }
 
-    // PLANTILLA: Solicitud de Documentos
+    async notificarPostulacionRechazada(datos) {
+        const html = templateLoader.getProcessedTemplate('postulacion-rechazada', {
+            nombreEmpleado: datos.nombreEmpleado,
+            nombreHijo: datos.nombreHijo,
+            motivo: datos.motivo || 'No se especificó un motivo'
+        });
+        
+        return await this.enviarEmail(
+            datos.email, 
+            '📋 Actualización de Postulación - COOMOTOR', 
+            html
+        );
+    }
+
+    async notificarAprobacionEliminada(datos) {
+        const html = templateLoader.getProcessedTemplate('aprobacion-eliminada', {
+            nombreEmpleado: datos.nombreEmpleado,
+            nombreHijo: datos.nombreHijo,
+            motivo: datos.motivo
+        });
+        
+        return await this.enviarEmail(
+            datos.email, 
+            '⚠️ Cambio en Aprobación - COOMOTOR', 
+            html
+        );
+    }
+
+    // ============================================
+    // PLANTILLAS DE SEGURIDAD Y AUTENTICACIÓN
+    // ============================================
+
+    async enviarCodigo2FA(datos) {
+        const html = templateLoader.getProcessedTemplate('codigo-2fa', {
+            nombre: datos.nombre,
+            codigo: datos.codigo
+        });
+        
+        return await this.enviarEmail(
+            datos.email, 
+            '🔐 Código de Verificación 2FA - COOMOTOR', 
+            html
+        );
+    }
+
+    async enviarCodigoRecuperacion(datos) {
+        const html = templateLoader.getProcessedTemplate('codigo-recuperacion', {
+            codigo: datos.codigo
+        });
+        
+        return await this.enviarEmail(
+            datos.email, 
+            '🔐 Código de Recuperación - COOMOTOR', 
+            html
+        );
+    }
+
+    async enviarConfirmacionRecuperacion(datos) {
+        const html = templateLoader.getProcessedTemplate('confirmacion-recuperacion', {});
+        
+        return await this.enviarEmail(
+            datos.email, 
+            '✅ Contraseña Actualizada - COOMOTOR', 
+            html
+        );
+    }
+
+    async enviarCambioRol(datos) {
+        const esAdmin = datos.rolNuevo === 'admin';
+        const iconoRol = esAdmin ? '👑' : datos.rolNuevo === 'conductor' ? '🚗' : '👤';
+        const colorRol = esAdmin ? '#f59e0b' : datos.rolNuevo === 'conductor' ? '#3b82f6' : '#10b981';
+        
+        // Permisos de admin (si aplica)
+        const permisosAdmin = esAdmin ? `
+            <table width="100%" cellpadding="0" cellspacing="0" style="background:#fef3c7;border-left:5px solid #f59e0b;border-radius:12px;margin:35px 0;">
+                <tr>
+                    <td style="padding:30px;">
+                        <p style="margin:0 0 15px 0;font-size:16px;font-weight:800;color:#92400e;">
+                            👑 PERMISOS DE ADMINISTRADOR:
+                        </p>
+                        <ul style="margin:0;padding-left:25px;color:#92400e;font-size:15px;line-height:2;">
+                            <li>Gestionar todos los usuarios</li>
+                            <li>Aprobar/rechazar postulaciones</li>
+                            <li>Ver reportes y estadísticas</li>
+                            <li>Configurar el sistema</li>
+                            <li>Acceso completo al panel admin</li>
+                        </ul>
+                    </td>
+                </tr>
+            </table>
+        ` : '';
+
+        const seguridadAdmin = esAdmin ? `
+            <table width="100%" cellpadding="0" cellspacing="0" style="background:#fef2f2;border-left:5px solid #dc2626;border-radius:12px;margin:35px 0;">
+                <tr>
+                    <td style="padding:30px;">
+                        <p style="margin:0 0 15px 0;font-size:16px;font-weight:800;color:#991b1b;">
+                            🔐 SEGURIDAD IMPORTANTE:
+                        </p>
+                        <ul style="margin:0;padding-left:25px;color:#991b1b;font-size:15px;line-height:2;">
+                            <li>Ahora tu cuenta requiere autenticación de 2 factores (2FA)</li>
+                            <li>Recibirás un código por email cada vez que inicies sesión</li>
+                            <li>Usa una contraseña fuerte y única</li>
+                            <li>No compartas tus credenciales con nadie</li>
+                        </ul>
+                    </td>
+                </tr>
+            </table>
+        ` : '';
+        
+        const html = templateLoader.getProcessedTemplate('cambio-rol', {
+            nombre: datos.nombre,
+            rolAnterior: datos.rolAnterior,
+            rolNuevoNombre: datos.rolNuevoNombre || datos.rolNuevo,
+            iconoRol: iconoRol,
+            colorRol: colorRol,
+            permisosAdmin: permisosAdmin,
+            seguridadAdmin: seguridadAdmin
+        });
+        
+        return await this.enviarEmail(
+            datos.email, 
+            `${iconoRol} Cambio de Rol - COOMOTOR`, 
+            html
+        );
+    }
+
+    // ============================================
+    // PLANTILLAS DE DOCUMENTOS
+    // ============================================
+
     async notificarSolicitudDocumentos(datos) {
         const tiposDocumento = {
             'registro_civil': 'Registro Civil',
@@ -135,20 +239,29 @@ class NotificationService {
             'otro': 'Otro Documento'
         };
 
-        let listaDocumentos = '';
+        let listaDocumentos = '<ul style="margin:0;padding-left:20px;">';
         datos.documentosSolicitados.forEach(doc => {
-            listaDocumentos += `<li style="margin-bottom:10px">${tiposDocumento[doc] || doc}</li>`;
+            listaDocumentos += `<li style="margin-bottom:10px;font-weight:600;">${tiposDocumento[doc] || doc}</li>`;
         });
+        listaDocumentos += '</ul>';
 
-        const html = `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><style>@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');body{margin:0;padding:0;font-family:'Poppins',Arial,sans-serif}</style></head><body style="margin:0;padding:0;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%)"><table width="100%" cellpadding="0" cellspacing="0" style="padding:40px 20px"><tr><td align="center"><table width="600" cellpadding="0" cellspacing="0" style="background:white;border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.3)"><tr><td style="background:linear-gradient(135deg,#2563eb 0%,#c41e3a 100%);padding:50px 30px;text-align:center"><div style="font-size:80px;margin-bottom:10px">📄</div><h1 style="margin:0;color:white;font-size:36px;font-weight:700;text-shadow:2px 2px 4px rgba(0,0,0,0.3)">COOMOTOR</h1><p style="margin:10px 0 0 0;color:rgba(255,255,255,0.9);font-size:16px">Solicitud de Documentos</p></td></tr><tr><td style="padding:50px 40px"><table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:30px"><tr><td align="center"><div style="background:linear-gradient(135deg,#f093fb 0%,#f5576c 100%);padding:30px;border-radius:15px;box-shadow:0 10px 30px rgba(240,147,251,0.3)"><div style="font-size:60px;margin-bottom:10px">📋</div><h2 style="margin:0;color:white;font-size:28px;font-weight:700;text-shadow:1px 1px 2px rgba(0,0,0,0.2)">Documentos Requeridos</h2></div></td></tr></table><p style="margin:0 0 20px 0;font-size:18px;line-height:1.6;color:#333">Estimado/a <strong style="color:#2563eb">${datos.nombreEmpleado}</strong>,</p><p style="margin:0 0 25px 0;font-size:16px;line-height:1.8;color:#555">Para continuar con la postulación de <strong style="color:#c41e3a">${datos.nombreHijo}</strong>, necesitamos que subas los siguientes documentos:</p><table width="100%" cellpadding="0" cellspacing="0" style="background:linear-gradient(135deg,#a8edea 0%,#fed6e3 100%);border-radius:12px;margin:30px 0;overflow:hidden"><tr><td style="padding:30px"><p style="margin:0 0 15px 0;font-size:14px;font-weight:600;color:#2563eb;text-transform:uppercase;letter-spacing:1px">📄 Documentos Solicitados:</p><div style="background:white;padding:20px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.1)"><ul style="margin:0;padding-left:20px;color:#333;font-size:15px;line-height:1.8">${listaDocumentos}</ul></div></td></tr></table>${datos.mensaje ? `<table width="100%" cellpadding="0" cellspacing="0" style="background:#fff3cd;border-left:4px solid #ffc107;border-radius:8px;margin:25px 0"><tr><td style="padding:20px"><p style="margin:0 0 10px 0;font-size:14px;font-weight:600;color:#856404">💬 Mensaje del Administrador:</p><p style="margin:0;font-size:15px;line-height:1.6;color:#856404">${datos.mensaje}</p></td></tr></table>` : ''}<table width="100%" cellpadding="0" cellspacing="0" style="margin-top:40px"><tr><td align="center"><a href="https://coomotor-regalos.onrender.com/dashboards/empleado.html" style="display:inline-block;background:linear-gradient(135deg,#2563eb 0%,#1e40af 100%);color:white;text-decoration:none;padding:15px 40px;border-radius:10px;font-weight:600;font-size:16px;box-shadow:0 4px 12px rgba(46,139,87,0.3)">📤 Subir Documentos Ahora</a></td></tr></table><p style="margin:25px 0 0 0;font-size:14px;line-height:1.8;color:#666;text-align:center">También puedes subir los documentos desde tu panel de conductor</p></td></tr><tr><td style="background:linear-gradient(135deg,#2563eb 0%,#1a5c3a 100%);padding:30px;text-align:center"><p style="margin:0 0 5px 0;font-size:14px;color:white;font-weight:600">COOMOTOR</p><p style="margin:0;font-size:12px;color:rgba(255,255,255,0.8)">Cooperativa de Motoristas del Huila</p><p style="margin:10px 0 0 0;font-size:12px;color:rgba(255,255,255,0.7)">Neiva, Huila - Colombia 🇨🇴</p></td></tr></table></td></tr></table></body></html>`;
+        const html = templateLoader.getProcessedTemplate('solicitud-documentos', {
+            nombreEmpleado: datos.nombreEmpleado,
+            nombreHijo: datos.nombreHijo,
+            listaDocumentos: listaDocumentos,
+            mensaje: datos.mensaje || ''
+        });
         
-        return await this.enviarEmail(datos.email, '📄 Documentos Requeridos - COOMOTOR', html);
+        return await this.enviarEmail(
+            datos.email, 
+            '📄 Documentos Requeridos - COOMOTOR', 
+            html
+        );
     }
 
-    // PLANTILLA: Revisión de Documento
     async notificarRevisionDocumento(usuario, documento) {
         const estadoTexto = documento.estado === 'aprobado' ? 'APROBADO ✅' : 'REQUIERE REVISIÓN ⚠️';
-        const estadoColor = documento.estado === 'aprobado' ? '#11998e' : '#ff6b6b';
+        const estadoColor = documento.estado === 'aprobado' ? '#10b981' : '#f59e0b';
         const estadoEmoji = documento.estado === 'aprobado' ? '✅' : '📋';
         
         const tiposDocumento = {
@@ -160,60 +273,135 @@ class NotificationService {
             'otro': 'Otro Documento'
         };
 
-        const html = `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><style>@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');body{margin:0;padding:0;font-family:'Poppins',Arial,sans-serif}</style></head><body style="margin:0;padding:0;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%)"><table width="100%" cellpadding="0" cellspacing="0" style="padding:40px 20px"><tr><td align="center"><table width="600" cellpadding="0" cellspacing="0" style="background:white;border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.3)"><tr><td style="background:linear-gradient(135deg,#2563eb 0%,#c41e3a 100%);padding:50px 30px;text-align:center"><div style="font-size:80px;margin-bottom:10px">📄</div><h1 style="margin:0;color:white;font-size:36px;font-weight:700;text-shadow:2px 2px 4px rgba(0,0,0,0.3)">COOMOTOR</h1><p style="margin:10px 0 0 0;color:rgba(255,255,255,0.9);font-size:16px">Revisión de Documento</p></td></tr><tr><td style="padding:50px 40px"><table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:30px"><tr><td align="center"><div style="background:linear-gradient(135deg,${estadoColor} 0%,${estadoColor}dd 100%);padding:30px;border-radius:15px;box-shadow:0 10px 30px rgba(0,0,0,0.3)"><div style="font-size:60px;margin-bottom:10px">${estadoEmoji}</div><h2 style="margin:0;color:white;font-size:28px;font-weight:700;text-shadow:1px 1px 2px rgba(0,0,0,0.2)">${estadoTexto}</h2></div></td></tr></table><p style="margin:0 0 20px 0;font-size:18px;line-height:1.6;color:#333">Estimado/a <strong style="color:#2563eb">${usuario.nombres}</strong>,</p><p style="margin:0 0 25px 0;font-size:16px;line-height:1.8;color:#555">Tu documento <strong style="color:#667eea">${tiposDocumento[documento.tipo_documento] || documento.tipo_documento}</strong> ha sido revisado.</p><table width="100%" cellpadding="0" cellspacing="0" style="background:linear-gradient(135deg,#a8edea 0%,#fed6e3 100%);border-radius:12px;margin:30px 0;overflow:hidden"><tr><td style="padding:30px"><p style="margin:0 0 15px 0;font-size:14px;font-weight:600;color:#2563eb;text-transform:uppercase;letter-spacing:1px">📋 Estado del Documento:</p><div style="background:white;padding:20px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.1)"><p style="margin:0 0 10px 0;font-size:18px;font-weight:700;color:${estadoColor}">${estadoTexto}</p>${documento.observaciones ? `<p style="margin:10px 0 0 0;font-size:15px;line-height:1.6;color:#555"><strong>Observaciones:</strong><br>${documento.observaciones}</p>` : ''}</div></td></tr></table>${documento.estado === 'rechazado' ? `<p style="margin:25px 0;font-size:16px;line-height:1.8;color:#555">Por favor, revisa las observaciones y sube nuevamente el documento corregido desde tu panel de conductor.</p>` : `<p style="margin:25px 0;font-size:16px;line-height:1.8;color:#555">Tu documento ha sido aprobado exitosamente. Puedes continuar con el proceso de postulación.</p>`}<table width="100%" cellpadding="0" cellspacing="0" style="margin-top:40px"><tr><td align="center" style="padding:25px;background:linear-gradient(135deg,#ffecd2 0%,#fcb69f 100%);border-radius:12px"><p style="margin:0;font-size:18px;font-weight:600;color:#c41e3a">Gracias por tu colaboración</p><p style="margin:10px 0 0 0;font-size:14px;color:#666">COOMOTOR - Juntos construimos futuro 🤝</p></td></tr></table></td></tr><tr><td style="background:linear-gradient(135deg,#2563eb 0%,#1a5c3a 100%);padding:30px;text-align:center"><p style="margin:0 0 5px 0;font-size:14px;color:white;font-weight:600">COOMOTOR</p><p style="margin:0;font-size:12px;color:rgba(255,255,255,0.8)">Cooperativa de Motoristas del Huila</p><p style="margin:10px 0 0 0;font-size:12px;color:rgba(255,255,255,0.7)">Neiva, Huila - Colombia 🇨🇴</p></td></tr></table></td></tr></table></body></html>`;
-        
-        return await this.enviarEmail(usuario.correo, `📄 Revisión de Documento: ${tiposDocumento[documento.tipo_documento]} - COOMOTOR`, html);
-    }
+        const mensajeEstado = documento.estado === 'aprobado' 
+            ? 'Tu documento ha sido aprobado exitosamente. Puedes continuar con el proceso de postulación.'
+            : 'Por favor, revisa las observaciones y sube nuevamente el documento corregido desde tu panel de empleado.';
 
-    // PLANTILLA: Cambio de Rol
-    async enviarCambioRol(datos) {
-        const esAdmin = datos.rolNuevo === 'admin';
-        const iconoRol = esAdmin ? '👑' : datos.rolNuevo === 'conductor' ? '🚗' : '👤';
-        const colorRol = esAdmin ? '#f59e0b' : datos.rolNuevo === 'conductor' ? '#3b82f6' : '#10b981';
+        const html = templateLoader.getProcessedTemplate('revision-documento', {
+            nombreEmpleado: usuario.nombres,
+            tipoDocumento: tiposDocumento[documento.tipo_documento] || documento.tipo_documento,
+            estadoTexto: estadoTexto,
+            estadoColor: estadoColor,
+            estadoEmoji: estadoEmoji,
+            observaciones: documento.observaciones || 'Sin observaciones',
+            mensajeEstado: mensajeEstado
+        });
         
-        const html = `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><style>@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');body{margin:0;padding:0;font-family:'Poppins',Arial,sans-serif}</style></head><body style="margin:0;padding:0;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%)"><table width="100%" cellpadding="0" cellspacing="0" style="padding:40px 20px"><tr><td align="center"><table width="600" cellpadding="0" cellspacing="0" style="background:white;border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.3)"><tr><td style="background:linear-gradient(135deg,#2563eb 0%,#c41e3a 100%);padding:50px 30px;text-align:center"><div style="font-size:80px;margin-bottom:10px">${iconoRol}</div><h1 style="margin:0;color:white;font-size:36px;font-weight:700;text-shadow:2px 2px 4px rgba(0,0,0,0.3)">COOMOTOR</h1><p style="margin:10px 0 0 0;color:rgba(255,255,255,0.9);font-size:16px">Actualización de Permisos</p></td></tr><tr><td style="padding:50px 40px"><table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:30px"><tr><td align="center"><div style="background:linear-gradient(135deg,${colorRol} 0%,${colorRol}dd 100%);padding:30px;border-radius:15px;box-shadow:0 10px 30px rgba(0,0,0,0.2)"><div style="font-size:60px;margin-bottom:10px">🔄</div><h2 style="margin:0;color:white;font-size:28px;font-weight:700;text-shadow:1px 1px 2px rgba(0,0,0,0.2)">Cambio de Rol</h2></div></td></tr></table><p style="margin:0 0 20px 0;font-size:18px;line-height:1.6;color:#333">Hola <strong style="color:#2563eb">${datos.nombre}</strong>,</p><p style="margin:0 0 25px 0;font-size:16px;line-height:1.8;color:#555">Te informamos que tu rol en el sistema ha sido actualizado por un administrador.</p><table width="100%" cellpadding="0" cellspacing="0" style="background:linear-gradient(135deg,#f0f9ff 0%,#e0f2fe 100%);border-radius:12px;margin:30px 0;overflow:hidden"><tr><td style="padding:30px"><table width="100%" cellpadding="0" cellspacing="0"><tr><td style="padding-bottom:15px"><p style="margin:0;font-size:14px;font-weight:600;color:#64748b;text-transform:uppercase">Rol Anterior:</p><p style="margin:5px 0 0 0;font-size:18px;font-weight:700;color:#94a3b8">${datos.rolAnterior}</p></td></tr><tr><td style="padding-top:15px;border-top:2px dashed #cbd5e1"><p style="margin:0;font-size:14px;font-weight:600;color:#2563eb;text-transform:uppercase">Nuevo Rol:</p><p style="margin:5px 0 0 0;font-size:24px;font-weight:900;color:${colorRol}">${iconoRol} ${datos.rolNuevoNombre}</p></td></tr></table></td></tr></table>${esAdmin ? `<table width="100%" cellpadding="0" cellspacing="0" style="background:#fef3c7;border-left:4px solid #f59e0b;border-radius:8px;margin:25px 0"><tr><td style="padding:20px"><p style="margin:0 0 10px 0;font-size:14px;font-weight:600;color:#92400e">👑 PERMISOS DE ADMINISTRADOR:</p><ul style="margin:0;padding-left:20px;color:#92400e;font-size:14px;line-height:1.8"><li>Gestionar todos los usuarios</li><li>Aprobar/rechazar postulaciones</li><li>Ver reportes y estadísticas</li><li>Configurar el sistema</li><li>Acceso completo al panel admin</li></ul></td></tr></table><table width="100%" cellpadding="0" cellspacing="0" style="background:#fee2e2;border-left:4px solid #dc2626;border-radius:8px;margin:25px 0"><tr><td style="padding:20px"><p style="margin:0 0 10px 0;font-size:14px;font-weight:600;color:#991b1b">🔐 SEGURIDAD IMPORTANTE:</p><ul style="margin:0;padding-left:20px;color:#991b1b;font-size:14px;line-height:1.8"><li>Ahora tu cuenta requiere autenticación de 2 factores (2FA)</li><li>Recibirás un código por email cada vez que inicies sesión</li><li>Usa una contraseña fuerte y única</li><li>No compartas tus credenciales con nadie</li></ul></td></tr></table>` : ''}<p style="margin:25px 0;font-size:16px;line-height:1.8;color:#555">Si tienes dudas sobre tus nuevos permisos, contacta al administrador del sistema.</p><table width="100%" cellpadding="0" cellspacing="0" style="margin-top:40px"><tr><td align="center" style="padding:25px;background:linear-gradient(135deg,#ffecd2 0%,#fcb69f 100%);border-radius:12px"><p style="margin:0;font-size:18px;font-weight:600;color:#c41e3a">¡Bienvenido a tu nuevo rol!</p><p style="margin:10px 0 0 0;font-size:14px;color:#666">COOMOTOR - Juntos construimos futuro</p></td></tr></table></td></tr><tr><td style="background:linear-gradient(135deg,#2563eb 0%,#1a5c3a 100%);padding:30px;text-align:center"><p style="margin:0 0 5px 0;font-size:14px;color:white;font-weight:600">COOMOTOR</p><p style="margin:0;font-size:12px;color:rgba(255,255,255,0.8)">Cooperativa de Motoristas del Huila</p><p style="margin:10px 0 0 0;font-size:12px;color:rgba(255,255,255,0.7)">Neiva, Huila - Colombia 🇨🇴</p></td></tr></table></td></tr></table></body></html>`;
-        
-        return await this.enviarEmail(datos.email, `${iconoRol} Cambio de Rol - COOMOTOR`, html);
+        return await this.enviarEmail(
+            usuario.correo, 
+            `📄 Revisión de Documento: ${tiposDocumento[documento.tipo_documento]} - COOMOTOR`, 
+            html
+        );
     }
 
     // ============================================
-    // RECORDATORIOS AUTOMÁTICOS
+    // PLANTILLAS DE RECORDATORIOS Y ALERTAS
     // ============================================
 
-    // PLANTILLA: Recordatorio de Documentos Pendientes
     async enviarRecordatorioDocumentos(datos) {
         const urgencia = datos.diasTranscurridos >= 7 ? 'URGENTE' : 'IMPORTANTE';
-        const colorUrgencia = datos.diasTranscurridos >= 7 ? '#dc2626' : '#f59e0b';
         
-        const html = `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><style>@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');body{margin:0;padding:0;font-family:'Poppins',Arial,sans-serif}</style></head><body style="margin:0;padding:0;background:linear-gradient(135deg,#f59e0b 0%,#dc2626 100%)"><table width="100%" cellpadding="0" cellspacing="0" style="padding:40px 20px"><tr><td align="center"><table width="600" cellpadding="0" cellspacing="0" style="background:white;border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.3)"><tr><td style="background:linear-gradient(135deg,#2563eb 0%,#c41e3a 100%);padding:50px 30px;text-align:center"><div style="font-size:80px;margin-bottom:10px">📄</div><h1 style="margin:0;color:white;font-size:36px;font-weight:700;text-shadow:2px 2px 4px rgba(0,0,0,0.3)">COOMOTOR</h1><p style="margin:10px 0 0 0;color:rgba(255,255,255,0.9);font-size:16px">Recordatorio de Documentos</p></td></tr><tr><td style="padding:50px 40px"><table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:30px"><tr><td align="center"><div style="background:linear-gradient(135deg,${colorUrgencia} 0%,${colorUrgencia}dd 100%);padding:30px;border-radius:15px;box-shadow:0 10px 30px rgba(0,0,0,0.3)"><div style="font-size:60px;margin-bottom:10px">⚠️</div><h2 style="margin:0;color:white;font-size:28px;font-weight:700;text-shadow:1px 1px 2px rgba(0,0,0,0.2)">${urgencia}: Documentos Pendientes</h2></div></td></tr></table><p style="margin:0 0 20px 0;font-size:18px;line-height:1.6;color:#333">Hola <strong style="color:#2563eb">${datos.nombre}</strong>,</p><p style="margin:0 0 25px 0;font-size:16px;line-height:1.8;color:#555">Te recordamos que tienes documentos pendientes de revisión en el sistema de regalos navideños.</p><table width="100%" cellpadding="0" cellspacing="0" style="background:linear-gradient(135deg,#fef3c7 0%,#fed7aa 100%);border-radius:12px;margin:30px 0;overflow:hidden"><tr><td style="padding:30px"><table width="100%" cellpadding="0" cellspacing="0"><tr><td style="padding-bottom:15px"><p style="margin:0;font-size:14px;font-weight:600;color:#92400e;text-transform:uppercase">📊 Estado de Documentos:</p></td></tr>${datos.docsPendientes > 0 ? `<tr><td style="padding:10px 0"><p style="margin:0;font-size:18px;color:#92400e"><strong>⏳ Pendientes de revisión:</strong> ${datos.docsPendientes}</p></td></tr>` : ''}${datos.docsRechazados > 0 ? `<tr><td style="padding:10px 0"><p style="margin:0;font-size:18px;color:#dc2626"><strong>❌ Rechazados (requieren corrección):</strong> ${datos.docsRechazados}</p></td></tr>` : ''}<tr><td style="padding:10px 0;border-top:2px dashed #fbbf24"><p style="margin:0;font-size:16px;color:#92400e"><strong>📅 Días transcurridos:</strong> ${datos.diasTranscurridos} días</p></td></tr></table></td></tr></table><table width="100%" cellpadding="0" cellspacing="0" style="background:#fee2e2;border-left:4px solid #dc2626;border-radius:8px;margin:25px 0"><tr><td style="padding:20px"><p style="margin:0 0 10px 0;font-size:14px;font-weight:600;color:#991b1b">⚡ ACCIÓN REQUERIDA:</p><ul style="margin:0;padding-left:20px;color:#991b1b;font-size:14px;line-height:1.8"><li>Revisa el estado de tus documentos en tu panel</li><li>Corrige los documentos rechazados según las observaciones</li><li>Sube nuevamente los documentos corregidos</li><li>Completa este proceso lo antes posible</li></ul></td></tr></table><table width="100%" cellpadding="0" cellspacing="0" style="margin-top:40px"><tr><td align="center"><a href="https://coomotor-regalos.onrender.com/sistema-regalos/dashboards/empleado.html" style="display:inline-block;background:linear-gradient(135deg,#2563eb 0%,#1e40af 100%);color:white;text-decoration:none;padding:18px 45px;border-radius:12px;font-weight:700;font-size:16px;box-shadow:0 4px 15px rgba(37,99,235,0.4);text-transform:uppercase;letter-spacing:1px">📤 Ir a Mi Panel</a></td></tr></table><p style="margin:30px 0 0 0;font-size:14px;line-height:1.8;color:#666;text-align:center">Si tienes dudas, contacta al administrador del sistema</p></td></tr><tr><td style="background:linear-gradient(135deg,#2563eb 0%,#1a5c3a 100%);padding:30px;text-align:center"><p style="margin:0 0 5px 0;font-size:14px;color:white;font-weight:600">COOMOTOR</p><p style="margin:0;font-size:12px;color:rgba(255,255,255,0.8)">Cooperativa de Motoristas del Huila</p><p style="margin:10px 0 0 0;font-size:12px;color:rgba(255,255,255,0.7)">Neiva, Huila - Colombia 🇨🇴</p></td></tr></table></td></tr></table></body></html>`;
+        const html = templateLoader.getProcessedTemplate('recordatorio-documentos', {
+            nombre: datos.nombre,
+            urgencia: urgencia,
+            docsPendientes: datos.docsPendientes || 0,
+            docsRechazados: datos.docsRechazados || 0,
+            diasTranscurridos: datos.diasTranscurridos
+        });
         
-        return await this.enviarEmail(datos.email, `⚠️ ${urgencia}: Documentos Pendientes - COOMOTOR`, html);
+        return await this.enviarEmail(
+            datos.email, 
+            `⚠️ ${urgencia}: Documentos Pendientes - COOMOTOR`, 
+            html
+        );
     }
 
-    // PLANTILLA: Alerta de Plazo Próximo a Vencer
     async enviarAlertaPlazo(datos) {
         const colorUrgencia = datos.diasRestantes <= 3 ? '#dc2626' : datos.diasRestantes <= 5 ? '#f59e0b' : '#3b82f6';
         const nivelUrgencia = datos.diasRestantes <= 3 ? '🚨 URGENTE' : datos.diasRestantes <= 5 ? '⚠️ IMPORTANTE' : 'ℹ️ RECORDATORIO';
+        const pluralDias = datos.diasRestantes !== 1 ? 'S' : '';
         
-        const html = `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><style>@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');body{margin:0;padding:0;font-family:'Poppins',Arial,sans-serif}</style></head><body style="margin:0;padding:0;background:linear-gradient(135deg,#dc2626 0%,#991b1b 100%)"><table width="100%" cellpadding="0" cellspacing="0" style="padding:40px 20px"><tr><td align="center"><table width="600" cellpadding="0" cellspacing="0" style="background:white;border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.3)"><tr><td style="background:linear-gradient(135deg,#2563eb 0%,#c41e3a 100%);padding:50px 30px;text-align:center"><div style="font-size:80px;margin-bottom:10px">⏰</div><h1 style="margin:0;color:white;font-size:36px;font-weight:700;text-shadow:2px 2px 4px rgba(0,0,0,0.3)">COOMOTOR</h1><p style="margin:10px 0 0 0;color:rgba(255,255,255,0.9);font-size:16px">Alerta de Plazo</p></td></tr><tr><td style="padding:50px 40px"><table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:30px"><tr><td align="center"><div style="background:linear-gradient(135deg,${colorUrgencia} 0%,${colorUrgencia}dd 100%);padding:40px;border-radius:15px;box-shadow:0 10px 30px rgba(0,0,0,0.3)"><div style="font-size:80px;margin-bottom:15px;font-weight:900;color:white;text-shadow:2px 2px 4px rgba(0,0,0,0.3)">${datos.diasRestantes}</div><h2 style="margin:0;color:white;font-size:32px;font-weight:700;text-shadow:1px 1px 2px rgba(0,0,0,0.2)">DÍA${datos.diasRestantes !== 1 ? 'S' : ''} RESTANTE${datos.diasRestantes !== 1 ? 'S' : ''}</h2><p style="margin:10px 0 0 0;font-size:18px;color:rgba(255,255,255,0.95);font-weight:600">${nivelUrgencia}</p></div></td></tr></table><p style="margin:0 0 20px 0;font-size:18px;line-height:1.6;color:#333">Hola <strong style="color:#2563eb">${datos.nombre}</strong>,</p><p style="margin:0 0 25px 0;font-size:16px;line-height:1.8;color:#555">El plazo para completar las postulaciones de regalos navideños está próximo a vencer.</p><table width="100%" cellpadding="0" cellspacing="0" style="background:linear-gradient(135deg,#fef3c7 0%,#fed7aa 100%);border-radius:12px;margin:30px 0;overflow:hidden"><tr><td style="padding:30px"><p style="margin:0 0 15px 0;font-size:14px;font-weight:600;color:#92400e;text-transform:uppercase">📅 Información del Plazo:</p><table width="100%" cellpadding="0" cellspacing="0"><tr><td style="padding:10px 0"><p style="margin:0;font-size:16px;color:#92400e"><strong>Fecha límite:</strong> ${datos.fechaLimite}</p></td></tr><tr><td style="padding:10px 0"><p style="margin:0;font-size:16px;color:#92400e"><strong>Días restantes:</strong> ${datos.diasRestantes} día${datos.diasRestantes !== 1 ? 's' : ''}</p></td></tr>${datos.hijosRegistrados > 0 ? `<tr><td style="padding:10px 0"><p style="margin:0;font-size:16px;color:#92400e"><strong>Hijos registrados:</strong> ${datos.hijosRegistrados}</p></td></tr>` : ''}<tr><td style="padding:10px 0;border-top:2px dashed #fbbf24"><p style="margin:0;font-size:18px;color:#dc2626;font-weight:700"><strong>⚠️ Postulaciones pendientes:</strong> ${datos.postulacionesPendientes || 'Ninguna completada'}</p></td></tr></table></td></tr></table><table width="100%" cellpadding="0" cellspacing="0" style="background:#fee2e2;border-left:4px solid #dc2626;border-radius:8px;margin:25px 0"><tr><td style="padding:20px"><p style="margin:0 0 10px 0;font-size:14px;font-weight:600;color:#991b1b">🚨 ACCIÓN URGENTE REQUERIDA:</p><ul style="margin:0;padding-left:20px;color:#991b1b;font-size:14px;line-height:1.8"><li>Completa tus postulaciones antes del ${datos.fechaLimite}</li><li>Verifica que todos los documentos estén aprobados</li><li>Revisa la información de tus hijos registrados</li><li>No pierdas esta oportunidad para tus hijos</li></ul></td></tr></table><table width="100%" cellpadding="0" cellspacing="0" style="margin-top:40px"><tr><td align="center"><a href="https://coomotor-regalos.onrender.com/sistema-regalos/dashboards/empleado.html" style="display:inline-block;background:linear-gradient(135deg,#dc2626 0%,#991b1b 100%);color:white;text-decoration:none;padding:20px 50px;border-radius:12px;font-weight:700;font-size:18px;box-shadow:0 6px 20px rgba(220,38,38,0.4);text-transform:uppercase;letter-spacing:1px;animation:pulse 2s infinite">⚡ COMPLETAR AHORA</a></td></tr></table><p style="margin:30px 0 0 0;font-size:14px;line-height:1.8;color:#666;text-align:center">¡No dejes pasar esta oportunidad! Completa tu postulación hoy mismo.</p></td></tr><tr><td style="background:linear-gradient(135deg,#2563eb 0%,#1a5c3a 100%);padding:30px;text-align:center"><p style="margin:0 0 5px 0;font-size:14px;color:white;font-weight:600">COOMOTOR</p><p style="margin:0;font-size:12px;color:rgba(255,255,255,0.8)">Cooperativa de Motoristas del Huila</p><p style="margin:10px 0 0 0;font-size:12px;color:rgba(255,255,255,0.7)">Neiva, Huila - Colombia 🇨🇴</p></td></tr></table></td></tr></table></body></html>`;
+        const html = templateLoader.getProcessedTemplate('alerta-plazo', {
+            nombre: datos.nombre,
+            diasRestantes: datos.diasRestantes,
+            fechaLimite: datos.fechaLimite,
+            hijosRegistrados: datos.hijosRegistrados || 0,
+            postulacionesPendientes: datos.postulacionesPendientes || 'Ninguna completada',
+            colorUrgencia: colorUrgencia,
+            nivelUrgencia: nivelUrgencia,
+            pluralDias: pluralDias
+        });
         
-        return await this.enviarEmail(datos.email, `${nivelUrgencia} Plazo: ${datos.diasRestantes} día${datos.diasRestantes !== 1 ? 's' : ''} restante${datos.diasRestantes !== 1 ? 's' : ''} - COOMOTOR`, html);
+        return await this.enviarEmail(
+            datos.email, 
+            `${nivelUrgencia} Plazo: ${datos.diasRestantes} día${pluralDias} restante${pluralDias} - COOMOTOR`, 
+            html
+        );
     }
 
-    // PLANTILLA: Confirmación de Entrega de Regalo
+    // ============================================
+    // PLANTILLAS DE ENTREGA Y SATISFACCIÓN
+    // ============================================
+
     async enviarConfirmacionEntrega(datos) {
-        const html = `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><style>@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');body{margin:0;padding:0;font-family:'Poppins',Arial,sans-serif}</style></head><body style="margin:0;padding:0;background:linear-gradient(135deg,#11998e 0%,#38ef7d 100%)"><table width="100%" cellpadding="0" cellspacing="0" style="padding:40px 20px"><tr><td align="center"><table width="600" cellpadding="0" cellspacing="0" style="background:white;border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.3)"><tr><td style="background:linear-gradient(135deg,#2563eb 0%,#c41e3a 100%);padding:50px 30px;text-align:center"><div style="font-size:80px;margin-bottom:10px">🎁</div><h1 style="margin:0;color:white;font-size:36px;font-weight:700;text-shadow:2px 2px 4px rgba(0,0,0,0.3)">COOMOTOR</h1><p style="margin:10px 0 0 0;color:rgba(255,255,255,0.9);font-size:16px">Confirmación de Entrega</p></td></tr><tr><td style="padding:50px 40px"><table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:30px"><tr><td align="center"><div style="background:linear-gradient(135deg,#11998e 0%,#38ef7d 100%);padding:30px;border-radius:15px;box-shadow:0 10px 30px rgba(17,153,142,0.3)"><div style="font-size:60px;margin-bottom:10px">🎉</div><h2 style="margin:0;color:white;font-size:28px;font-weight:700;text-shadow:1px 1px 2px rgba(0,0,0,0.2)">¡Regalo Listo para Entregar!</h2></div></td></tr></table><p style="margin:0 0 20px 0;font-size:18px;line-height:1.6;color:#333">Hola <strong style="color:#2563eb">${datos.nombre}</strong>,</p><p style="margin:0 0 25px 0;font-size:16px;line-height:1.8;color:#555">¡Tenemos excelentes noticias! El regalo para <strong style="color:#c41e3a">${datos.nombreHijo}</strong> está listo para ser entregado.</p><table width="100%" cellpadding="0" cellspacing="0" style="background:linear-gradient(135deg,#e0f2fe 0%,#dbeafe 100%);border-radius:12px;margin:30px 0;overflow:hidden"><tr><td style="padding:30px"><p style="margin:0 0 15px 0;font-size:14px;font-weight:600;color:#2563eb;text-transform:uppercase">🎁 Información del Regalo:</p><table width="100%" cellpadding="0" cellspacing="0"><tr><td style="padding:10px 0"><p style="margin:0;font-size:16px;color:#1e40af"><strong>Niño/a:</strong> ${datos.nombreHijo}</p></td></tr><tr><td style="padding:10px 0"><p style="margin:0;font-size:16px;color:#1e40af"><strong>Edad:</strong> ${datos.edad} años</p></td></tr><tr><td style="padding:10px 0"><p style="margin:0;font-size:16px;color:#1e40af"><strong>Fecha de aprobación:</strong> ${datos.fechaAprobacion}</p></td></tr></table></td></tr></table><table width="100%" cellpadding="0" cellspacing="0" style="background:#dcfce7;border-left:4px solid #16a34a;border-radius:8px;margin:25px 0"><tr><td style="padding:20px"><p style="margin:0 0 10px 0;font-size:14px;font-weight:600;color:#166534">📍 PRÓXIMOS PASOS:</p><ul style="margin:0;padding-left:20px;color:#166534;font-size:14px;line-height:1.8"><li>Pronto recibirás información sobre fecha y lugar de entrega</li><li>Mantente atento a tu correo electrónico</li><li>Prepara un documento de identidad para el día de la entrega</li><li>Si tienes dudas, contacta al administrador</li></ul></td></tr></table><table width="100%" cellpadding="0" cellspacing="0" style="margin-top:40px"><tr><td align="center" style="padding:30px;background:linear-gradient(135deg,#fef3c7 0%,#fed7aa 100%);border-radius:12px"><div style="font-size:48px;margin-bottom:15px">🎅🎄✨</div><p style="margin:0;font-size:20px;font-weight:700;color:#c41e3a">¡Felices Fiestas!</p><p style="margin:10px 0 0 0;font-size:14px;color:#92400e">Que la magia de la Navidad llene tu hogar de alegría</p></td></tr></table></td></tr><tr><td style="background:linear-gradient(135deg,#2563eb 0%,#1a5c3a 100%);padding:30px;text-align:center"><p style="margin:0 0 5px 0;font-size:14px;color:white;font-weight:600">COOMOTOR</p><p style="margin:0;font-size:12px;color:rgba(255,255,255,0.8)">Cooperativa de Motoristas del Huila</p><p style="margin:10px 0 0 0;font-size:12px;color:rgba(255,255,255,0.7)">Neiva, Huila - Colombia 🇨🇴</p></td></tr></table></td></tr></table></body></html>`;
+        const html = templateLoader.getProcessedTemplate('confirmacion-entrega', {
+            nombre: datos.nombre,
+            nombreHijo: datos.nombreHijo,
+            edad: datos.edad,
+            fechaAprobacion: datos.fechaAprobacion
+        });
         
-        return await this.enviarEmail(datos.email, `🎁 Regalo Listo: ${datos.nombreHijo} - COOMOTOR`, html);
+        return await this.enviarEmail(
+            datos.email, 
+            `🎁 Regalo Listo: ${datos.nombreHijo} - COOMOTOR`, 
+            html
+        );
     }
 
-    // PLANTILLA: Encuesta de Satisfacción Post-Entrega
     async enviarEncuestaSatisfaccion(datos) {
         const urlEncuesta = `https://coomotor-regalos.onrender.com/sistema-regalos/encuesta.html?p=${datos.postulacionId}`;
         
-        const html = `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><style>@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');body{margin:0;padding:0;font-family:'Poppins',Arial,sans-serif}</style></head><body style="margin:0;padding:0;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%)"><table width="100%" cellpadding="0" cellspacing="0" style="padding:40px 20px"><tr><td align="center"><table width="600" cellpadding="0" cellspacing="0" style="background:white;border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.3)"><tr><td style="background:linear-gradient(135deg,#2563eb 0%,#c41e3a 100%);padding:50px 30px;text-align:center"><div style="font-size:80px;margin-bottom:10px">📋</div><h1 style="margin:0;color:white;font-size:36px;font-weight:700;text-shadow:2px 2px 4px rgba(0,0,0,0.3)">COOMOTOR</h1><p style="margin:10px 0 0 0;color:rgba(255,255,255,0.9);font-size:16px">Tu Opinión es Importante</p></td></tr><tr><td style="padding:50px 40px"><table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:30px"><tr><td align="center"><div style="background:linear-gradient(135deg,#f093fb 0%,#f5576c 100%);padding:30px;border-radius:15px;box-shadow:0 10px 30px rgba(240,147,251,0.3)"><div style="font-size:60px;margin-bottom:10px">⭐</div><h2 style="margin:0;color:white;font-size:28px;font-weight:700;text-shadow:1px 1px 2px rgba(0,0,0,0.2)">Encuesta de Satisfacción</h2></div></td></tr></table><p style="margin:0 0 20px 0;font-size:18px;line-height:1.6;color:#333">Hola <strong style="color:#2563eb">${datos.nombre}</strong>,</p><p style="margin:0 0 25px 0;font-size:16px;line-height:1.8;color:#555">Esperamos que <strong style="color:#c41e3a">${datos.nombreHijo}</strong> haya disfrutado su regalo navideño. Tu opinión nos ayuda a mejorar cada año.</p><table width="100%" cellpadding="0" cellspacing="0" style="background:linear-gradient(135deg,#fef3c7 0%,#fed7aa 100%);border-radius:12px;margin:30px 0;overflow:hidden"><tr><td style="padding:30px"><p style="margin:0 0 15px 0;font-size:14px;font-weight:600;color:#92400e;text-transform:uppercase">📝 Ayúdanos a Mejorar:</p><ul style="margin:0;padding-left:20px;color:#92400e;font-size:14px;line-height:1.8"><li>¿Cómo fue tu experiencia con el proceso?</li><li>¿El regalo fue apropiado para la edad de tu hijo/a?</li><li>¿Qué podemos mejorar para el próximo año?</li><li>¿Recomendarías este programa a otros empleados?</li></ul></td></tr></table><table width="100%" cellpadding="0" cellspacing="0" style="background:#e0f2fe;border-left:4px solid #3b82f6;border-radius:8px;margin:25px 0"><tr><td style="padding:20px"><p style="margin:0 0 10px 0;font-size:14px;font-weight:600;color:#1e40af">⏱️ SOLO 2 MINUTOS:</p><p style="margin:0;font-size:14px;color:#1e40af;line-height:1.8">La encuesta es breve y anónima. Tus respuestas nos ayudarán a hacer que el programa de regalos sea aún mejor el próximo año.</p></td></tr></table><table width="100%" cellpadding="0" cellspacing="0" style="margin-top:40px"><tr><td align="center"><a href="${urlEncuesta}" style="display:inline-block;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;text-decoration:none;padding:20px 50px;border-radius:12px;font-weight:700;font-size:18px;box-shadow:0 6px 20px rgba(102,126,234,0.4);text-transform:uppercase;letter-spacing:1px">⭐ RESPONDER ENCUESTA</a></td></tr></table><p style="margin:30px 0 0 0;font-size:13px;line-height:1.8;color:#999;text-align:center">Si el botón no funciona, copia este enlace en tu navegador:<br><span style="color:#667eea;word-break:break-all">${urlEncuesta}</span></p><table width="100%" cellpadding="0" cellspacing="0" style="margin-top:40px"><tr><td align="center" style="padding:25px;background:linear-gradient(135deg,#dcfce7 0%,#d1fae5 100%);border-radius:12px"><p style="margin:0;font-size:18px;font-weight:600;color:#166534">¡Gracias por tu participación! 🎄</p><p style="margin:10px 0 0 0;font-size:14px;color:#166534">COOMOTOR - Juntos construimos futuro</p></td></tr></table></td></tr><tr><td style="background:linear-gradient(135deg,#2563eb 0%,#1a5c3a 100%);padding:30px;text-align:center"><p style="margin:0 0 5px 0;font-size:14px;color:white;font-weight:600">COOMOTOR</p><p style="margin:0;font-size:12px;color:rgba(255,255,255,0.8)">Cooperativa de Motoristas del Huila</p><p style="margin:10px 0 0 0;font-size:12px;color:rgba(255,255,255,0.7)">Neiva, Huila - Colombia 🇨🇴</p></td></tr></table></td></tr></table></body></html>`;
+        const html = templateLoader.getProcessedTemplate('encuesta-satisfaccion', {
+            nombre: datos.nombre,
+            nombreHijo: datos.nombreHijo,
+            urlEncuesta: urlEncuesta
+        });
         
-        return await this.enviarEmail(datos.email, `⭐ Tu Opinión es Importante - COOMOTOR`, html);
+        return await this.enviarEmail(
+            datos.email, 
+            '⭐ Tu Opinión es Importante - COOMOTOR', 
+            html
+        );
+    }
+
+    // ============================================
+    // PLANTILLAS DE CONTACTO
+    // ============================================
+
+    async notificarRespuestaContacto(datos) {
+        const html = templateLoader.getProcessedTemplate('respuesta-contacto', {
+            nombreUsuario: datos.nombreUsuario,
+            asunto: datos.asunto,
+            respuesta: datos.respuesta
+        });
+        
+        return await this.enviarEmail(
+            datos.email, 
+            `💬 Respuesta: ${datos.asunto} - COOMOTOR`, 
+            html
+        );
+    }
+
+    // ============================================
+    // MÉTODOS ADICIONALES (COMPATIBILIDAD)
+    // ============================================
+
+    async notificarAlertaPlazo(datos) {
+        return await this.enviarAlertaPlazo(datos);
+    }
+
+    async notificarCambioEstadoRegalo(datos) {
+        return { success: true };
     }
 }
 
