@@ -1,5 +1,5 @@
 // ============================================
-// SERVICIO DE CHAT EN VIVO - COOMOTOR
+// SERVICIO DE CHAT EN VIVO - COOMOTORR
 // ============================================
 
 const WebSocket = require('ws');

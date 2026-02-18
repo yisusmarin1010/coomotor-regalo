@@ -913,18 +913,15 @@
             // Cargar documentos al iniciar
             cargarMisDocumentos();
             
-            // Inicializar chat
-            const userData = JSON.parse(localStorage.getItem('userData'));
-            if (userData && userData.id) {
-                initChat(userData.id, userData.rol || 'empleado');
-            }
+            // El chat se auto-inicializa desde chat-ui.js
+            console.log('✅ Dashboard empleado cargado - Chat se inicializará automáticamente');
         });
     </script>
     
     <!-- Chat en Vivo -->
-    <link href="../css/chat-styles.css?v=1.0" rel="stylesheet">
-    <script src="../js/chat-client.js?v=1.0"></script>
-    <script src="../js/chat-ui.js?v=1.0"></script>
+    <link href="../css/chat-styles.css?v=1.1" rel="stylesheet">
+    <script src="../js/chat-client.js?v=1.1"></script>
+    <script src="../js/chat-ui.js?v=1.1"></script>
     
     <!-- Footer Legal Automático -->
     <script src="../js/footer-legal.js"></script>

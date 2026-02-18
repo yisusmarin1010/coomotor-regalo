@@ -297,7 +297,36 @@ let chatUI;
 
 // Inicializar chat cuando el usuario esté autenticado
 function initChat(userId, rol) {
-    chatClient = new ChatClient(userId, rol);
-    chatUI = new ChatUI(chatClient);
-    chatClient.connect();
+    try {
+        console.log('🚀 Inicializando chat...', { userId, rol });
+        chatClient = new ChatClient(userId, rol);
+        chatUI = new ChatUI(chatClient);
+        chatClient.connect();
+        console.log('✅ Chat inicializado correctamente');
+    } catch (error) {
+        console.error('❌ Error inicializando chat:', error);
+    }
+}
+
+// Auto-inicializar cuando el DOM esté listo
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(autoInitChat, 1000);
+    });
+} else {
+    setTimeout(autoInitChat, 1000);
+}
+
+function autoInitChat() {
+    try {
+        const userData = JSON.parse(localStorage.getItem('userData'));
+        if (userData && userData.id && typeof ChatClient !== 'undefined' && typeof ChatUI !== 'undefined') {
+            console.log('🔄 Auto-inicializando chat...');
+            initChat(userData.id, userData.rol || 'empleado');
+        } else {
+            console.log('⏳ Esperando datos de usuario o clases del chat...');
+        }
+    } catch (error) {
+        console.error('❌ Error en auto-inicialización:', error);
+    }
 }
