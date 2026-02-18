@@ -220,109 +220,271 @@ Usa emojis ocasionalmente para ser más amigable. Habla en español colombiano.
     obtenerRespuestaMejorada(pregunta) {
         const preguntaLower = pregunta.toLowerCase();
         
-        // Saludos informales
-        if (preguntaLower.match(/^(q tal|que tal|qué tal|como estas|cómo estás|todo bien|buenas|ey|oye)$/i)) {
-            return `¡Hola! 😊 Todo bien por aquí. Estoy listo para ayudarte con el sistema de regalos.
+        // SISTEMA DE COMPRENSIÓN INTELIGENTE
+        // Detecta intención basándose en palabras clave y contexto
+        
+        // 1. SALUDOS Y CORTESÍA (cualquier variación)
+        const saludos = ['hola', 'hi', 'hey', 'buenas', 'buenos', 'que tal', 'q tal', 'como estas', 'como esta', 'cómo estás', 'cómo está', 'todo bien', 'ey', 'oye', 'saludos', 'holi', 'holaaa'];
+        if (saludos.some(s => preguntaLower.includes(s))) {
+            return `¡Hola! 😊 Todo excelente por aquí.
+
+Soy tu asistente virtual de COOMOTOR y estoy listo para ayudarte con el sistema de regalos navideños.
 
 ¿Qué necesitas saber?`;
         }
         
-        // Contacto (palabra sola)
-        if (preguntaLower.match(/^(contacto|contactar|admin|administrador)$/i)) {
+        // 2. AGRADECIMIENTOS
+        const agradecimientos = ['gracias', 'thanks', 'thank', 'muchas gracias', 'te lo agradezco', 'vale', 'ok', 'perfecto', 'excelente', 'genial', 'bien'];
+        if (agradecimientos.some(a => preguntaLower.includes(a))) {
+            return `¡De nada! 😊 Fue un placer ayudarte.
+
+Si tienes más preguntas, aquí estaré. ¡Que tengas un excelente día! 🎄`;
+        }
+        
+        // 3. DESPEDIDAS
+        const despedidas = ['adios', 'adiós', 'chao', 'hasta luego', 'bye', 'nos vemos', 'me voy', 'hasta pronto'];
+        if (despedidas.some(d => preguntaLower.includes(d))) {
+            return `¡Hasta pronto! 👋 
+
+Recuerda que estoy disponible 24/7 para ayudarte.
+
+¡Felices fiestas! 🎄🎁`;
+        }
+        
+        // 4. CONTACTO / ADMIN
+        const contacto = ['contacto', 'contactar', 'admin', 'administrador', 'hablar', 'comunicar', 'escribir', 'mensaje'];
+        if (contacto.some(c => preguntaLower.includes(c))) {
             return `📞 **Para contactar al administrador:**
 
-1. Ve a la sección "Contacto" en tu dashboard
-2. Completa el formulario con tu consulta
-3. Recibirás respuesta por email en 24-48 horas
+**Desde tu dashboard:**
+1. Busca "Contacto" o "Mensajes"
+2. Completa el formulario
+3. Describe tu consulta
+4. Envía
 
-💡 Antes de contactar, pregúntame a mí. Puedo resolver la mayoría de dudas al instante.
+⏰ Respuesta en 24-48 horas
+
+💡 Pregúntame primero, puedo resolver la mayoría de dudas al instante.
 
 ¿Qué necesitas específicamente?`;
         }
         
-        // Registro (palabra sola)
-        if (preguntaLower.match(/^(registro|registrar|registrarme)$/i)) {
+        // 5. REGISTRO
+        const registro = ['registrar', 'registro', 'inscribir', 'inscripción', 'agregar hijo', 'añadir hijo', 'dar de alta'];
+        if (registro.some(r => preguntaLower.includes(r))) {
             return `📋 **Para registrar a tu hijo:**
 
-1. Ve a tu dashboard
-2. Click en "Registrar Hijo"
-3. Completa los datos del niño
-4. Guarda
+1️⃣ Entra a tu dashboard
+2️⃣ Click en "Registrar Hijo"
+3️⃣ Completa:
+   • Nombres y apellidos
+   • Fecha de nacimiento
+   • Tipo y número de documento
+   • Género
 
-⏰ Plazo: Hasta el 10 de diciembre
+4️⃣ Guarda
+
+⏰ **Plazo:** Hasta el 10 de diciembre
 
 ¿Necesitas ayuda con algún paso?`;
         }
         
-        // Documentos (palabra sola)
-        if (preguntaLower.match(/^(documentos|documento|papeles|docs)$/i)) {
+        // 6. DOCUMENTOS
+        const documentos = ['documento', 'documentos', 'papeles', 'papel', 'archivo', 'archivos', 'subir', 'cargar', 'adjuntar'];
+        if (documentos.some(d => preguntaLower.includes(d))) {
             return `📄 **Documentos necesarios:**
 
+**Para todos:**
 • Registro civil del niño
-• Foto del niño
-• Cédula del empleado (para conductores)
+• Foto reciente del niño
 
-📸 Formato: JPG, PNG o PDF (máx 5MB)
+**Para conductores:**
+• Cédula del empleado (ambos lados)
+
+📸 **Requisitos:**
+• Claras y legibles
+• JPG, PNG o PDF
+• Máximo 5MB
+
+💡 Puedes tomarlas con tu celular.
 
 ¿Tienes los documentos listos?`;
         }
         
-        // Fechas (palabra sola)
-        if (preguntaLower.match(/^(fechas|fecha|cuando|cuándo|plazo|plazos)$/i)) {
+        // 7. FECHAS / PLAZOS
+        const fechas = ['fecha', 'fechas', 'cuando', 'cuándo', 'plazo', 'plazos', 'tiempo', 'hasta cuando', 'límite', 'deadline'];
+        if (fechas.some(f => preguntaLower.includes(f))) {
             return `📅 **Fechas importantes 2024:**
 
-✅ Registro: Hasta 10 dic
-🎁 Postulaciones: Hasta 15 dic
-📋 Revisión: 16-20 dic
-🎄 Entrega: 21-24 dic
+✅ **Registro de hijos**
+   Hasta el 10 de diciembre
+
+🎁 **Postulaciones**
+   Hasta el 15 de diciembre
+
+📋 **Revisión**
+   16 al 20 de diciembre
+
+🎄 **Entrega de regalos**
+   21 al 24 de diciembre
+
+⏰ ¡No dejes todo para última hora!
 
 ¿Sobre qué fecha tienes dudas?`;
         }
         
-        // Estado (palabra sola)
-        if (preguntaLower.match(/^(estado|estados|postulacion|postulación)$/i)) {
-            return `📊 **Ver estado de postulación:**
+        // 8. ESTADO / POSTULACIÓN
+        const estado = ['estado', 'estados', 'postulación', 'postulacion', 'solicitud', 'ver', 'revisar', 'consultar', 'como va', 'cómo va'];
+        if (estado.some(e => preguntaLower.includes(e))) {
+            return `📊 **Ver estado de tu postulación:**
 
-Ve a tu dashboard → Sección "Mis Hijos"
+**Paso 1:** Ve a tu dashboard
 
-**Estados:**
-⏳ Pendiente
-📄 Docs solicitados
-✅ Aprobada
-❌ Rechazada
-📦 Entregado
+**Paso 2:** Sección "Mis Hijos"
 
-¿Quieres saber más sobre algún estado?`;
+**Estados posibles:**
+• ⏳ Pendiente - En revisión
+• 📄 Docs solicitados - Necesitas subir documentos
+• ✅ Aprobada - ¡Regalo confirmado!
+• ❌ Rechazada - No cumple requisitos
+• 📦 Entregado - Ya recibiste el regalo
+
+💡 Recibirás email cuando cambie.
+
+¿Quieres saber más?`;
         }
         
-        // Ayuda
-        if (preguntaLower.match(/^(ayuda|help|auxilio|sos)$/i)) {
-            return `🆘 **¿En qué puedo ayudarte?**
+        // 9. EDAD / REQUISITOS
+        const edad = ['edad', 'años', 'requisito', 'requisitos', 'puede participar', 'cumple', 'menor', 'mayor'];
+        if (edad.some(e => preguntaLower.includes(e))) {
+            return `📏 **Requisito de edad:**
 
-Puedo responder sobre:
-• Registro de hijos
-• Documentos necesarios
-• Fechas y plazos
-• Estado de postulaciones
-• Contacto con admin
+Solo niños **menores de 12 años** al 24 de diciembre de 2024.
 
-Pregúntame lo que necesites. 😊`;
+✅ **SÍ puede:** Cumple 12 años después del 24 dic
+❌ **NO puede:** Cumple 12 años antes del 24 dic
+
+💡 El sistema calcula la edad automáticamente.
+
+¿Tu hijo cumple el requisito?`;
         }
         
-        // Respuesta por defecto mejorada
-        return `Entiendo que preguntas sobre "${pregunta}". 
+        // 10. ENTREGA / RECOGER
+        const entrega = ['entrega', 'entregar', 'recoger', 'recojo', 'donde', 'dónde', 'ubicación', 'lugar', 'punto'];
+        if (entrega.some(e => preguntaLower.includes(e))) {
+            return `🎁 **Entrega de regalos:**
 
-Intenta preguntarme así:
+📍 **Lugar:** Te notificaremos cuando aprueban tu postulación
+
+📅 **Fechas:** 21 al 24 de diciembre
+
+📋 **Qué llevar:**
+• Tu cédula
+• Código de confirmación (llega por email)
+
+💡 Puedes llevar a tu hijo para que reciba el regalo.
+
+¿Tienes otra pregunta?`;
+        }
+        
+        // 11. PROBLEMAS / ERRORES
+        const problemas = ['problema', 'error', 'falla', 'no funciona', 'no puedo', 'ayuda', 'auxilio', 'sos', 'help'];
+        if (problemas.some(p => preguntaLower.includes(p))) {
+            return `🔧 **Soluciones rápidas:**
+
+1️⃣ Recarga la página (Ctrl + F5)
+2️⃣ Verifica tu conexión a internet
+3️⃣ Intenta desde otro navegador
+4️⃣ Limpia el caché
+
+📞 **Si persiste:**
+• Describe el error exacto
+• Toma captura de pantalla
+• Contacta al administrador
+
+¿Qué error específico ves?`;
+        }
+        
+        // 12. CÓMO FUNCIONA / PROCESO
+        const proceso = ['funciona', 'proceso', 'pasos', 'como', 'cómo', 'explicar', 'entender'];
+        if (proceso.some(p => preguntaLower.includes(p))) {
+            return `📋 **Proceso completo:**
+
+**1. Registrar hijo** 👶
+   Dashboard → Registrar Hijo
+
+**2. Postular** 🎁
+   Seleccionar hijo → Postular
+
+**3. Subir documentos** 📄
+   Registro civil + Foto + Cédula
+
+**4. Esperar aprobación** ⏳
+   Admin revisa (recibes email)
+
+**5. Recoger regalo** 🎄
+   Fecha y lugar por email
+
+¿Qué paso necesitas que explique mejor?`;
+        }
+        
+        // 13. QUIÉN PUEDE / PARTICIPAR
+        const participar = ['quien', 'quién', 'puedo', 'puede', 'participar', 'aplica', 'elegible'];
+        if (participar.some(p => preguntaLower.includes(p))) {
+            return `👥 **¿Quién puede participar?**
+
+✅ **SÍ pueden:**
+• Todos los empleados de COOMOTOR
+• Conductores (carretera, urbano, furgones)
+• Personal administrativo
+• Con hijos menores de 12 años
+
+❌ **NO pueden:**
+• Niños de 12 años o más
+• Hijos no registrados
+• Fuera de plazo
+
+¿Tu caso cumple los requisitos?`;
+        }
+        
+        // 14. CUÁNTOS HIJOS
+        const cuantos = ['cuántos', 'cuantos', 'varios', 'múltiples', 'todos', 'más de uno'];
+        if (cuantos.some(c => preguntaLower.includes(c))) {
+            return `👨‍👩‍👧‍👦 **Registro de múltiples hijos:**
+
+✅ Puedes registrar a **todos** tus hijos menores de 12 años.
+
+📋 **Proceso:**
+1. Registra al primer hijo
+2. Click en "Registrar Nuevo Hijo"
+3. Repite para cada hijo
+4. Postula a cada uno
+
+💡 Cada hijo necesita su propia postulación y documentos.
+
+¿Cuántos hijos vas a registrar?`;
+        }
+        
+        // 15. RESPUESTA INTELIGENTE POR DEFECTO
+        // Si no detectó ninguna intención específica, da opciones útiles
+        return `Entiendo que me preguntas sobre algo relacionado con el sistema. 😊
+
+**Temas que puedo ayudarte:**
+
+📋 **Registro** - Cómo registrar a tus hijos
+📄 **Documentos** - Qué necesitas subir
+📅 **Fechas** - Plazos importantes
+🎁 **Estado** - Ver tu postulación
+🎂 **Edad** - Requisitos de edad
+📍 **Entrega** - Dónde recoger
+📞 **Contacto** - Hablar con admin
+
+**Intenta preguntarme:**
 • "¿Cómo registro a mi hijo?"
 • "¿Qué documentos necesito?"
 • "¿Cuándo es el plazo?"
 
-O dime una palabra clave:
-• Registro
-• Documentos
-• Fechas
-• Estado
-• Contacto
+O simplemente dime: registro, documentos, fechas, etc.
 
 ¿Qué necesitas?`;
     }
