@@ -165,7 +165,7 @@ class ChatbotIA {
         // Contexto del sistema para la IA
         const contextoSistema = `
 Eres un asistente virtual amigable y profesional de COOMOTOR, una empresa de transporte colombiana.
-Estás ayudando con el sistema de regalos navideños 2024 para hijos de empleados.
+Estás ayudando con el sistema de regalos navideños 2026 para hijos de empleados.
 
 INFORMACIÓN IMPORTANTE DEL SISTEMA:
 - Solo pueden registrarse niños menores de 12 años
@@ -218,14 +218,14 @@ Usa emojis ocasionalmente para ser más amigable. Habla en español colombiano.
     }
 
     obtenerRespuestaMejorada(pregunta) {
-        const preguntaLower = pregunta.toLowerCase();
+        const preguntaLower = pregunta.toLowerCase().trim();
         
-        // SISTEMA DE COMPRENSIÓN INTELIGENTE
+        // SISTEMA DE COMPRENSIÓN INTELIGENTE MEJORADO
         // Detecta intención basándose en palabras clave y contexto
         
         // 1. SALUDOS Y CORTESÍA (cualquier variación)
-        const saludos = ['hola', 'hi', 'hey', 'buenas', 'buenos', 'que tal', 'q tal', 'como estas', 'como esta', 'cómo estás', 'cómo está', 'todo bien', 'ey', 'oye', 'saludos', 'holi', 'holaaa'];
-        if (saludos.some(s => preguntaLower.includes(s))) {
+        const saludos = ['hola', 'hi', 'hey', 'buenas', 'buenos', 'que tal', 'q tal', 'como estas', 'como esta', 'cómo estás', 'cómo está', 'todo bien', 'ey', 'oye', 'saludos', 'holi', 'holaaa', 'que onda', 'qué onda'];
+        if (saludos.some(s => preguntaLower === s || preguntaLower.includes(s))) {
             return `¡Hola! 😊 Todo excelente por aquí.
 
 Soy tu asistente virtual de COOMOTOR y estoy listo para ayudarte con el sistema de regalos navideños.
@@ -251,9 +251,9 @@ Recuerda que estoy disponible 24/7 para ayudarte.
 ¡Felices fiestas! 🎄🎁`;
         }
         
-        // 4. CONTACTO / ADMIN
-        const contacto = ['contacto', 'contactar', 'admin', 'administrador', 'hablar', 'comunicar', 'escribir', 'mensaje'];
-        if (contacto.some(c => preguntaLower.includes(c))) {
+        // 4. CONTACTO / ADMIN (mejorado para detectar palabra sola)
+        const contacto = ['contacto', 'contactar', 'admin', 'administrador', 'hablar', 'comunicar', 'escribir', 'mensaje', 'ayuda'];
+        if (contacto.some(c => preguntaLower === c || preguntaLower.includes(c))) {
             return `📞 **Para contactar al administrador:**
 
 **Desde tu dashboard:**
@@ -314,7 +314,7 @@ Recuerda que estoy disponible 24/7 para ayudarte.
         // 7. FECHAS / PLAZOS
         const fechas = ['fecha', 'fechas', 'cuando', 'cuándo', 'plazo', 'plazos', 'tiempo', 'hasta cuando', 'límite', 'deadline'];
         if (fechas.some(f => preguntaLower.includes(f))) {
-            return `📅 **Fechas importantes 2024:**
+            return `📅 **Fechas importantes 2026:**
 
 ✅ **Registro de hijos**
    Hasta el 10 de diciembre
@@ -354,17 +354,21 @@ Recuerda que estoy disponible 24/7 para ayudarte.
 ¿Quieres saber más?`;
         }
         
-        // 9. EDAD / REQUISITOS
+        // 9. EDAD / REQUISITOS (mejorado para detectar respuestas negativas)
         const edad = ['edad', 'años', 'requisito', 'requisitos', 'puede participar', 'cumple', 'menor', 'mayor'];
         if (edad.some(e => preguntaLower.includes(e))) {
             return `📏 **Requisito de edad:**
 
-Solo niños **menores de 12 años** al 24 de diciembre de 2024.
+Solo niños **menores de 12 años** al 24 de diciembre de 2026.
 
 ✅ **SÍ puede:** Cumple 12 años después del 24 dic
 ❌ **NO puede:** Cumple 12 años antes del 24 dic
 
 💡 El sistema calcula la edad automáticamente.
+
+💬 **Responde:**
+• "Sí cumple" si tu hijo es menor de 12 años
+• "No cumple" si tu hijo tiene 12 años o más
 
 ¿Tu hijo cumple el requisito?`;
         }
@@ -509,12 +513,15 @@ Estoy aquí para ayudarte. Puedes preguntarme sobre:
 ¿Qué necesitas saber?`;
         }
 
-        // Respuestas sobre NO cumplir requisitos
-        if (preguntaLower.match(/^(no|nop|nope)$/i) || preguntaLower.includes('no cumple') || preguntaLower.includes('no puede') || preguntaLower.includes('mayor de 12') || preguntaLower.includes('tiene 12') || preguntaLower.includes('cumple 12')) {
+        // Respuestas sobre NO cumplir requisitos (mejorado para detectar "no" después de pregunta de edad)
+        if (preguntaLower === 'no' || preguntaLower === 'nop' || preguntaLower === 'nope' || 
+            preguntaLower.includes('no cumple') || preguntaLower.includes('no puede') || 
+            preguntaLower.includes('mayor de 12') || preguntaLower.includes('tiene 12') || 
+            preguntaLower.includes('cumple 12') || preguntaLower.includes('no cumple el requisito')) {
             return `😔 Lamento informarte que si tu hijo **no cumple con el requisito de edad**, no podrá participar este año.
 
 📋 **Requisito estricto:**
-• Solo niños **menores de 12 años** al 24 de diciembre de 2024
+• Solo niños **menores de 12 años** al 24 de diciembre de 2026
 
 ❌ **No pueden participar:**
 • Niños que cumplan 12 años antes del 24 de diciembre
@@ -616,7 +623,7 @@ Si crees que hay un error o tienes una situación especial, contacta al administ
 
         // Respuestas sobre fechas
         if (preguntaLower.includes('fecha') || preguntaLower.includes('cuándo') || preguntaLower.includes('plazo')) {
-            return `📅 **Fechas importantes 2024:**
+            return `📅 **Fechas importantes 2026:**
 
 ✅ **Registro de hijos:** Hasta el 10 de diciembre
 🎁 **Postulaciones:** Hasta el 15 de diciembre
@@ -650,7 +657,7 @@ Si crees que hay un error o tienes una situación especial, contacta al administ
         if (preguntaLower.includes('edad') || preguntaLower.includes('años') || preguntaLower.includes('12')) {
             return `📏 **Requisito de edad:**
 
-Solo pueden participar niños **menores de 12 años** al 24 de diciembre de 2024.
+Solo pueden participar niños **menores de 12 años** al 24 de diciembre de 2026.
 
 ⚠️ **Importante:**
 • Si tu hijo cumple 12 años **antes** del 24 de diciembre, NO puede participar
@@ -658,12 +665,12 @@ Solo pueden participar niños **menores de 12 años** al 24 de diciembre de 2024
 • El sistema calcula la edad automáticamente
 
 ✅ **Ejemplo que SÍ puede:**
-• Niño nace: 25 de diciembre de 2012
-• Edad al 24 dic 2024: 11 años ✅
+• Niño nace: 25 de diciembre de 2014
+• Edad al 24 dic 2026: 11 años ✅
 
 ❌ **Ejemplo que NO puede:**
-• Niño nace: 20 de diciembre de 2012
-• Edad al 24 dic 2024: 12 años ❌
+• Niño nace: 20 de diciembre de 2014
+• Edad al 24 dic 2026: 12 años ❌
 
 💡 **¿Tu hijo cumple el requisito?**
 Responde "sí" o "no" y te ayudo con los siguientes pasos.`;

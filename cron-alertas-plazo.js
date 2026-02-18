@@ -23,7 +23,7 @@ const dbConfig = {
 };
 
 // Fecha límite para postulaciones (configurable)
-const FECHA_LIMITE = new Date('2024-12-15'); // Ajustar según necesidad
+const FECHA_LIMITE = new Date('2026-12-15'); // Ajustar según necesidad
 
 async function enviarAlertasPlazo() {
     let pool;

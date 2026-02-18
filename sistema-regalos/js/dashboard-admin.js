@@ -146,7 +146,7 @@ function mostrarInicio() {
                 <i class="bi bi-house-fill me-2"></i>
                 Panel de Control Principal
             </h3>
-            <p>Bienvenido al sistema administrativo de regalos navideños COOMOTOR 2024</p>
+            <p>Bienvenido al sistema administrativo de regalos navideños COOMOTOR 2026</p>
             
             <div class="row mt-4">
                 <div class="col-md-6">

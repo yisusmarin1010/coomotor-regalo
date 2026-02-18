@@ -270,7 +270,7 @@ class EmailService {
 
                 <div class="footer">
                     <p><strong>🚌 COOMOTOR - Más de 60 años conectando Colombia</strong></p>
-                    <p>Sistema de Regalos Navideños 2024</p>
+                    <p>Sistema de Regalos Navideños 2026</p>
                     <p style="font-size: 12px; color: #999;">
                         Este es un correo automático del sistema. Por favor no responder a esta dirección.
                     </p>
@@ -353,7 +353,7 @@ INFORMACIÓN DEL TICKET:
 
 ---
 COOMOTOR - Más de 60 años conectando Colombia
-Sistema de Regalos Navideños 2024
+Sistema de Regalos Navideños 2026
         `;
     }
 
@@ -519,7 +519,7 @@ Gracias por ser parte de nuestra gran familia navideña.
 
 ---
 COOMOTOR - Más de 60 años conectando Colombia
-Sistema de Regalos Navideños 2024
+Sistema de Regalos Navideños 2026
         `;
     }
 }

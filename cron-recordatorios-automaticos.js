@@ -102,7 +102,7 @@ class RecordatoriosAutomaticos {
 
     async enviarAlertaPlazo() {
         try {
-            const FECHA_LIMITE = new Date(process.env.FECHA_LIMITE_POSTULACIONES || '2024-12-15');
+            const FECHA_LIMITE = new Date(process.env.FECHA_LIMITE_POSTULACIONES || '2026-12-15');
             const hoy = new Date();
             const diasRestantes = Math.ceil((FECHA_LIMITE - hoy) / (1000 * 60 * 60 * 24));
 
