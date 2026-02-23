@@ -1,5 +1,5 @@
 // ============================================
-// CARGADOR DE PLANTILLAS DE EMAIL
+// CARGADOR DE PLANTILLAS DE EMAILL
 // ============================================
 
 const fs = require('fs');
