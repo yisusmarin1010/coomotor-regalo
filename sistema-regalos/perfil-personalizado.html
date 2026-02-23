@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Perfil Personalizado - COOMOTOR</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="css/perfil-personalizado.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="dashboards/empleado.html">
+                <i class="bi bi-arrow-left-circle me-2"></i>
+                Volver al Dashboard
+            </a>
+            <div class="d-flex align-items-center gap-3">
+                <span class="user-level">Nivel <span id="userLevel">1</span></span>
+                <span class="user-points"><i class="bi bi-star-fill me-1"></i><span id="userPoints">0</span> pts</span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar de Navegación -->
+            <div class="col-lg-3 col-md-4 sidebar">
+                <div class="profile-preview">
+                    <div class="banner-preview" id="bannerPreview">
+                        <button class="btn-edit-banner" onclick="editarBanner()">
+                            <i class="bi bi-pencil-fill"></i>
+                        </button>
+                    </div>
+                    <div class="avatar-container">
+                        <img src="https://ui-avatars.com/api/?name=Usuario&size=120&background=2563eb&color=fff" 
+                             alt="Avatar" id="avatarPreview" class="avatar-img">
+                        <button class="btn-edit-avatar" onclick="editarAvatar()">
+                            <i class="bi bi-camera-fill"></i>
+                        </button>
+                    </div>
+                    <h5 class="mt-3 mb-1" id="userName">Usuario</h5>
+                    <p class="text-muted small" id="userRole">Empleado</p>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar-fill" id="profileProgress" style="width: 0%"></div>
+                    </div>
+                    <p class="small text-center mt-2">Perfil completado: <strong id="profilePercentage">0%</strong></p>
+                </div>
+
+                <div class="menu-sections">
+                    <button class="menu-item active" onclick="cambiarSeccion('visual')">
+                        <i class="bi bi-palette-fill"></i>
+                        <span>Personalización Visual</span>
+                    </button>
+                    <button class="menu-item" onclick="cambiarSeccion('galeria')">
+                        <i class="bi bi-images"></i>
+                        <span>Galería Multimedia</span>
+                    </button>
+                    <button class="menu-item" onclick="cambiarSeccion('informacion')">
+                        <i class="bi bi-person-fill"></i>
+                        <span>Información Personal</span>
+                    </button>
+                    <button class="menu-item" onclick="cambiarSeccion('logros')">
+                        <i class="bi bi-trophy-fill"></i>
+                        <span>Logros y Estadísticas</span>
+                    </button>
+                    <button class="menu-item" onclick="cambiarSeccion('social')">
+                        <i class="bi bi-people-fill"></i>
+                        <span>Social y Comunidad</span>
+                    </button>
+                    <button class="menu-item" onclick="cambiarSeccion('preferencias')">
+                        <i class="bi bi-gear-fill"></i>
+                        <span>Preferencias</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Contenido Principal -->
+            <div class="col-lg-9 col-md-8 main-content">
+                <!-- Sección: Personalización Visual -->
+                <div id="seccion-visual" class="content-section active">
+                    <div class="section-header">
+                        <h2><i class="bi bi-palette-fill me-2"></i>Personalización Visual</h2>
+                        <p>Haz que tu perfil sea único y refleje tu personalidad</p>
+                    </div>
+
+                    <!-- Editor de Avatar -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5><i class="bi bi-person-circle me-2"></i>Foto de Perfil</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="avatar-editor">
+                                        <img src="https://ui-avatars.com/api/?name=Usuario&size=300&background=2563eb&color=fff" 
+                                             alt="Avatar" id="avatarEditor" class="img-fluid rounded">
+                                    </div>
+                                    <input type="file" id="avatarUpload" accept="image/*" class="d-none" onchange="cargarAvatar(this)">
+                                    <button class="btn btn-primary w-100 mt-3" onclick="document.getElementById('avatarUpload').click()">
+                                        <i class="bi bi-upload me-2"></i>Subir Foto
+                                    </button>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6 class="mb-3">Herramientas de Edición</h6>
+                                    <div class="editor-tools">
+                                        <button class="btn btn-outline-primary btn-sm mb-2 w-100" onclick="aplicarFiltro('none')">
+                                            <i class="bi bi-image me-2"></i>Original
+                                        </button>
+                                        <button class="btn btn-outline-primary btn-sm mb-2 w-100" onclick="aplicarFiltro('grayscale')">
+                                            <i class="bi bi-circle-half me-2"></i>Blanco y Negro
+                                        </button>
+                                        <button class="btn btn-outline-primary btn-sm mb-2 w-100" onclick="aplicarFiltro('sepia')">
+                                            <i class="bi bi-sun me-2"></i>Sepia
+                                        </button>
+                                        <button class="btn btn-outline-primary btn-sm mb-2 w-100" onclick="aplicarFiltro('christmas')">
+                                            <i class="bi bi-snow me-2"></i>Navideño
+                                        </button>
+                                        <button class="btn btn-outline-primary btn-sm mb-2 w-100" onclick="crearAvatar3D()">
+                                            <i class="bi bi-emoji-smile me-2"></i>Crear Avatar 3D
+                                        </button>
+                                    </div>
+                                    <hr>
+                                    <h6 class="mb-3">Marcos Temáticos</h6>
+                                    <div class="frame-selector">
+                                        <div class="frame-option" onclick="aplicarMarco('none')">
+                                            <div class="frame-preview">Sin marco</div>
+                                        </div>
+                                        <div class="frame-option" onclick="aplicarMarco('christmas')">
+                                            <div class="frame-preview frame-christmas">🎄</div>
+                                        </div>
+                                        <div class="frame-option" onclick="aplicarMarco('coomotor')">
+                                            <div class="frame-preview frame-coomotor">🚌</div>
+                                        </div>
+                                        <div class="frame-option" onclick="aplicarMarco('gold')">
+                                            <div class="frame-preview frame-gold">⭐</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Editor de Banner -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5><i class="bi bi-image me-2"></i>Banner Personalizado</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="banner-editor mb-3" id="bannerEditor">
+                                <div class="banner-placeholder">
+                                    <i class="bi bi-image" style="font-size: 3rem; opacity: 0.3;"></i>
+                                    <p>Selecciona un banner o sube el tuyo</p>
+                                </div>
+                            </div>
+                            <input type="file" id="bannerUpload" accept="image/*" class="d-none" onchange="cargarBanner(this)">
+                            <button class="btn btn-primary me-2" onclick="document.getElementById('bannerUpload').click()">
+                                <i class="bi bi-upload me-2"></i>Subir Banner
+                            </button>
+                            <button class="btn btn-outline-primary" onclick="mostrarGaleriaBanners()">
+                                <i class="bi bi-collection me-2"></i>Galería de Banners
+                            </button>
+                            
+                            <h6 class="mt-4 mb-3">Banners Prediseñados</h6>
+                            <div class="banner-gallery">
+                                <div class="banner-option" onclick="seleccionarBanner('christmas')">
+                                    <div class="banner-thumb banner-christmas"></div>
+                                    <p class="small">Navideño</p>
+                                </div>
+                                <div class="banner-option" onclick="seleccionarBanner('blue')">
+                                    <div class="banner-thumb banner-blue"></div>
+                                    <p class="small">Azul Elegante</p>
+                                </div>
+                                <div class="banner-option" onclick="seleccionarBanner('gold')">
+                                    <div class="banner-thumb banner-gold"></div>
+                                    <p class="small">Dorado Premium</p>
+                                </div>
+                                <div class="banner-option" onclick="seleccionarBanner('dark')">
+                                    <div class="banner-thumb banner-dark"></div>
+                                    <p class="small">Oscuro Minimalista</p>
+                                </div>
+                                <div class="banner-option" onclick="seleccionarBanner('rainbow')">
+                                    <div class="banner-thumb banner-rainbow"></div>
+                                    <p class="small">Arcoíris</p>
+                                </div>
+                                <div class="banner-option" onclick="seleccionarBanner('forest')">
+                                    <div class="banner-thumb banner-forest"></div>
+                                    <p class="small">Bosque</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Selector de Temas -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5><i class="bi bi-brush me-2"></i>Temas y Colores</h5>
+                        </div>
+                        <div class="card-body">
+                            <h6 class="mb-3">Temas Prediseñados</h6>
+                            <div class="theme-selector">
+                                <div class="theme-option" onclick="aplicarTema('christmas')" data-theme="christmas">
+                                    <div class="theme-colors">
+                                        <span style="background: #dc2626;"></span>
+                                        <span style="background: #16a34a;"></span>
+                                        <span style="background: #fbbf24;"></span>
+                                    </div>
+                                    <p class="small">Navideño</p>
+                                </div>
+                                <div class="theme-option active" onclick="aplicarTema('blue')" data-theme="blue">
+                                    <div class="theme-colors">
+                                        <span style="background: #2563eb;"></span>
+                                        <span style="background: #3b82f6;"></span>
+                                        <span style="background: #60a5fa;"></span>
+                                    </div>
+                                    <p class="small">Azul Elegante</p>
+                                </div>
+                                <div class="theme-option" onclick="aplicarTema('gold')" data-theme="gold">
+                                    <div class="theme-colors">
+                                        <span style="background: #f59e0b;"></span>
+                                        <span style="background: #fbbf24;"></span>
+                                        <span style="background: #fcd34d;"></span>
+                                    </div>
+                                    <p class="small">Dorado Premium</p>
+                                </div>
+                                <div class="theme-option" onclick="aplicarTema('dark')" data-theme="dark">
+                                    <div class="theme-colors">
+                                        <span style="background: #0f172a;"></span>
+                                        <span style="background: #1e293b;"></span>
+                                        <span style="background: #334155;"></span>
+                                    </div>
+                                    <p class="small">Oscuro</p>
+                                </div>
+                                <div class="theme-option" onclick="aplicarTema('rainbow')" data-theme="rainbow">
+                                    <div class="theme-colors">
+                                        <span style="background: #ef4444;"></span>
+                                        <span style="background: #3b82f6;"></span>
+                                        <span style="background: #10b981;"></span>
+                                    </div>
+                                    <p class="small">Arcoíris</p>
+                                </div>
+                                <div class="theme-option" onclick="aplicarTema('forest')" data-theme="forest">
+                                    <div class="theme-colors">
+                                        <span style="background: #065f46;"></span>
+                                        <span style="background: #059669;"></span>
+                                        <span style="background: #10b981;"></span>
+                                    </div>
+                                    <p class="small">Bosque</p>
+                                </div>
+                            </div>
+
+                            <hr class="my-4">
+
+                            <h6 class="mb-3">Crear Tema Personalizado</h6>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label class="form-label">Color Primario</label>
+                                    <input type="color" class="form-control form-control-color" id="colorPrimario" value="#2563eb" onchange="actualizarTemaPersonalizado()">
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Color Secundario</label>
+                                    <input type="color" class="form-control form-control-color" id="colorSecundario" value="#3b82f6" onchange="actualizarTemaPersonalizado()">
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Color de Acento</label>
+                                    <input type="color" class="form-control form-control-color" id="colorAcento" value="#60a5fa" onchange="actualizarTemaPersonalizado()">
+                                </div>
+                            </div>
+                            <div class="mt-3">
+                                <button class="btn btn-success" onclick="guardarTemaPersonalizado()">
+                                    <i class="bi bi-save me-2"></i>Guardar Tema Personalizado
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Efectos Visuales -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="bi bi-stars me-2"></i>Efectos Visuales</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="efectoNieve" onchange="toggleEfecto('nieve')">
+                                        <label class="form-check-label" for="efectoNieve">
+                                            <i class="bi bi-snow me-2"></i>Nieve Cayendo
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="efectoLuces" onchange="toggleEfecto('luces')">
+                                        <label class="form-check-label" for="efectoLuces">
+                                            <i class="bi bi-lightbulb me-2"></i>Luces Navideñas
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="efectoParticulas" onchange="toggleEfecto('particulas')">
+                                        <label class="form-check-label" for="efectoParticulas">
+                                            <i class="bi bi-stars me-2"></i>Partículas Flotantes
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="efectoAnimaciones" checked onchange="toggleEfecto('animaciones')">
+                                        <label class="form-check-label" for="efectoAnimaciones">
+                                            <i class="bi bi-play-circle me-2"></i>Animaciones Suaves
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sección: Galería Multimedia -->
+                <div id="seccion-galeria" class="content-section">
+                    <div class="section-header">
+                        <h2><i class="bi bi-images me-2"></i>Galería Multimedia</h2>
+                        <p>Organiza y comparte tus mejores momentos</p>
+                    </div>
+
+                    <!-- Álbumes -->
+                    <div class="card mb-4">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5><i class="bi bi-folder-fill me-2"></i>Mis Álbumes</h5>
+                            <button class="btn btn-primary btn-sm" onclick="crearAlbum()">
+                                <i class="bi bi-plus-circle me-1"></i>Crear Álbum
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div class="albums-grid" id="albumsGrid">
+                                <!-- Álbumes se cargarán aquí -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Galería de Fotos -->
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5><i class="bi bi-images me-2"></i>Todas las Fotos</h5>
+                            <button class="btn btn-primary btn-sm" onclick="subirFotos()">
+                                <i class="bi bi-upload me-1"></i>Subir Fotos
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div class="photos-grid" id="photosGrid">
+                                <!-- Fotos se cargarán aquí -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Más secciones continúan... -->
+                
+            </div>
+        </div>
+    </div>
+
+    <!-- Modales -->
+    <div id="modalsContainer"></div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="js/perfil-personalizado.js"></script>
+</body>
+</html>
