@@ -2403,16 +2403,6 @@ app.delete('/api/documentos/:id', authenticateToken, async (req, res) => {
 });
 
 // ============================================
-// RUTAS DE PERFIL PERSONALIZADO
-// ============================================
-
-// Importar rutas de perfil personalizado
-const perfilPersonalizadoRoutes = require('./api-perfil-personalizado');
-app.use('/api/perfil-personalizado', perfilPersonalizadoRoutes);
-
-console.log('✅ Rutas de perfil personalizado cargadas');
-
-// ============================================
 // INICIAR SERVIDOR
 // ============================================
 
