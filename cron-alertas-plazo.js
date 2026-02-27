@@ -7,7 +7,7 @@ const sql = require('mssql');
 require('dotenv').config();
 const notificationService = require('./email-service-notifications');
 
-// Configuración de base de datos
+// Configuración de base de datosss
 const dbConfig = {
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
