@@ -2523,3 +2523,18 @@ function exportarResultados() {
     // Mostrar mensaje de éxito
     mostrarAlerta('success', `✅ Archivo exportado exitosamente: ${postulacionesFiltradas.length} registros`);
 }
+// Event listener para búsqueda de usuarios en tiempo real
+document.addEventListener('DOMContentLoaded', function() {
+    const buscarUsuarioInput = document.getElementById('buscarUsuario');
+    if (buscarUsuarioInput) {
+        buscarUsuarioInput.addEventListener('input', function() {
+            // Debounce para evitar demasiadas llamadas
+            clearTimeout(window.busquedaUsuariosTimeout);
+            window.busquedaUsuariosTimeout = setTimeout(() => {
+                if (seccionActual === 'usuarios') {
+                    cargarUsuarios();
+                }
+            }, 300);
+        });
+    }
+});
