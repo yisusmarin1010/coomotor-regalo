@@ -21,10 +21,6 @@ require('dotenv').config();
 // Importar servicios de notificaciones
 const notificationService = require('./email-service-notifications');
 
-// Importar utilidades centralizadas
-const validators = require('./utils/validators');
-const responses = require('./utils/responses');
-
 // Crear app Express
 const app = express();
 const PORT = process.env.PORT || 10000; // Render usa variable PORT dinámica
@@ -319,11 +315,68 @@ app.post('/api/usuarios/register', async (req, res) => {
     try {
         const { nombres, apellidos, celular, correo, tipo_documento, numero_documento, password, tipo_conductor, subtipo_conductor } = req.body;
         
-        // Validar usando módulo centralizado
-        try {
-            validators.validateRegistroUsuario(req.body);
-        } catch (validationError) {
-            return responses.validationError(res, validationError.message, validationError.field);
+        // Validaciones básicas
+        if (!nombres || !apellidos || !celular || !correo || !tipo_documento || !numero_documento || !password || !tipo_conductor) {
+            return res.status(400).json({
+                success: false,
+                error: 'Todos los campos obligatorios deben ser completados'
+            });
+        }
+        
+        // Validar nombres (solo letras y espacios)
+        if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]{2,50}$/.test(nombres)) {
+            return res.status(400).json({
+                success: false,
+                error: 'Los nombres solo pueden contener letras y espacios (2-50 caracteres)'
+            });
+        }
+        
+        // Validar apellidos (solo letras y espacios)
+        if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]{2,50}$/.test(apellidos)) {
+            return res.status(400).json({
+                success: false,
+                error: 'Los apellidos solo pueden contener letras y espacios (2-50 caracteres)'
+            });
+        }
+        
+        // Validar celular (10 dígitos, debe comenzar con 3)
+        if (!/^3\d{9}$/.test(celular)) {
+            return res.status(400).json({
+                success: false,
+                error: 'El celular debe tener 10 dígitos y comenzar con 3'
+            });
+        }
+        
+        // Validar correo (dominios permitidos)
+        if (!/^[a-zA-Z0-9._-]+@(gmail\.com|hotmail\.com|outlook\.com|yahoo\.com|coomotor\.com)$/.test(correo)) {
+            return res.status(400).json({
+                success: false,
+                error: 'El correo debe ser de Gmail, Hotmail, Outlook, Yahoo o Coomotor'
+            });
+        }
+        
+        // Validar número de documento (7-10 dígitos)
+        if (!/^\d{7,10}$/.test(numero_documento)) {
+            return res.status(400).json({
+                success: false,
+                error: 'El número de documento debe tener entre 7 y 10 dígitos'
+            });
+        }
+        
+        // Validar contraseña segura (mínimo 8 caracteres, mayúsculas, minúsculas, números y caracteres especiales)
+        if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password)) {
+            return res.status(400).json({
+                success: false,
+                error: 'La contraseña debe tener mínimo 8 caracteres, incluir mayúsculas, minúsculas, números y un carácter especial (@$!%*?&)'
+            });
+        }
+        
+        // Validar que se requiera subtipo para carretera y furgones
+        if ((tipo_conductor === 'carretera' || tipo_conductor === 'furgones') && !subtipo_conductor) {
+            return res.status(400).json({
+                success: false,
+                error: `Debe seleccionar un subtipo para ${tipo_conductor}`
+            });
         }
         
         // Verificar si el usuario ya existe (por correo o documento)
@@ -333,7 +386,10 @@ app.post('/api/usuarios/register', async (req, res) => {
             .query('SELECT id FROM usuarios WHERE correo = @correo OR numero_documento = @numero_documento');
             
         if (checkUser.recordset.length > 0) {
-            return responses.conflict(res, 'El correo o número de documento ya está registrado');
+            return res.status(400).json({
+                success: false,
+                error: 'El correo o número de documento ya está registrado'
+            });
         }
         
         // Hash de la contraseña
@@ -377,24 +433,31 @@ app.post('/api/usuarios/register', async (req, res) => {
         console.log(`✅ Nuevo usuario registrado: ${nuevoUsuario.nombres} ${nuevoUsuario.apellidos}`);
         console.log(`📧 Email: ${nuevoUsuario.correo}`);
         
-        return responses.success(res, {
-            user: {
-                id: nuevoUsuario.id,
-                nombres: nuevoUsuario.nombres,
-                apellidos: nuevoUsuario.apellidos,
-                correo: nuevoUsuario.correo,
-                celular: nuevoUsuario.celular,
-                tipo_conductor: nuevoUsuario.tipo_conductor,
-                subtipo_conductor: nuevoUsuario.subtipo_conductor,
-                rol: nuevoUsuario.rol,
-                fechaRegistro: nuevoUsuario.fecha_registro
-            },
-            token
-        }, 'Usuario registrado exitosamente', 201);
+        res.status(201).json({
+            success: true,
+            message: 'Usuario registrado exitosamente',
+            data: {
+                user: {
+                    id: nuevoUsuario.id,
+                    nombres: nuevoUsuario.nombres,
+                    apellidos: nuevoUsuario.apellidos,
+                    correo: nuevoUsuario.correo,
+                    celular: nuevoUsuario.celular,
+                    tipo_conductor: nuevoUsuario.tipo_conductor,
+                    subtipo_conductor: nuevoUsuario.subtipo_conductor,
+                    rol: nuevoUsuario.rol,
+                    fechaRegistro: nuevoUsuario.fecha_registro
+                },
+                token
+            }
+        });
         
     } catch (error) {
         console.error('Error en registro:', error);
-        return responses.error(res, 'Error interno del servidor');
+        res.status(500).json({
+            success: false,
+            error: 'Error interno del servidor'
+        });
     }
 });
 
@@ -968,11 +1031,11 @@ app.post('/api/auth/recuperar-password/cambiar', async (req, res) => {
     try {
         const { email, token, nuevaPassword } = req.body;
         
-        // Validar campos requeridos
-        try {
-            validators.validateRequiredFields({ email, token, nuevaPassword }, ['email', 'token', 'nuevaPassword']);
-        } catch (validationError) {
-            return responses.validationError(res, validationError.message);
+        if (!email || !token || !nuevaPassword) {
+            return res.status(400).json({
+                success: false,
+                error: 'Todos los campos son requeridos'
+            });
         }
         
         // Verificar token
@@ -980,17 +1043,25 @@ app.post('/api/auth/recuperar-password/cambiar', async (req, res) => {
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
             
             if (decoded.email !== email.toLowerCase() || decoded.tipo !== 'recuperacion') {
-                return responses.validationError(res, 'Token inválido');
+                return res.status(400).json({
+                    success: false,
+                    error: 'Token inválido'
+                });
             }
         } catch (jwtError) {
-            return responses.validationError(res, 'Token expirado o inválido');
+            return res.status(400).json({
+                success: false,
+                error: 'Token expirado o inválido'
+            });
         }
         
         // Validar fortaleza de contraseña
-        try {
-            validators.validatePassword(nuevaPassword);
-        } catch (validationError) {
-            return responses.validationError(res, validationError.message);
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+        if (!passwordRegex.test(nuevaPassword)) {
+            return res.status(400).json({
+                success: false,
+                error: 'La contraseña debe tener al menos 8 caracteres, incluir mayúsculas, minúsculas, números y caracteres especiales'
+            });
         }
         
         // Hash de la nueva contraseña
@@ -1003,7 +1074,10 @@ app.post('/api/auth/recuperar-password/cambiar', async (req, res) => {
             .query('UPDATE usuarios SET password_hash = @passwordHash WHERE correo = @email');
         
         if (result.rowsAffected[0] === 0) {
-            return responses.notFound(res, 'Usuario no encontrado');
+            return res.status(404).json({
+                success: false,
+                error: 'Usuario no encontrado'
+            });
         }
         
         // Eliminar código de recuperación
@@ -1031,11 +1105,17 @@ app.post('/api/auth/recuperar-password/cambiar', async (req, res) => {
             }
         }
         
-        return responses.success(res, null, 'Contraseña cambiada exitosamente');
+        res.json({
+            success: true,
+            message: 'Contraseña cambiada exitosamente'
+        });
         
     } catch (error) {
         console.error('Error al cambiar contraseña:', error);
-        return responses.error(res);
+        res.status(500).json({
+            success: false,
+            error: 'Error interno del servidor'
+        });
     }
 });
 
